@@ -1,22 +1,33 @@
 {
-  "name": "hackhost",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@types/node": "20.4.2",
-    "@types/react": "18.2.15",
-    "@types/react-dom": "18.2.7",
-    "eslint": "8.45.0",
-    "eslint-config-next": "13.4.10",
-    "next": "13.4.10",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.1.6"
-  }
+    "name": "hackhost",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "prisma generate && next build",
+        "start": "next start",
+        "lint": "next lint",
+        "prisma:gen": "prisma generate",
+        "prisma:deploy": "prisma migrate deploy",
+        "prisma:dev": "prisma migrate dev",
+        "vercel-build": "npm run prisma:deploy && npm run build"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.0.0",
+        "@types/node": "20.4.2",
+        "@types/react": "18.2.15",
+        "@types/react-dom": "18.2.7",
+        "dotenv": "^16.3.1",
+        "eslint": "8.45.0",
+        "eslint-config-next": "13.4.10",
+        "next": "13.4.10",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "typescript": "5.1.6"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1",
+        "prisma": "^5.0.0",
+        "ts-node": "^10.9.1"
+    }
 }
