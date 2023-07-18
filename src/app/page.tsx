@@ -1,18 +1,23 @@
+'use client';
 import Image from 'next/image';
-import styles from './styles/page.module.css';
-import { prisma } from '../../lib/prisma';
-import Card from './components/Card';
+import styles from '@/src/app/styles/page.module.css';
+import axios from 'axios';
 
-export default async function Home() {
+// import { Box, Flex } from '@chakra-ui/react';
+export default function Home() {
     // const user = await prisma.user.create({
     //     data: { name: 'Lucky', email: 'lucky@test.com' },
     // });
     // console.log({ user });
+    const f = async () => {};
+    axios.get('/api/hackathon').then((d) => {
+        console.log({ data: d });
+    });
     return (
         <main className={styles.main}>
             <div className={styles.description}>
                 <p>
-                    <Card></Card>
+                    {/* <Box h={200} w={140} bg={'red.700'}></Box> */}
                     Get started by editing&nbsp;
                     <code className={styles.code}>src/app/page.tsx</code>
                 </p>

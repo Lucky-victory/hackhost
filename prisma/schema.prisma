@@ -9,9 +9,93 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-model User{
-  id String @id @default(uuid())
-  name String 
-  email String @unique
-@@index([email])
+
+model User {
+  id           String                 @id @default(uuid())
+  name         String
+  email        String                 @unique
+  password     String?
+  createdAt    DateTime               @default(now()) @map("created_at")
+  updatedAt    DateTime               @updatedAt @map("updated_at")
+  bio          String?
+  jobTitle     String?                @map("job_title")
+  interest     String?
+  skills       String?
+  avatar       String?
+  role         USER_ROLE              @default(BASIC)
+  username     String?
+  location     String?
+  submissions  Submission[]
+  hackathons   Hackathon[]
+  participants HackathonParticipant[]
+
+  @@index([email, jobTitle, skills])
+  @@map("users")
+}
+
+model Submission {
+  id            String    @id @default(uuid())
+  title         String
+  description   String
+  screenshotUrl String    @map("screenshot_url")
+  repoUrl       String    @map("repo_url")
+  demoUrl       String    @map("demo_url")
+  fileUrl       String    @map("file_url")
+  user          User      @relation(fields: [userId], references: [id])
+  slug          String    @unique
+  category      String
+  tools         Json
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  userId        String    @map("user_id")
+  hackathons    Hackathon @relation(fields: [hackathonId], references: [id])
+  hackathonId   String    @map("hackathon_id")
+
+  @@index([title, description, slug])
+  @@map("submissions")
+}
+
+model Hackathon {
+  id           String                 @id @default(uuid())
+  title        String
+  description  String
+  startDate    DateTime               @map("start_date")
+  endDate      DateTime               @map("end_date")
+  host         User                   @relation(fields: [userId], references: [id])
+  slug         String                 @unique
+  category     HackathonCategory[]
+  createdAt    DateTime               @default(now()) @map("created_at")
+  updatedAt    DateTime               @updatedAt @map("updated_at")
+  userId       String                 @map("user_id")
+  totalPrice   Int                    @map("total_price")
+  participants HackathonParticipant[]
+  submissions  Submission[]
+
+  @@index([title, description, slug])
+  @@map("hackathons")
+}
+
+model HackathonCategory {
+  id         String      @id @default(uuid())
+  title      String
+  hackathons Hackathon[]
+
+  @@index([title])
+  @@map("hackathon_categories")
+}
+
+model HackathonParticipant {
+  id          String    @id @default(uuid())
+  hackathons  Hackathon @relation(fields: [hackathonId], references: [id])
+  hackathonId String    @map("hackathon_id")
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @map("user_id")
+
+  @@map("hackathon_participants")
+}
+
+enum USER_ROLE {
+  BASIC
+  ADMIN
+  MOD
 }

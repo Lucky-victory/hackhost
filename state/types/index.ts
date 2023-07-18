@@ -1,0 +1,1 @@
+export type StateStatus='loading'|'error'|'pending'
