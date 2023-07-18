@@ -1,16 +1,24 @@
-// Need to use the React-specific entry point to import createApi
+import { Hackathon } from '@/const';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // Define a service using a base URL and expected endpoints
+
 export const HackHostApi = createApi({
     reducerPath: 'HackHostApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: '/api',
+        baseUrl: '/api/hackathon',
     }),
     endpoints: (builder) => ({
-        getHackathons: builder.query({
-            query: (username) => ({
-                url: `/hackathon`,
+        getHackathons: builder.query<Partial<Hackathon>, void>({
+            query: () => ({
+                url: `/`,
+            }),
+        }),
+        addHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
+            query: (data) => ({
+                url: `/`,
+                method: 'POST',
+                body: data,
             }),
         }),
     }),
@@ -18,4 +26,4 @@ export const HackHostApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetHackathonsQuery } = HackHostApi;
+export const { useAddHackathonMutation, useGetHackathonsQuery } = HackHostApi;

@@ -2,6 +2,11 @@
 import Image from 'next/image';
 import styles from '@/src/app/styles/page.module.css';
 import axios from 'axios';
+import {
+    useAddHackathonMutation,
+    useGetHackathonsQuery,
+} from '@/state/services/hackathon-api';
+import { Box, Button, Text } from '@chakra-ui/react';
 
 // import { Box, Flex } from '@chakra-ui/react';
 export default function Home() {
@@ -9,106 +14,41 @@ export default function Home() {
     //     data: { name: 'Lucky', email: 'lucky@test.com' },
     // });
     // console.log({ user });
-    const f = async () => {};
-    axios.get('/api/hackathon').then((d) => {
-        console.log({ data: d });
-    });
+    // const f = async () => {};
+    // axios.get('/api/hackathon').then((d) => {
+    //     console.log({ data: d });
+    // });
+    const { data, isLoading } = useGetHackathonsQuery();
+    const [addHack, { data: newData, isLoading: isAdding }] =
+        useAddHackathonMutation();
+    // console.log({newData,isAdding});
+
+    console.log({ isLoading, data });
     return (
         <main className={styles.main}>
-            <div className={styles.description}>
-                <p>
-                    {/* <Box h={200} w={140} bg={'red.700'}></Box> */}
-                    Get started by editing&nbsp;
-                    <code className={styles.code}>src/app/page.tsx</code>
-                </p>
-                <div>
-                    <a
-                        href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        By{' '}
-                        <Image
-                            src="/vercel.svg"
-                            alt="Vercel Logo"
-                            className={styles.vercelLogo}
-                            width={100}
-                            height={24}
-                            priority
-                        />
-                    </a>
-                </div>
-            </div>
+            <Box>
+                GET
+                {isLoading ? 'loading...' : <Text>{data?.title}</Text>}
+            </Box>
+            <Box>
+                POST
+                {isLoading ? 'loading...' : <Text>{data?.title}</Text>}
+            </Box>
 
-            <div className={styles.center}>
-                <Image
-                    className={styles.logo}
-                    src="/next.svg"
-                    alt="Next.js Logo"
-                    width={180}
-                    height={37}
-                    priority
-                />
-            </div>
-
-            <div className={styles.grid}>
-                <a
-                    href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Docs <span>-&gt;</span>
-                    </h2>
-                    <p>
-                        Find in-depth information about Next.js features and
-                        API.
-                    </p>
-                </a>
-
-                <a
-                    href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Learn <span>-&gt;</span>
-                    </h2>
-                    <p>
-                        Learn about Next.js in an interactive course
-                        with&nbsp;quizzes!
-                    </p>
-                </a>
-
-                <a
-                    href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Templates <span>-&gt;</span>
-                    </h2>
-                    <p>Explore the Next.js 13 playground.</p>
-                </a>
-
-                <a
-                    href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Deploy <span>-&gt;</span>
-                    </h2>
-                    <p>
-                        Instantly deploy your Next.js site to a shareable URL
-                        with Vercel.
-                    </p>
-                </a>
-            </div>
+            <Button
+                onClick={() => {
+                    addHack({ title: 'new Hack', id: '123' });
+                }}
+            >
+                add hack
+            </Button>
+            {isAdding ? (
+                'adding'
+            ) : (
+                <Text>
+                    {newData?.title} {newData?.id}
+                </Text>
+            )}
         </main>
     );
 }

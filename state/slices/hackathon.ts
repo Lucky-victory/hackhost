@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { StateStatus } from '../types';
-import { HYDRATE } from 'next-redux-wrapper';
 
 const initialState = {
     data: [],
@@ -13,14 +12,8 @@ export const hackathonSlice = createSlice({
     reducers: {
         fetc() {},
     },
-    extraReducers: {
-        [HYDRATE]: (state, action) => {
-            return {
-                ...state,
-                ...action.payload.comments,
-            };
-        },
-    },
+    
+
 });
 
 export const { fetc } = hackathonSlice.actions;

@@ -4,18 +4,13 @@ prisma;
 export async function GET(request: Request) {
     return NextResponse.json(
         {
-            data: { name: 'Lucky' },
+            title: 'TiDB Hackathon',
         },
         { status: 200 }
     );
 }
 export async function POST(request: Request) {
-    const json = request.json();
+    const json = await request.json();
 
-    return NextResponse.json(
-        {
-            data: { name: 'Lucky' },
-        },
-        { status: 200 }
-    );
+    return NextResponse.json(json, { status: 201 });
 }

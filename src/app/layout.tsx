@@ -1,10 +1,13 @@
 import '@/src/app/styles/globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Providers } from './providers/chakra-provider';
+import { Inter, Poppins } from 'next/font/google';
+import { ChakraProvider } from './providers/chakra-provider';
 import { ReduxProvider } from './providers/redux-provider';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Poppins({
+    weight: ['300', '400', '500', '700'],
+    subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -20,7 +23,7 @@ export default function RootLayout({
         <html lang="en">
             <body className={inter.className}>
                 <ReduxProvider>
-                    <Providers>{children}</Providers>
+                    <ChakraProvider>{children}</ChakraProvider>
                 </ReduxProvider>
             </body>
         </html>
