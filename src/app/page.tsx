@@ -1,63 +1,112 @@
 'use client';
 import Image from 'next/image';
-import styles from '@/src/app/styles/page.module.css';
-import axios from 'axios';
+import styles from '@/src/app/styles/home.module.css';
+
 import {
     useAddHackathonMutation,
     useGetHackathonsQuery,
 } from '@/state/services/hackathon-api';
-import { Box, Button, Link, Text } from '@chakra-ui/react';
-
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Link} from '@chakra-ui/next-js'
 // import { Box, Flex } from '@chakra-ui/react';
 export default function Home() {
-    // const user = await prisma.user.create({
-    //     data: { name: 'Lucky', email: 'lucky@test.com' },
-    // });
-    // console.log({ user });
-    // const f = async () => {};
-    // axios.get('/api/hackathon').then((d) => {
-    //     console.log({ data: d });
-    // });
+ 
     const { data, isLoading } = useGetHackathonsQuery();
     const hackathons = data?.data;
     const [addHack, { data: newData, isLoading: isAdding }] =
         useAddHackathonMutation();
-    // console.log({newData,isAdding});
+    
 
     console.log({ isLoading, data });
     return (
-        <main className={styles.main}>
+      <main className={styles.main}>
+        <Box p={"4"} pt={16}>
+          <Flex
+            boxShadow={"md"}
+            className={styles.navbar}
+            justify={"space-between"}
+            p={4}
+            align={"center"}
+            pos={"fixed"}
+            w={"100%"}
+            top={0}
+            left={0}
+            zIndex={"banner"}
+            bg={"white"}
+          >
             <Box>
-                GET
-                {isLoading ? 'loading...' : <pre>{JSON.stringify(data,undefined,3)}</pre>}
+              <Flex gap={8}>
+                <Box>
+                  <Text>App logo</Text>
+                </Box>
+
+                <Link href={""}>Host a hackathon</Link>
+              </Flex>
             </Box>
-          
-            <Link href={`/hackathon/${hackathons && hackathons[0].slug}`}>
-            Hackathon
-            </Link>
-            <Button
-                onClick={() => {
-                    addHack({
-                      title: "Then Also Another hackathon by TiDB",
-                      userId: "171cf73a-e9b6-4948-b00d-3ef4fa82bd8a",
-                      description: "Another Hackathon Description",
-                      currency: "USD",
-                      price: 75000,
-                      startDate: new Date(),
-                      endDate: new Date(new Date().setDate(30)),
-                      
-                    });
-                }}
-            >
-                add hack
-            </Button>
-            {isAdding ? (
-                'adding'
-            ) : (
-                <Text>
-                    {newData?.title} {newData?.id}
-                </Text>
-            )}
-        </main>
+            <Box>
+              <Link
+                href={"/hackathons"}
+                bg={"transparent"}
+                color={"purple.500"}
+                fontWeight={"medium"}
+                _hover={{ bg: "purple.100" }}
+                mr={4}
+                p={"0.5rem 1rem"}
+                borderRadius={"base"}
+              >
+                Log in
+              </Link>
+              <Link
+                href={"/"}
+                color={"white"}
+                bg={"purple.500"}
+                fontWeight={"medium"}
+                _hover={{ bg: "purple.700" }}
+                borderRadius={"base"}
+                p={"0.5rem 1rem"}
+              >
+                Sign up
+              </Link>
+            </Box>
+          </Flex>
+          <Flex>
+            <Box pt={6} maxW={500}>
+              <Heading>The home for hackathons</Heading>
+              <Text my={6}>
+                Build products, practice skills, learn technologies, win prizes,
+                and grow your network.
+              </Text>
+              <Button borderRadius={"base"} size={"lg"} colorScheme="purple">
+                Join the community
+              </Button>
+            </Box>
+            <Box></Box>
+          </Flex>
+
+         
+          {/* <Button
+          onClick={() => {
+            addHack({
+              title: "Then Also Another hackathon by TiDB",
+              userId: "171cf73a-e9b6-4948-b00d-3ef4fa82bd8a",
+              description: "Another Hackathon Description",
+              currency: "USD",
+              price: 75000,
+              startDate: new Date(),
+              endDate: new Date(new Date().setDate(30)),
+            });
+          }}
+        >
+          add hack
+        </Button>
+        {isAdding ? (
+          "adding"
+        ) : (
+          <Text>
+            {newData?.title} {newData?.id}
+          </Text>
+        )} */}
+        </Box>
+      </main>
     );
 }
