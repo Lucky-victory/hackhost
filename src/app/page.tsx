@@ -28,16 +28,22 @@ export default function Home() {
         <main className={styles.main}>
             <Box>
                 GET
-                {isLoading ? 'loading...' : <Text>{data?.title}</Text>}
+                {isLoading ? 'loading...' : <pre>{JSON.stringify(data,undefined,3)}</pre>}
             </Box>
-            <Box>
-                POST
-                {isLoading ? 'loading...' : <Text>{data?.title}</Text>}
-            </Box>
+          
 
             <Button
                 onClick={() => {
-                    addHack({ title: 'new Hack', id: '123' });
+                    addHack({
+                      title: "Then Also Another hackathon by TiDB",
+                      userId: "171cf73a-e9b6-4948-b00d-3ef4fa82bd8a",
+                      description: "Another Hackathon Description",
+                      currency: "USD",
+                      price: 75000,
+                      startDate: new Date(),
+                      endDate: new Date(new Date().setDate(30)),
+                      
+                    });
                 }}
             >
                 add hack

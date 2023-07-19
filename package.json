@@ -1,42 +1,48 @@
 {
-    "name": "hackhost",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "prisma generate && next build",
-        "start": "next start",
-        "lint": "next lint",
-        "prisma:gen": "prisma generate",
-        "prisma:deploy": "prisma migrate deploy",
-        "prisma:dev": "prisma migrate dev",
-        "vercel-build": "npm run prisma:deploy && npm run build"
-    },
-    "dependencies": {
-        "@chakra-ui/next-js": "^2.1.4",
-        "@chakra-ui/react": "^2.7.1",
-        "@emotion/react": "^11.11.1",
-        "@emotion/styled": "^11.11.0",
-        "@prisma/client": "^5.0.0",
-        "@reduxjs/toolkit": "^1.9.5",
-        "@types/node": "20.4.2",
-        "@types/react": "18.2.15",
-        "@types/react-dom": "18.2.7",
-        "axios": "^1.4.0",
-        "bcrypt": "^5.1.0",
-        "cross-env": "^7.0.3",
-        "dotenv": "^16.3.1",
-        "eslint": "8.45.0",
-        "eslint-config-next": "13.4.10",
-        "framer-motion": "^10.12.22",
-        "next": "13.4.10",
-        "next-auth": "^4.22.1",
-        "react": "18.2.0",
-        "react-dom": "18.2.0",
-        "react-redux": "^8.1.1",
-        "typescript": "5.1.6"
-    },
-    "devDependencies": {
-        "prisma": "^5.0.0"
-    }
+  "name": "hackhost",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:gen": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:dev": "prisma migrate dev",
+    "setup": "node ./scripts/setup.mjs",
+    "vercel-build": "npm run prisma:deploy && npm run build"
+  },
+  "dependencies": {
+    "@chakra-ui/next-js": "^2.1.4",
+    "@chakra-ui/react": "^2.7.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@faker-js/faker": "^8.0.2",
+    "@prisma/client": "^5.0.0",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@types/node": "20.4.2",
+    "@types/react": "18.2.15",
+    "@types/react-dom": "18.2.7",
+    "axios": "^1.4.0",
+    "base64-uuid": "^1.0.2",
+    "bcrypt": "^5.1.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "eslint": "8.45.0",
+    "eslint-config-next": "13.4.10",
+    "framer-motion": "^10.12.22",
+    "next": "13.4.10",
+    "next-auth": "^4.22.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-redux": "^8.1.1",
+    "slugify": "^1.6.6",
+    "typescript": "5.1.6",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.2",
+    "prisma": "^5.0.0"
+  }
 }

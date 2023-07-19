@@ -45,7 +45,7 @@ model Submission {
   user          User      @relation(fields: [userId], references: [id])
   slug          String    @unique
   category      String?
-  tools         Json?
+  toolsUsed     String @map("tools_used")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   userId        String    @map("user_id")
@@ -59,6 +59,7 @@ model Submission {
 model Hackathon {
   id                  String                 @id @default(uuid())
   title               String
+  subtitle String? 
   description         String
   startDate           DateTime               @map("start_date")
   endDate             DateTime               @map("end_date")
@@ -68,13 +69,29 @@ model Hackathon {
   createdAt           DateTime               @default(now()) @map("created_at")
   updatedAt           DateTime               @updatedAt @map("updated_at")
   userId              String                 @map("user_id")
-  totalPrice          Int                    @map("total_price")
+  price               Int                    @map("price")
+  currency            String
+  currencyCode        String?                @map("currency_code")
   participants        HackathonParticipant[]
   submissions         Submission[]
   hackathonCategoryId String?                @map("hackathon_category_id")
+  type                HACKATHON_TYPE?         @default(public)
+  status              HACKATHON_STATUS?       @default(draft)
+  judges              HackathonJudges[]
 
   @@index([title, description, slug])
   @@map("hackathons")
+}
+
+model HackathonJudges {
+  id          String    @id @default(uuid())
+  hackathonId String    @map("hackathon_id")
+  name        String
+  bio         String?
+  avatar      String?
+  Hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
+
+  @@map("hackathon_judges")
 }
 
 model HackathonCategory {
@@ -83,6 +100,9 @@ model HackathonCategory {
   hackathons Hackathon[]
   user       User        @relation(fields: [userId], references: [id])
   userId     String      @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([title])
   @@map("hackathon_categories")
@@ -95,6 +115,9 @@ model HackathonParticipant {
   user        User      @relation(fields: [userId], references: [id])
   userId      String    @map("user_id")
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("hackathon_participants")
 }
 
@@ -102,4 +125,16 @@ enum USER_ROLE {
   BASIC
   ADMIN
   MOD
+}
+
+enum HACKATHON_STATUS {
+  published
+  ongoing
+  ended
+  draft
+}
+
+enum HACKATHON_TYPE {
+  public
+  private
 }

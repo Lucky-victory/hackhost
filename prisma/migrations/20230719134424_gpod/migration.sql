@@ -31,7 +31,7 @@ CREATE TABLE `submissions` (
     `file_url` VARCHAR(191) NOT NULL,
     `slug` VARCHAR(191) NOT NULL,
     `category` VARCHAR(191) NULL,
-    `tools` JSON NULL,
+    `tools_used` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
@@ -46,6 +46,7 @@ CREATE TABLE `submissions` (
 CREATE TABLE `hackathons` (
     `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
+    `subtitle` VARCHAR(191) NULL,
     `description` VARCHAR(191) NOT NULL,
     `start_date` DATETIME(3) NOT NULL,
     `end_date` DATETIME(3) NOT NULL,
@@ -53,8 +54,12 @@ CREATE TABLE `hackathons` (
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
-    `total_price` INTEGER NOT NULL,
+    `price` INTEGER NOT NULL,
+    `currency` VARCHAR(191) NOT NULL,
+    `currency_code` VARCHAR(191) NULL,
     `hackathon_category_id` VARCHAR(191) NULL,
+    `type` ENUM('public', 'private') NULL DEFAULT 'public',
+    `status` ENUM('published', 'ongoing', 'ended', 'draft') NULL DEFAULT 'draft',
 
     UNIQUE INDEX `hackathons_slug_key`(`slug`),
     INDEX `hackathons_title_description_slug_idx`(`title`, `description`, `slug`),
@@ -62,10 +67,23 @@ CREATE TABLE `hackathons` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `hackathon_judges` (
+    `id` VARCHAR(191) NOT NULL,
+    `hackathon_id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `bio` VARCHAR(191) NULL,
+    `avatar` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `hackathon_categories` (
     `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
-    `userId` VARCHAR(191) NOT NULL,
+    `user_id` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     INDEX `hackathon_categories_title_idx`(`title`),
     PRIMARY KEY (`id`)
@@ -76,6 +94,8 @@ CREATE TABLE `hackathon_participants` (
     `id` VARCHAR(191) NOT NULL,
     `hackathon_id` VARCHAR(191) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -93,7 +113,10 @@ ALTER TABLE `hackathons` ADD CONSTRAINT `hackathons_user_id_fkey` FOREIGN KEY (`
 ALTER TABLE `hackathons` ADD CONSTRAINT `hackathons_hackathon_category_id_fkey` FOREIGN KEY (`hackathon_category_id`) REFERENCES `hackathon_categories`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `hackathon_categories` ADD CONSTRAINT `hackathon_categories_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `hackathon_judges` ADD CONSTRAINT `hackathon_judges_hackathon_id_fkey` FOREIGN KEY (`hackathon_id`) REFERENCES `hackathons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `hackathon_categories` ADD CONSTRAINT `hackathon_categories_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `hackathon_participants` ADD CONSTRAINT `hackathon_participants_hackathon_id_fkey` FOREIGN KEY (`hackathon_id`) REFERENCES `hackathons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
