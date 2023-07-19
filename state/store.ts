@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-import { HackHostApi } from './rtk';
+import { HackHostApi } from '@/state/services/hackathon-api';
 
 export const store = configureStore({
     reducer: {

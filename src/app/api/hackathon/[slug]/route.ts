@@ -1,22 +1,26 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Hackathon } from "@/const";
-import { Utils } from "@/lib/utils";
 
-export async function GET(request: Request) {
+
+export async function GET(request: Request, { params: { slug } }: { params: { slug: string } }) {
   try {
-    const data = await prisma.hackathon.findMany({
+    const data = await prisma.hackathon.findFirst({
       include: {
         submissions: true,
-        participants: true,
+            participants: {
+            
+        },
       },
+      where: {slug},
     });
+
 
     return NextResponse.json(
       {
-        data: data,
+        data,
         status: 200,
-        message: "Hackathons retrieved successfully",
+        message: "Hackathon retrieved successfully",
       },
       { status: 200 }
     );
@@ -24,15 +28,18 @@ export async function GET(request: Request) {
     return NextResponse.json({
       data: null,
       status: 500,
-      message: "An error occurred couldn't retrieve hackathons",
+      message: "An error occurred couldn't retrieve hackathon",
     });
   }
 }
-export async function PATCH(request: Request) {
+export async function PATCH(request: Request,{slug}:{slug:string}) {
   const json = (await request.json()) as Hackathon;
-  const { title, ...rest } = json;
-  const created = await prisma.hackathon.create({
-    data: { ...rest, title, slug: Utils.slugify(title) },
+
+  const updated = await prisma.hackathon.update({
+    data: json ,
+      where: {
+        slug
+    }
   });
-  return NextResponse.json(created, { status: 201 });
+  return NextResponse.json(updated, { status: 200 });
 }

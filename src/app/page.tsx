@@ -6,7 +6,7 @@ import {
     useAddHackathonMutation,
     useGetHackathonsQuery,
 } from '@/state/services/hackathon-api';
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Link, Text } from '@chakra-ui/react';
 
 // import { Box, Flex } from '@chakra-ui/react';
 export default function Home() {
@@ -19,6 +19,7 @@ export default function Home() {
     //     console.log({ data: d });
     // });
     const { data, isLoading } = useGetHackathonsQuery();
+    const hackathons = data?.data;
     const [addHack, { data: newData, isLoading: isAdding }] =
         useAddHackathonMutation();
     // console.log({newData,isAdding});
@@ -31,7 +32,9 @@ export default function Home() {
                 {isLoading ? 'loading...' : <pre>{JSON.stringify(data,undefined,3)}</pre>}
             </Box>
           
-
+            <Link href={`/hackathon/${hackathons && hackathons[0].slug}`}>
+            Hackathon
+            </Link>
             <Button
                 onClick={() => {
                     addHack({

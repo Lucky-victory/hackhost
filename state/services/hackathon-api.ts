@@ -7,14 +7,14 @@ import { APIResponse } from '../types';
 export const HackHostApi = createApi({
   reducerPath: "HackHostApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api/hackathon",
+    baseUrl: "/api/",
   }),
     tagTypes: ["Hackathons"],
   
   endpoints: (builder) => ({
     getHackathons: builder.query<Partial<APIResponse<Hackathon[]>>, void>({
       query: () => ({
-        url: `/`,
+        url: `hackathon/`,
       }),
       providesTags: (result) =>
         // is result available?
@@ -30,25 +30,29 @@ export const HackHostApi = createApi({
           : // an error occurred, but we still want to refetch this query when `{ type: 'Hackathons', id: 'LIST' }` is invalidated
             [{ type: "Hackathons", id: "LIST" }],
     }),
-    addHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
-      query: (data) => ({
-        url: `/`,
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: [{ type: "Hackathons" as const, id: "LIST" }],
-    }),
     getHackathon: builder.query<Partial<APIResponse<Hackathon>>, string>({
-      query: (slug) => `/${slug}`,
-      providesTags: (result, error, slug) => [
-        { type: "Hackathons" as const, id: slug },
-      ],
-    }),
+        query: (slug) => `hackathon/${slug}`,
+        providesTags: (result, error, slug) => {
+            console.log('rtk query error',error);
+            console.log('rtk query result',result);
+            
+            return [
+                { type: "Hackathons" as const, id: slug },
+            ]}
+        }),
+        addHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
+          query: (data) => ({
+            url: `hackathon/`,
+            method: "POST",
+            body: data,
+          }),
+          invalidatesTags: [{ type: "Hackathons" as const, id: "LIST" }],
+        }),
     updateHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
       query(data) {
         const { slug, ...body } = data;
         return {
-          url: `/${slug}`,
+          url: `hackathon/${slug}`,
           method: "PATCH",
           body,
         };
