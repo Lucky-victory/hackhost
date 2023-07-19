@@ -8,6 +8,7 @@ const inter = Poppins({
     weight: ['300', '400', '500', '700'],
     subsets: ['latin'],
 });
+export const revalidate = 2;
 
 export const metadata: Metadata = {
     title: 'Create Next App',

@@ -11,23 +11,24 @@ datasource db {
 }
 
 model User {
-  id           String                 @id @default(uuid())
-  name         String
-  email        String                 @unique
-  password     String?
-  createdAt    DateTime               @default(now()) @map("created_at")
-  updatedAt    DateTime               @updatedAt @map("updated_at")
-  bio          String?
-  jobTitle     String?                @map("job_title")
-  interest     String?
-  skills       String?
-  avatar       String?
-  role         USER_ROLE              @default(BASIC)
-  username     String?
-  location     String?
-  submissions  Submission[]
-  hackathons   Hackathon[]
-  participants HackathonParticipant[]
+  id                String                 @id @default(uuid())
+  name              String
+  email             String                 @unique
+  password          String?
+  createdAt         DateTime               @default(now()) @map("created_at")
+  updatedAt         DateTime               @updatedAt @map("updated_at")
+  bio               String?
+  jobTitle          String?                @map("job_title")
+  interest          String?
+  skills            String?
+  avatar            String?
+  role              USER_ROLE              @default(BASIC)
+  username          String?
+  location          String?
+  submissions       Submission[]
+  hackathons        Hackathon[]
+  participants      HackathonParticipant[]
+  HackathonCategory HackathonCategory[]
 
   @@index([email, jobTitle, skills])
   @@map("users")
@@ -43,8 +44,8 @@ model Submission {
   fileUrl       String    @map("file_url")
   user          User      @relation(fields: [userId], references: [id])
   slug          String    @unique
-  category      String
-  tools         Json
+  category      String?
+  tools         Json?
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   userId        String    @map("user_id")
@@ -56,20 +57,21 @@ model Submission {
 }
 
 model Hackathon {
-  id           String                 @id @default(uuid())
-  title        String
-  description  String
-  startDate    DateTime               @map("start_date")
-  endDate      DateTime               @map("end_date")
-  host         User                   @relation(fields: [userId], references: [id])
-  slug         String                 @unique
-  category     HackathonCategory[]
-  createdAt    DateTime               @default(now()) @map("created_at")
-  updatedAt    DateTime               @updatedAt @map("updated_at")
-  userId       String                 @map("user_id")
-  totalPrice   Int                    @map("total_price")
-  participants HackathonParticipant[]
-  submissions  Submission[]
+  id                  String                 @id @default(uuid())
+  title               String
+  description         String
+  startDate           DateTime               @map("start_date")
+  endDate             DateTime               @map("end_date")
+  user                User                   @relation(fields: [userId], references: [id])
+  slug                String                 @unique
+  category            HackathonCategory?     @relation(fields: [hackathonCategoryId], references: [id])
+  createdAt           DateTime               @default(now()) @map("created_at")
+  updatedAt           DateTime               @updatedAt @map("updated_at")
+  userId              String                 @map("user_id")
+  totalPrice          Int                    @map("total_price")
+  participants        HackathonParticipant[]
+  submissions         Submission[]
+  hackathonCategoryId String?                @map("hackathon_category_id")
 
   @@index([title, description, slug])
   @@map("hackathons")
@@ -79,6 +81,8 @@ model HackathonCategory {
   id         String      @id @default(uuid())
   title      String
   hackathons Hackathon[]
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String      @map("user_id")
 
   @@index([title])
   @@map("hackathon_categories")
