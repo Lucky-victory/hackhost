@@ -33,8 +33,7 @@ export const HackHostApi = createApi({
     getHackathon: builder.query<Partial<APIResponse<Hackathon>>, string>({
         query: (slug) => `hackathon/${slug}`,
         providesTags: (result, error, slug) => {
-            console.log('rtk query error',error);
-            console.log('rtk query result',result);
+        
             
             return [
                 { type: "Hackathons" as const, id: slug },

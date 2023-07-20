@@ -34,6 +34,7 @@ export interface Submission {
   userId: string;
   hackathons: Hackathon;
   hackathonId: string;
+  isWinner?:boolean
 }
 
 export interface Hackathon {
@@ -44,7 +45,7 @@ export interface Hackathon {
   startDate: Date;
   endDate: Date;
   slug: string;
-//   category?: HackathonCategory|null;
+  category?: string|string[];
   createdAt: Date;
   updatedAt: Date;
   userId: string;
@@ -53,19 +54,18 @@ export interface Hackathon {
   currencyCode?: string | null;
 //   participants?: HackathonParticipant[];
 //   submissions?: Submission[];
-  hackathonCategoryId?: string | null;
   type?: HACKATHON_TYPE;
   status?: HACKATHON_STATUS;
-//   judges?: HackathonJudges[];
+  judges?: HackathonJudges[];
 }
-
+export type NewHackathon=Pick<Hackathon,'currency'|'currencyCode'|'description'|'price'|'startDate'|'status'|'subtitle'|'title'|'type'|'userId'|'endDate'|'judges'>
 export interface HackathonJudges {
   id: string;
   hackathonId: string;
   name: string;
   bio?: string | null;
   avatar?: string | null;
-  Hackathon: Hackathon;
+  
 }
 
 export interface HackathonCategory {
