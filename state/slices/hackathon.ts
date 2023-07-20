@@ -1,19 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { StateStatus } from '../types';
+import { createSlice } from "@reduxjs/toolkit";
+import { StateStatus } from "../types";
 
 const initialState = {
-    data: [],
-    status: 'loading' as StateStatus,
-    error: null,
+  data: [],
+  status: "loading" as StateStatus,
+  error: null,
 };
 export const hackathonSlice = createSlice({
-    name: 'hackathon',
-    initialState,
-    reducers: {
-        fetc() {},
-    },
-    
-
+  name: "hackathon",
+  initialState,
+  reducers: {
+    fetc() {},
+  },
 });
 
 export const { fetc } = hackathonSlice.actions;

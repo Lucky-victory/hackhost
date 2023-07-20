@@ -2,19 +2,18 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Hackathon } from "@/const";
 
-
-export async function GET(request: Request, { params: { slug } }: { params: { slug: string } }) {
+export async function GET(
+  request: Request,
+  { params: { slug } }: { params: { slug: string } },
+) {
   try {
     const data = await prisma.hackathon.findFirst({
       include: {
         submissions: true,
-            participants: {
-            
-        },
+        participants: {},
       },
-      where: {slug},
+      where: { slug },
     });
-
 
     return NextResponse.json(
       {
@@ -22,7 +21,7 @@ export async function GET(request: Request, { params: { slug } }: { params: { sl
         status: 200,
         message: "Hackathon retrieved successfully",
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     return NextResponse.json({
@@ -32,14 +31,14 @@ export async function GET(request: Request, { params: { slug } }: { params: { sl
     });
   }
 }
-export async function PATCH(request: Request,{slug}:{slug:string}) {
+export async function PATCH(request: Request, { slug }: { slug: string }) {
   const json = (await request.json()) as Hackathon;
 
   const updated = await prisma.hackathon.update({
-    data: json ,
-      where: {
-        slug
-    }
+    data: json,
+    where: {
+      slug,
+    },
   });
   return NextResponse.json(updated, { status: 200 });
 }

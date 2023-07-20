@@ -1,16 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import { setupListeners } from '@reduxjs/toolkit/query';
+import { setupListeners } from "@reduxjs/toolkit/query";
 
-import { HackHostApi } from '@/state/services/hackathon-api';
+import { HackHostApi } from "@/state/services/hackathon-api";
 
 export const store = configureStore({
-    reducer: {
-        [HackHostApi.reducerPath]: HackHostApi.reducer,
-    },
+  reducer: {
+    [HackHostApi.reducerPath]: HackHostApi.reducer,
+  },
 
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(HackHostApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(HackHostApi.middleware),
 });
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors

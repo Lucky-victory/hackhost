@@ -5,11 +5,5 @@ import { Box } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 
 export default function HackathonPage() {
- 
-
-  return (
-    <Box p={"1rem"}>
-     Home page
-    </Box>
-  );
+  return <Box p={"1rem"}>Home page</Box>;
 }

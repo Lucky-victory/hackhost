@@ -1,6 +1,6 @@
-import { Hackathon } from '@/const';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { APIResponse } from '../types';
+import { Hackathon } from "@/const";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { APIResponse } from "../types";
 
 // Define a service using a base URL and expected endpoints
 
@@ -9,8 +9,8 @@ export const HackHostApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "/api/",
   }),
-    tagTypes: ["Hackathons"],
-  
+  tagTypes: ["Hackathons"],
+
   endpoints: (builder) => ({
     getHackathons: builder.query<Partial<APIResponse<Hackathon[]>>, void>({
       query: () => ({
@@ -31,22 +31,19 @@ export const HackHostApi = createApi({
             [{ type: "Hackathons", id: "LIST" }],
     }),
     getHackathon: builder.query<Partial<APIResponse<Hackathon>>, string>({
-        query: (slug) => `hackathon/${slug}`,
-        providesTags: (result, error, slug) => {
-        
-            
-            return [
-                { type: "Hackathons" as const, id: slug },
-            ]}
-        }),
-        addHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
-          query: (data) => ({
-            url: `hackathon/`,
-            method: "POST",
-            body: data,
-          }),
-          invalidatesTags: [{ type: "Hackathons" as const, id: "LIST" }],
-        }),
+      query: (slug) => `hackathon/${slug}`,
+      providesTags: (result, error, slug) => {
+        return [{ type: "Hackathons" as const, id: slug }];
+      },
+    }),
+    addHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
+      query: (data) => ({
+        url: `hackathon/`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Hackathons" as const, id: "LIST" }],
+    }),
     updateHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
       query(data) {
         const { slug, ...body } = data;
@@ -56,12 +53,19 @@ export const HackHostApi = createApi({
           body,
         };
       },
-     
-      invalidatesTags: (result, error, { slug }) => [{ type: "Hackathons", id:slug }],
+
+      invalidatesTags: (result, error, { slug }) => [
+        { type: "Hackathons", id: slug },
+      ],
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useAddHackathonMutation, useGetHackathonsQuery,useGetHackathonQuery,useUpdateHackathonMutation } = HackHostApi;
+export const {
+  useAddHackathonMutation,
+  useGetHackathonsQuery,
+  useGetHackathonQuery,
+  useUpdateHackathonMutation,
+} = HackHostApi;
