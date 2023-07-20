@@ -45,7 +45,7 @@ export interface Hackathon {
   startDate: Date;
   endDate: Date;
   slug: string;
-  category?: string|string[];
+  category?: HackathonCategory[];
   createdAt: Date;
   updatedAt: Date;
   userId: string;

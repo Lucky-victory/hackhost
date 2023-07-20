@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import NextLink from 'next/link'
 import styles from '@/src/app/styles/home.module.css';
 
 import {
@@ -40,33 +41,17 @@ export default function Home() {
                   <Text>App logo</Text>
                 </Box>
 
-                <Link href={""}>Host a hackathon</Link>
+                <Link href={"#"}>Host a hackathon</Link>
               </Flex>
             </Box>
             <Box>
-              <Link
-                href={"/hackathons"}
-                bg={"transparent"}
-                color={"purple.500"}
-                fontWeight={"medium"}
-                _hover={{ bg: "purple.100" }}
-                mr={4}
-                p={"0.5rem 1rem"}
-                borderRadius={"base"}
-              >
-                Log in
-              </Link>
-              <Link
-                href={"/"}
-                color={"white"}
-                bg={"purple.500"}
-                fontWeight={"medium"}
-                _hover={{ bg: "purple.700" }}
-                borderRadius={"base"}
-                p={"0.5rem 1rem"}
-              >
-                Sign up
-              </Link>
+            <Button borderRadius={'base'} as={NextLink} href={'/hackathons'} colorScheme='purple' mr={4} variant={'ghost'}>
+                Log In
+              </Button>
+             
+              <Button borderRadius={'base'} as={NextLink} href={'/hackathons'} colorScheme='purple'>
+                Sign Up
+              </Button>
             </Box>
           </Flex>
           <Flex>

@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const data = await prisma.hackathon.findMany({
       
       include: {
-        submissions: true, participants: true
+        projects: true, participants: true
       }
     })
     
@@ -35,10 +35,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     const json = await request.json() as Hackathon
     const { title,...rest} = json;
-    const created = await prisma.hackathon.create({
-      data: {...rest,title,
-        slug: Utils.slugify(title),
-      },
-    });
-    return NextResponse.json(created, { status: 201 });
+    // const created = await prisma.hackathon.create({
+    //   data: {...rest,title,
+    //     slug: Utils.slugify(title),
+    //   },
+    // });
+    // return NextResponse.json(created, { status: 201 });
 }
