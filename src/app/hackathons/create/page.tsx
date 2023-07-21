@@ -65,7 +65,7 @@ const CreatePage = () => {
       | HTMLInputElement
       | HTMLTextAreaElement
       | HTMLButtonElement;
-    setFormFields((prev) => ({ ...prev, [name]: value }));
+    setFormFields((prev) => ({ ...prev, [name]:name==='price'? +value:value }));
   }
   function handleDatePicker(
     evt: ChangeEvent<HTMLDivElement>,
