@@ -37,7 +37,7 @@ export default function Home() {
   console.log({ isLoading, data });
   return (
     <main className={styles.main}>
-      <Box p={"4"} pt={16}>
+      <Box p={"4"} pt={'28'}>
         <Flex
           boxShadow={"md"}
           className={styles.navbar}
@@ -50,6 +50,8 @@ export default function Home() {
           left={0}
           zIndex={"banner"}
           bg={"whiteAlpha.900"}
+          backdropBlur={'lg'}
+          
         >
           <Box>
             <Flex gap={8}>
@@ -60,13 +62,13 @@ export default function Home() {
               <Link href={"#"}>Host a hackathon</Link>
             </Flex>
           </Box>
-          <Box>
+          <Box align={'center'} as={Flex} wrap={'wrap'} gap={4}>
             <Button
               borderRadius={"base"}
               as={NextLink}
               href={"/hackathons"}
               colorScheme="purple"
-              mr={4}
+              
               variant={"ghost"}
             >
               Log In
@@ -86,12 +88,11 @@ export default function Home() {
           bg={"whiteAlpha.800"}
           mx={"auto"}
           maxW={"var(--page-width)"}
-          p={{ lg: "1xl", sm: 4 }}
           mt={6}
           w={"100%"}
-          pt={6}
-          minH={{ lg: "400", base: 600 }}
-          bgPos={"center"}
+          
+          minH={{ lg: "400", base: 450 }}
+          bgPos={"bottom center"}
           bgSize={"contain"}
           bgRepeat={"no-repeat"}
           pos={"relative"}
@@ -100,8 +101,10 @@ export default function Home() {
             base: "/images/mobile-illustration-morning.png",
           }}
         >
-          <Box pt={4} maxW={{ lg: 500, base: 450 }}>
-            <Heading>The home for hackathons</Heading>
+          <Box 
+          p={{ lg: "1xl", base: 4 }}
+           maxW={{ lg: 500, base: 500 }}>
+            <Heading fontSize={{lg:'4xl',base:'3xl'}}>The home for hackathons</Heading>
             <Text
               my={6}
               fontSize={{ lg: "2xl", base: "md" }}
@@ -143,7 +146,7 @@ export default function Home() {
           </Text>
         )} */}
 
-        <Box my={8}  bg={'whiteAlpha.800'} px={4} py={6}>
+        <Box my={8}  bg={'whiteAlpha.800'} px={{lg:4,base:2}} py={6}>
           <Flex align={'center'}>
 
 <Heading mb={6}>Hackathons For You</Heading>
