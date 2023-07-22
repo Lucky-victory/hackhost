@@ -1,7 +1,13 @@
 "use client";
 import { NewHackathon, NewHackathonJudges } from "@/const";
 import { useAddHackathonMutation } from "@/state/services/hackathon-api";
-import {
+import { Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
   Box,
   Button,
   Card,
@@ -23,6 +29,7 @@ import {
   Textarea,
   Wrap,
   WrapItem,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   ChangeEvent,
@@ -37,10 +44,13 @@ import {
   useState,
 } from "react";
 import DatePicker from "react-datepicker";
-import { FaArrowDown, FaCamera, FaChevronDown, FaImage, FaPlus, FaTrash } from "react-icons/fa";
+import {  MdExpandMore, MdPhoto, MdAdd,  MdClose, MdDelete } from "react-icons/md";
 
 const currencies = ["USD", "GBP", "EUR", "INR", "NGN"];
 const CreatePage = () => {
+  const [isDrawerOpen,setIsDrawerOpen]=useState<boolean>(true)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const drawerBtnRef = useRef<HTMLButtonElement|null>(null)
   const fileInputRefs = useRef<HTMLInputElement[]|null[]>([]);
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDateType, setSelectedDateType] = useState<"start" | "end">(
@@ -121,8 +131,10 @@ newJudges[index][name as keyof typeof newJudges[typeof index]]=value;
 setFormFields((prev)=>({...prev,judges:newJudges}))
 }
 function handlePhotoSelect(index:number){
+  console.log({inp:
+    fileInputRefs.current[index]});
+  
 fileInputRefs.current[index]?.click();
-
 }
 
 function handleFileInputChange(evt:ChangeEvent<HTMLInputElement>,index:number){
@@ -130,8 +142,6 @@ console.log(evt.target.files,{index});
 const file=(evt.target.files && evt.target.files[0]) as File
 const {judges}=formFields;
 const newJudges=[...judges];
-
-
 const reader = new FileReader();
 reader.onload = function (e) {
   
@@ -141,13 +151,17 @@ reader.onload = function (e) {
 reader.readAsDataURL(file);
 
 }
+
+function handleDrawerClose(){
+
+}
   return (
     <Box className="page" pb={12}>
 
       <FormControl  p={8} as={"form"} onSubmit={(evt) => handleFormSubmit(evt)}>
         <HStack bg={'inherit'} wrap={'wrap'} divider={<StackDivider/>}  justify={'flex-end'} w={'full'} mb={8}>
 
-        <Button type="submit" colorScheme="purple" variant={'ghost'} fontWeight={'medium'}>Preview </Button>
+        <Button ref={drawerBtnRef} onClick={onOpen} colorScheme="purple" variant={'ghost'} fontWeight={'medium'}>Preview </Button>
         <Button type="submit" colorScheme="purple" variant={'outline'} fontWeight={'medium'}>Save as Draft </Button>
         <Button type="submit" colorScheme="purple" >Publish</Button>
         </HStack>
@@ -227,7 +241,7 @@ reader.readAsDataURL(file);
 
               {formFields.currency}
         
-            <FaChevronDown/>
+            <MdExpandMore/>
                 </Flex>
 
             </MenuButton>
@@ -339,16 +353,18 @@ Bio:
 Photo:
     </FormLabel>
 {judge.avatar ?
-<Box className="my-box" pos={'relative'} w={'5.5rem'} h={'5.5rem'} borderRadius={'full'}>
-<Flex align={'center'} justify={'center'} onClick={()=>handlePhotoSelect(index)} borderRadius={'inherit'} 
-  top={0} right={-2} pos={'absolute'} zIndex={1} bg={'blackAlpha.600'}>
-<IconButton  color={'red.400'} bg={'transparent!important'} aria-label="camera icon" icon={<FaTrash size={18} />}/>
-</Flex>
+<Box border={'1px'} borderColor={'gray.400'} boxShadow={'lg'} className="my-box" pos={'relative'} w={'5.5rem'} h={'5.5rem'} borderRadius={'full'}>
+<Box
+  top={0} right={-2} pos={'absolute'} zIndex={1}>
+<Button  w={4} h={8} p={0}  onClick={()=>handlePhotoSelect(index)} color={'whiteAlpha.900'} borderRadius={'full'} bg={'blackAlpha.700 !important'} aria-label="camera icon" >
+<MdClose size={18} />
+</Button>
+</Box>
     <Image pos={'relative'} borderRadius={'inherit'} h={'full'} w={'full'}  src={judge.avatar as string} alt=''  objectFit={'cover'}/>
 </Box>
 
 :<Box>
-    <Button  colorScheme="purple"><FaImage/><Text ml={2} as='span' display={'inline-block'} onClick={()=>handlePhotoSelect(index)}> Choose Photo</Text>  </Button>
+    <Button  colorScheme="purple"><MdPhoto/><Text ml={2} as='span' display={'inline-block'} onClick={()=>handlePhotoSelect(index)}> Choose Photo</Text>  </Button>
 <Input accept="image/*" max={1} onChange={(e:ChangeEvent<HTMLInputElement>)=>handleFileInputChange(e,index)} ref={el=>fileInputRefs.current[index]=el} id="j-photo" type={'file'} hidden />
 </Box>
 }
@@ -358,7 +374,7 @@ Photo:
     {!(index===0) &&
 <Flex h={16} align={'flex-end'} >
 
-    <IconButton onClick={()=>handleRemoveJudge(index)} aria-label="danger" colorScheme="red" icon={<FaTrash/>}>
+    <IconButton onClick={()=>handleRemoveJudge(index)} aria-label="danger" colorScheme="red" icon={<MdDelete/>}>
        </IconButton>
     
 </Flex>
@@ -367,13 +383,38 @@ Photo:
     })}
 
     <Box mt={3}>
-      <Button onClick={handleAddMoreJudge} variant={'ghost'} colorScheme="purple" fontWeight={'medium'}><FaPlus/><Text ml={2} as='span' display={'inline-block'}>
+      <Button onClick={handleAddMoreJudge} variant={'ghost'} colorScheme="purple" fontWeight={'medium'}><MdAdd/><Text ml={2} as='span' display={'inline-block'}>
       Add Another</Text>  </Button>
     </Box>
   </CardBody>
 </Card>
       </FormControl>
+
+
+
+      <Drawer isOpen ={isOpen}  finalFocusRef={drawerBtnRef} size={'lg'}
+        onClose={onClose}>
+        <DrawerOverlay/>
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Create your account</DrawerHeader>
+
+          <DrawerBody>
+            <Input placeholder='Type here...' />
+          </DrawerBody>
+
+          <DrawerFooter>
+            <Button variant='outline' mr={3} onClick={onClose} >
+              Cancel
+            </Button>
+            <Button colorScheme='blue'>Save</Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </Box>
+
+
+
   );
 };
 
