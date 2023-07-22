@@ -27,6 +27,7 @@ import { Link } from "@chakra-ui/next-js";
 import { MdDoDisturb } from "react-icons/md";
 import HackathonList from "./components/HackathonList";
 import { Hackathon } from "@/const";
+import Footer from "./components/Footer";
 // import { Box, Flex } from '@chakra-ui/react';
 export default function Home() {
   const { data, isLoading } = useGetHackathonsQuery();
@@ -157,6 +158,8 @@ export default function Home() {
                   
         </Box>
       </Box>
+
+      <Footer/>
     </main>
   );
 }
