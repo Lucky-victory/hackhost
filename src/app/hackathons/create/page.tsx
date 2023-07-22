@@ -12,6 +12,7 @@ import {
   HStack,
   Hide,
   IconButton,
+  Image,
   Input,
   Menu,
   MenuButton,
@@ -32,13 +33,15 @@ import {
   ReactNode,
   forwardRef,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import DatePicker from "react-datepicker";
-import { FaArrowDown, FaChevronDown, FaImage, FaPlus, FaTrash } from "react-icons/fa";
-// import { second } from 'first'
+import { FaArrowDown, FaCamera, FaChevronDown, FaImage, FaPlus, FaTrash } from "react-icons/fa";
+
 const currencies = ["USD", "GBP", "EUR", "INR", "NGN"];
 const CreatePage = () => {
+  const fileInputRefs = useRef<HTMLInputElement[]|null[]>([]);
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDateType, setSelectedDateType] = useState<"start" | "end">(
     "start",
@@ -117,7 +120,27 @@ newJudges[index][name as keyof typeof newJudges[typeof index]]=value;
   
 setFormFields((prev)=>({...prev,judges:newJudges}))
 }
+function handlePhotoSelect(index:number){
+fileInputRefs.current[index]?.click();
 
+}
+
+function handleFileInputChange(evt:ChangeEvent<HTMLInputElement>,index:number){
+console.log(evt.target.files,{index});
+const file=(evt.target.files && evt.target.files[0]) as File
+const {judges}=formFields;
+const newJudges=[...judges];
+
+
+const reader = new FileReader();
+reader.onload = function (e) {
+  
+  newJudges[index]['avatar']=e.target?.result as string
+  setFormFields((prev)=>({...prev,judges:newJudges}))
+};
+reader.readAsDataURL(file);
+
+}
   return (
     <Box className="page" pb={12}>
 
@@ -126,7 +149,7 @@ setFormFields((prev)=>({...prev,judges:newJudges}))
 
         <Button type="submit" colorScheme="purple" variant={'ghost'} fontWeight={'medium'}>Preview </Button>
         <Button type="submit" colorScheme="purple" variant={'outline'} fontWeight={'medium'}>Save as Draft </Button>
-        <Button type="submit" colorScheme="purple" >Published </Button>
+        <Button type="submit" colorScheme="purple" >Publish</Button>
         </HStack>
         <Card mb={8}>
           <CardBody>
@@ -153,18 +176,22 @@ setFormFields((prev)=>({...prev,judges:newJudges}))
                 </Text>
               </Text>
             </FormLabel>
-            <Flex align="center" justify={"space-between"}>
+            <Flex align="center" justify={"space-between"} wrap={'wrap'} gap={3}>
               <Text fontSize={"smaller"}>
                 Give details about the hackathon, instructions, rules etc.
               </Text>
-              <Text fontSize={"xs"} as={"em"}>
+            </Flex>
+              <Box mt={6}>
+              <Text fontSize={"xs"} color={'gray.500'} textAlign={'right'}>
                 markdown supported
               </Text>
-            </Flex>
+
             <Textarea
-              mt={6}
-              resize={"none"}
-              h={250}
+            mt={2}
+              resize={'vertical'}
+              h={220}
+              minH={150}
+              maxH={350}
               id="desc"
               value={formFields.description} _focus={{borderColor:'purple.600'}}
               name="description"
@@ -173,12 +200,13 @@ setFormFields((prev)=>({...prev,judges:newJudges}))
               isRequired
               onChange={handleInputChange}
             ></Textarea>
+              </Box>
           </CardBody>
         </Card>
 <Card mb={8}>
     <CardBody>
   
-        <HStack divider={<StackDivider/>} my={6} gap={6}>
+        <HStack wrap={'wrap'} divider={<StackDivider/>} my={6} gap={6}>
             <Box>
 <FormLabel htmlFor="currency-menu">Currency:</FormLabel>
           <Menu id="currency-menu">
@@ -223,7 +251,7 @@ Total Price:<Text as={'span'} color="red.400" fontSize={'sm'}>*</Text>
 </FormLabel>
           <Input id="price"
             type="number"
-            value={formFields.price}
+            value={formFields.price===0?'':formFields.price}
             onChange={handleInputChange}
             name="price"
             placeholder="30000" _focus={{borderColor:'purple.600'}}
@@ -290,7 +318,7 @@ Total Price:<Text as={'span'} color="red.400" fontSize={'sm'}>*</Text>
 
     {formFields.judges?.map((judge,index)=>{
 
-    return  <HStack align={'center'} my={6} key={`judge-${index}`} divider={<StackDivider/>} gap={4}>
+    return  <HStack align={'center'} my={6} key={`judge-${index}`} divider={<StackDivider/>} gap={4} wrap={'wrap'}>
 <Box>
 
     <FormLabel htmlFor="j-name">
@@ -310,8 +338,20 @@ Bio:
     <FormLabel htmlFor="j-photo">
 Photo:
     </FormLabel>
-    <Button  colorScheme="purple"><FaImage/><Text ml={2} as='span' display={'inline-block'}> Choose Photo</Text>  </Button>
-<Input id="j-photo" type={'file'} hidden/>
+{judge.avatar ?
+<Box className="my-box" pos={'relative'} w={'5.5rem'} h={'5.5rem'} borderRadius={'full'}>
+<Flex align={'center'} justify={'center'} onClick={()=>handlePhotoSelect(index)} borderRadius={'inherit'} 
+  top={0} right={-2} pos={'absolute'} zIndex={1} bg={'blackAlpha.600'}>
+<IconButton  color={'red.400'} bg={'transparent!important'} aria-label="camera icon" icon={<FaTrash size={18} />}/>
+</Flex>
+    <Image pos={'relative'} borderRadius={'inherit'} h={'full'} w={'full'}  src={judge.avatar as string} alt=''  objectFit={'cover'}/>
+</Box>
+
+:<Box>
+    <Button  colorScheme="purple"><FaImage/><Text ml={2} as='span' display={'inline-block'} onClick={()=>handlePhotoSelect(index)}> Choose Photo</Text>  </Button>
+<Input accept="image/*" max={1} onChange={(e:ChangeEvent<HTMLInputElement>)=>handleFileInputChange(e,index)} ref={el=>fileInputRefs.current[index]=el} id="j-photo" type={'file'} hidden />
+</Box>
+}
 
     </Box>
     
