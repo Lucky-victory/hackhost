@@ -14,7 +14,7 @@ export const HackHostApi = createApi({
   endpoints: (builder) => ({
     getHackathons: builder.query<Partial<APIResponse<Hackathon[]>>, void>({
       query: () => ({
-        url: `hackathon/`,
+        url: `hackathons/`,
       }),
       providesTags: (result) =>
         // is result available?
@@ -38,7 +38,7 @@ export const HackHostApi = createApi({
     }),
     addHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
       query: (data) => ({
-        url: `hackathon/`,
+        url: `hackathons/`,
         method: "POST",
         body: data,
       }),

@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import NextImage from "next/image";
 import NextLink from "next/link";
 import styles from "@/src/app/styles/home.module.css";
 
@@ -7,8 +7,26 @@ import {
   useAddHackathonMutation,
   useGetHackathonsQuery,
 } from "@/state/services/hackathon-api";
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Tag,
+  TagLabel,
+  Text,
+  Image,
+  LinkBox,
+  LinkOverlay,
+  WrapItem,
+  Wrap,
+  HStack,
+} from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
+import { MdDoDisturb } from "react-icons/md";
+import HackathonList from "./components/HackathonList";
+import { Hackathon } from "@/const";
 // import { Box, Flex } from '@chakra-ui/react';
 export default function Home() {
   const { data, isLoading } = useGetHackathonsQuery();
@@ -31,7 +49,7 @@ export default function Home() {
           top={0}
           left={0}
           zIndex={"banner"}
-          bg={"white"}
+          bg={"whiteAlpha.900"}
         >
           <Box>
             <Flex gap={8}>
@@ -64,18 +82,42 @@ export default function Home() {
             </Button>
           </Box>
         </Flex>
-        <Flex>
-          <Box pt={6} maxW={500}>
+        <Flex
+          bg={"whiteAlpha.800"}
+          mx={"auto"}
+          maxW={"var(--page-width)"}
+          p={{ lg: "1xl", sm: 4 }}
+          mt={6}
+          w={"100%"}
+          pt={6}
+          minH={{ lg: "400", base: 600 }}
+          bgPos={"center"}
+          bgSize={"contain"}
+          bgRepeat={"no-repeat"}
+          pos={"relative"}
+          bgImage={{
+            lg: "url(/images/desktop-illustration-morning.png)",
+            base: "/images/mobile-illustration-morning.png",
+          }}
+        >
+          <Box pt={4} maxW={{ lg: 500, base: 450 }}>
             <Heading>The home for hackathons</Heading>
-            <Text my={6}>
+            <Text
+              my={6}
+              fontSize={{ lg: "2xl", base: "md" }}
+              color={"gray.500"}
+            >
               Build products, practice skills, learn technologies, win prizes,
               and grow your network.
             </Text>
-            <Button borderRadius={"base"} size={"lg"} colorScheme="purple">
+            <Button
+              borderRadius={"base"}
+              size={{ lg: "lg", base: "md", md: "lg" }}
+              colorScheme="purple"
+            >
               Join the community
             </Button>
           </Box>
-          <Box></Box>
         </Flex>
 
         {/* <Button
@@ -100,6 +142,13 @@ export default function Home() {
             {newData?.title} {newData?.id}
           </Text>
         )} */}
+
+        <Box my={8}  bg={'whiteAlpha.800'} px={4} py={6}>
+<Heading mb={6}>Hackathons For You</Heading>
+         
+<HackathonList hackathons={hackathons as Hackathon[]} loading={isLoading} />
+                  
+        </Box>
       </Box>
     </main>
   );
