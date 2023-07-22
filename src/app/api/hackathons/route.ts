@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Hackathon } from "@/const";
+import { Hackathon, NewHackathon } from "@/const";
 import { Utils } from "@/lib/utils";
 
 export async function GET(request: Request) {
@@ -29,12 +29,13 @@ export async function GET(request: Request) {
   }
 }
 export async function POST(request: Request) {
-  const json = (await request.json()) as Hackathon;
+  const json = (await request.json()) as NewHackathon;
   const { title, ...rest } = json;
-  // const created = await prisma.hackathon.create({
-  //   data: {...rest,title,
-  //     slug: Utils.slugify(title),
-  //   },
-  // });
-  // return NextResponse.json(created, { status: 201 });
+  const created = await prisma.hackathon.create({
+    data: {...rest,title,
+      slug: Utils.slugify(title),
+    },
+    
+  })
+  return NextResponse.json(created, { status: 201 });
 }

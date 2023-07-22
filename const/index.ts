@@ -36,7 +36,7 @@ export interface Submission {
   isWinner?: boolean;
 }
 
-export interface Hackathon<T = unknown> {
+export interface Hackathon {
   id: string;
   title: string;
   subtitle?: string | null;
@@ -55,10 +55,10 @@ export interface Hackathon<T = unknown> {
   //   submissions?: Submission[];
   type?: HACKATHON_TYPE;
   status?: HACKATHON_STATUS;
-  judges: T[];
+  judges: HackathonJudges[];
 }
 export type NewHackathon = Pick<
-  Hackathon<NewHackathonJudges>,
+  Hackathon,
   | "currency"
   | "currencyCode"
   | "description"
@@ -70,8 +70,7 @@ export type NewHackathon = Pick<
   | "type"
   | "userId"
   | "endDate"
-  | "judges"
->;
+>
 export interface HackathonJudges {
   id: string;
   hackathonId: string;
