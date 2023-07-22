@@ -38,7 +38,7 @@ export default function Home() {
   console.log({ isLoading, data });
   return (
     <main className={styles.main}>
-      <Box p={"4"} pt={'28'}>
+      <Box p={{lg:"4",base:2}} mt={{lg:'calc(var(--navbar-height) - 2rem)',base:'calc(var(--navbar-height) - 1rem)'}}>
         <Flex
           boxShadow={"md"}
           className={styles.navbar}
@@ -50,9 +50,11 @@ export default function Home() {
           top={0}
           left={0}
           zIndex={"banner"}
-          bg={"whiteAlpha.900"}
-          backdropBlur={'lg'}
-          
+        backdropFilter={'auto'}
+          backdropBlur={'md'}
+          h={{base:'var(--navbar-height)'}}
+          overflow={'hidden'}
+          bg={'whiteAlpha.700'}
         >
           <Box>
             <Flex gap={8}>
@@ -123,29 +125,6 @@ export default function Home() {
             </Button>
           </Box>
         </Flex>
-
-        {/* <Button
-          onClick={() => {
-            addHack({
-              title: "Then Also Another hackathon by TiDB",
-              userId: "171cf73a-e9b6-4948-b00d-3ef4fa82bd8a",
-              description: "Another Hackathon Description",
-              currency: "USD",
-              price: 75000,
-              startDate: new Date(),
-              endDate: new Date(new Date().setDate(30)),
-            });
-          }}
-        >
-          add hack
-        </Button>
-        {isAdding ? (
-          "adding"
-        ) : (
-          <Text>
-            {newData?.title} {newData?.id}
-          </Text>
-        )} */}
 
         <Box   my={8}  bg={'whiteAlpha.800'} px={{lg:4,base:2}} py={6}>
           <Box maxW={860}>
