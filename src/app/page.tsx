@@ -144,7 +144,11 @@ export default function Home() {
         )} */}
 
         <Box my={8}  bg={'whiteAlpha.800'} px={4} py={6}>
+          <Flex align={'center'}>
+
 <Heading mb={6}>Hackathons For You</Heading>
+<Button href={'/hackathons'} colorScheme="purple" as={NextLink} variant={'ghost'}>See All</Button>
+          </Flex>
          
 <HackathonList hackathons={hackathons as Hackathon[]} loading={isLoading} />
                   
