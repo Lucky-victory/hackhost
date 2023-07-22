@@ -147,16 +147,21 @@ export default function Home() {
           </Text>
         )} */}
 
-        <Box my={8}  bg={'whiteAlpha.800'} px={{lg:4,base:2}} py={6}>
-          <Flex align={'center'}>
+        <Box   my={8}  bg={'whiteAlpha.800'} px={{lg:4,base:2}} py={6}>
+          <Box maxW={860}>
 
-<Heading mb={6}>Hackathons For You</Heading>
-<Button href={'/hackathons'} colorScheme="purple" as={NextLink} variant={'ghost'}>See All</Button>
+          <Flex  mb={{lg:6,base:4}} align={'center'} justify={'space-between'}>
+
+<Heading   
+fontSize={{lg:'4xl',base:'2xl'}} >Hackathons For You</Heading>
+<Button href={'/hackathons'} colorScheme="purple" as={NextLink} variant={'ghost'} bg={'transparent!important'}>See All</Button>
           </Flex>
          
 <HackathonList hackathons={hackathons as Hackathon[]} loading={isLoading} />
                   
         </Box>
+        </Box>
+
       </Box>
 
       <Footer/>
