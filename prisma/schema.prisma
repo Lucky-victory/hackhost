@@ -26,10 +26,11 @@ model User {
   role              USER_ROLE              @default(BASIC)
   username          String?
   location          String?
+  authType  USER_AUTH_TYPE @default(CREDENTIALS)
   projects          Project[]
   hackathon         Hackathon[]
   participants      HackathonParticipant[]
-  HackathonCategory HackathonCategory[]
+  HackathonTags HackathonTags[]
 
   @@index([email, jobTitle])
   @@map("users")
@@ -72,7 +73,7 @@ model Project {
   hackathon    Hackathon          @relation(fields: [hackathonId], references: [id])
   hackathonId   String             @map("hackathon_id")
   isWinner      Boolean            @default(false) @map("is_winner")
-
+status PROJECT_STATUS @default(DRAFT)
   @@index([title, description, slug])
   @@map("projects")
 }
@@ -95,7 +96,8 @@ model Hackathon {
   endDate      DateTime               @map("end_date")
   user         User                   @relation(fields: [userId], references: [id])
   slug         String                 @unique
-  category     HackathonCategory[]
+  
+  tags  HackathonTags[]
   createdAt    DateTime               @default(now()) @map("created_at")
   updatedAt    DateTime               @updatedAt @map("updated_at")
   userId       String                 @map("user_id")
@@ -104,8 +106,8 @@ model Hackathon {
   currencyCode String?                @map("currency_code")
   participants HackathonParticipant[]
   projects     Project[]
-  type         HACKATHON_TYPE?        @default(public)
-  status       HACKATHON_STATUS?      @default(draft)
+  type         HACKATHON_TYPE?        @default(PUBLIC)
+  status       HACKATHON_STATUS?      @default(DRAFT)
   judges       HackathonJudges[]
 
   @@index([title, description, slug,type,price,status])
@@ -123,7 +125,7 @@ model HackathonJudges {
   @@map("hackathon_judges")
 }
 
-model HackathonCategory {
+model HackathonTags {
   id         String      @id @default(uuid())
   name       String @unique
   createdAt  DateTime    @default(now()) @map("created_at")
@@ -155,13 +157,23 @@ enum USER_ROLE {
 }
 
 enum HACKATHON_STATUS {
-  published
-  ongoing
-  ended
-  draft
+  ONGOING
+  ENDED
+UPCOMING
+  PUBLISHED
+  DRAFT
+}
+enum PROJECT_STATUS {
+  PUBLISHED
+  DRAFT
 }
 
 enum HACKATHON_TYPE {
-  public
-  private
+  PUBLIC
+  PRIVATE
+}
+enum USER_AUTH_TYPE{
+CREDENTIALS
+GITHUB
+GOOGLE
 }

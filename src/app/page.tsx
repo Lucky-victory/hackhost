@@ -69,7 +69,7 @@ export default function Home() {
             <Button
               borderRadius={"base"}
               as={NextLink}
-              href={"/hackathons"}
+              href={"/api/auth/signin"}
               colorScheme="purple"
               
               variant={"ghost"}
@@ -80,7 +80,7 @@ export default function Home() {
             <Button
               borderRadius={"base"}
               as={NextLink}
-              href={"/hackathons"}
+              href={"/api/auth/signout"}
               colorScheme="purple"
             >
               Sign Up

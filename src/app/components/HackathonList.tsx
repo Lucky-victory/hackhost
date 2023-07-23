@@ -9,7 +9,7 @@ const HackathonList = ({hackathons =[],loading}:{hackathons:Hackathon[],loading:
         {loading ?
         <Stack>
 
-        {[0,0,0,0].map(()=><Skeleton h={200} fadeDuration={3} >
+        {[0,0,0,0].map(()=><Skeleton key={crypto.randomUUID()} h={200} fadeDuration={3} >
             
             </Skeleton>)}
         </Stack>

@@ -67,6 +67,7 @@ async function seedUsers(client, count = 4) {
 setup()
   .catch((err) => {
     console.log("Setup error", err);
+    
   })
   .finally(async () => {
     await client.$disconnect();
