@@ -221,12 +221,15 @@ export interface Hackathon {
   status?: HACKATHON_STATUS | null;
   tags?: HackathonTags[];
   judges?: HackathonJudges[];
-  subStatus?:HACKATHON_SUB_STATUS|null
+  subStatus?: HACKATHON_SUB_STATUS | null;
+  _count?: {
+    participants: number;
+  };
 }
 export interface HackathonCreate
   extends Omit<
     Hackathon,
-    "id" | "tags" | "judges" | "slug" | "createdAt" | "updatedAt"
+    "id" | "tags" | "judges" | "slug" | "createdAt" | "updatedAt" | "_count"
   > {
   judges: Pick<HackathonJudges, "avatar" | "bio" | "name">[];
   tags?: Pick<HackathonTags, "name">[];
@@ -265,14 +268,13 @@ export enum USER_ROLE {
 }
 
 export enum HACKATHON_STATUS {
- 
   PUBLISHED = "PUBLISHED",
   DRAFT = "DRAFT",
 }
 export enum HACKATHON_SUB_STATUS {
   ONGOING = "ONGOING",
   ENDED = "ENDED",
-  UPCOMING = "UPCOMING"
+  UPCOMING = "UPCOMING",
 }
 export enum PROJECT_STATUS {
   PUBLISHED = "PUBLISHED",

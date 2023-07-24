@@ -8,19 +8,18 @@ export async function GET(request: Request) {
     const data = await prisma.hackathon.findMany({
       where: {
         status: {
-          equals:'PUBLISHED',
-        },AND:{
-          subStatus:'ONGOING'
+          equals: "PUBLISHED",
+        },
+      },
 
-        }
-      
-      },
-      
       include: {
-        
-        participants:true
+        _count: {
+          select: {
+            participants: true,
+          },
+        },
       },
-    })
+    });
 
     return NextResponse.json(
       {

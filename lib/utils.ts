@@ -1,6 +1,12 @@
 import { Base64UUID } from "base64-uuid";
 import slugify from "slugify";
 import dotenv from "dotenv";
+import {
+  MdAttachMoney,
+  MdEuro,
+  MdCurrencyRupee,
+  MdCurrencyPound,
+} from "react-icons/md";
 dotenv.config();
 
 import { v4 as uuid } from "uuid";
@@ -28,6 +34,24 @@ export class Utils {
       isCredentials: authType === "CREDENTIALS",
     };
   }
+  static formatCurrency(amount: number = 0) {
+  
+   
+    return  (+amount).toLocaleString()
+    
+  }
+  static getCurrencySymbol(currency='USD'){
+    const currencyCodes = {
+      USD: '$',
+      EUR: '€',
+      GBP: '£',
+      INR: '₹',
+      NGN: '₦',
+    };
+return currencyCodes[currency as keyof typeof currencyCodes]
+
+  }
+  
 }
 export const envConfigs = {
   google: {

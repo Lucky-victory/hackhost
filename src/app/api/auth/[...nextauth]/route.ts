@@ -12,14 +12,14 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       // console.log({ user, account, profile, email, credentials });
-    
+
       if (account) {
-      const  existingUser = await prisma.user.findFirst({
+        const existingUser = await prisma.user.findFirst({
           where: {
             email: profile?.email,
-          }
+          },
         });
-        
+
         // if it's a new user create an account
         if (!existingUser) {
           let authType: keyof typeof USER_AUTH_TYPE;
@@ -35,13 +35,11 @@ export const authOptions: NextAuthOptions = {
             authType: authType,
           };
 
-           await prisma.user.create({
+          await prisma.user.create({
             data: newUser,
-           
           });
         }
-        return true
-        
+        return true;
       }
 
       return true;
@@ -65,43 +63,43 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const  existingUser = await prisma.user.findFirst({
+        const existingUser = await prisma.user.findFirst({
           where: {
             email: credentials?.email,
-          }
+          },
         });
-        
+
         // if it's a new user create an account
         if (!existingUser) {
-          const hashedPassword=await bcrypt.hash(credentials?.password as string,10)    
+          const hashedPassword = await bcrypt.hash(
+            credentials?.password as string,
+            10,
+          );
           const newUser: UserCreate = {
             name: credentials?.name as string,
             email: credentials?.email as string,
-        password:hashedPassword,
+            password: hashedPassword,
             role: USER_ROLE.BASIC,
-            authType: 'CREDENTIALS'
+            authType: "CREDENTIALS",
           };
 
-        const createdUser=   await prisma.user.create({
+          const createdUser = await prisma.user.create({
             data: newUser,
-           
           });
-          return createdUser
+          return createdUser;
         }
-// compare the password
-        const isValidPassword=await bcrypt.compare(credentials?.password as string, existingUser.password as string);
-        if(!isValidPassword){
-        // Return null if password does not match
+        // compare the password
+        const isValidPassword = await bcrypt.compare(
+          credentials?.password as string,
+          existingUser.password as string,
+        );
+        if (!isValidPassword) {
+          // Return null if password does not match
 
-          return null
+          return null;
         }
-        return existingUser
-        
-        
-        
-        
-        
-      }
+        return existingUser;
+      },
     }),
     GithubProvider({ ...envConfigs.github }),
     GoogleProvider(envConfigs.google),

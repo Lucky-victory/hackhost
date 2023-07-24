@@ -1,5 +1,6 @@
 "use client";
-import { Hackathon } from "@/const";
+import { HACKATHON_SUB_STATUS, Hackathon } from "@/const";
+import { Utils as U } from "@/lib/utils";
 import {
   Box,
   Flex,
@@ -12,7 +13,7 @@ import {
   LinkOverlay,
   HStack,
 } from "@chakra-ui/react";
-import { format } from "date-fns";
+import { format, formatDistanceStrict } from "date-fns";
 
 import NextLink from "next/link";
 const HackathonItem = ({
@@ -22,15 +23,32 @@ const HackathonItem = ({
   hackathon: Hackathon;
   loading: boolean;
 }) => {
+
+  const dynamicBorderColor=(hackathonStatus:keyof typeof HACKATHON_SUB_STATUS)=>{
+    let color=''
+    switch (hackathonStatus) {
+      case 'ONGOING':
+        color='teal'
+        break;
+    case 'ENDED':
+color='gray.500'
+    break
+
+      default:
+       color= 'red.500'
+        break;
+    }
+return color
+  }
   return (
     <LinkBox
       border={"2px"}
       transitionProperty={"border"}
       transition={"0.25s ease-in-out"}
       _hover={{
-        borderColor: "purple.400",
+        borderColor: dynamicBorderColor(hackathon.subStatus as HACKATHON_SUB_STATUS),
         borderRight: "8px",
-        borderRightColor: "purple.500",
+        borderRightColor:  dynamicBorderColor(hackathon.subStatus as HACKATHON_SUB_STATUS),
       }}
       borderRadius={"base"}
       borderColor={"gray.300"}
@@ -56,7 +74,7 @@ const HackathonItem = ({
             fontWeight={"semibold"}
             mb={4}
             as="h3"
-            fontSize={{ lg: "3xl", base: "lg" }}
+            fontSize={{ lg: "3xl", base: "2xl" }}
           >
             {hackathon.title}
           </Heading>
@@ -64,12 +82,12 @@ const HackathonItem = ({
             <Tag
               mr={6}
               size="lg"
-              bg={"teal"}
+              bg={dynamicBorderColor(hackathon.subStatus as HACKATHON_SUB_STATUS)}
               color={"white"}
               borderRadius="full"
             >
               <Box w={1} h={1} borderRadius={"full"} bg={"white"} mr={2}></Box>
-              <TagLabel>7 Days Left</TagLabel>
+              <TagLabel>{formatDistanceStrict(new Date(hackathon.startDate),new Date(hackathon.endDate),{unit:'day'})} Left</TagLabel>
             </Tag>
             <Text as={"span"} fontWeight={"bold"}>
               {format(new Date(hackathon.startDate), "MMM dd")} -{" "}
@@ -85,7 +103,10 @@ const HackathonItem = ({
                 mr={1}
                 fontWeight={"bold"}
               >
-                $32,000
+
+                 {U.getCurrencySymbol(hackathon.currency)}{' '}{
+               U.formatCurrency(hackathon.price) 
+                }
               </Text>
               <Text as={"span"} color={"gray.500"}>
                 in prizes
@@ -98,10 +119,10 @@ const HackathonItem = ({
                 mr={1}
                 fontWeight={"bold"}
               >
-                562
+                
+                {hackathon?._count?.participants}
               </Text>
               <Text as={"span"} color={"gray.500"}>
-                {" "}
                 participants
               </Text>
             </Box>

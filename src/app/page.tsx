@@ -22,6 +22,8 @@ import {
   WrapItem,
   Wrap,
   HStack,
+  Skeleton,
+  Stack,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
 import HackathonList from "./components/HackathonList";
@@ -29,10 +31,11 @@ import { Hackathon } from "@/const";
 import Footer from "./components/Footer";
 import { useSession } from "next-auth/react";
 import Navbar from "./components/Navbar";
+import isEmpty from "just-is-empty";
 
 export default function Home() {
   const sess = useSession();
-  
+
   const { data, isLoading } = useGetHackathonsQuery();
 
   const hackathons = data?.data;
@@ -49,7 +52,6 @@ export default function Home() {
           base: "calc(var(--navbar-height) - 1rem)",
         }}
       >
-
         <Navbar />
         <Flex
           bg={"whiteAlpha.800"}
@@ -109,11 +111,25 @@ export default function Home() {
                 See All
               </Button>
             </Flex>
-
-            <HackathonList
-              hackathons={hackathons as Hackathon[]}
-              loading={isLoading}
-            />
+            {!(isLoading && isEmpty(hackathons)) ?(
+              <HackathonList
+                hackathons={hackathons as Hackathon[]}
+                loading={isLoading}
+              />
+            )  :
+              <Stack gap={'8'}>
+                {[0, 0, 0, 0].map(() => (
+                  <Skeleton borderRadius={'lg'}
+                    key={crypto.randomUUID()}
+                    h={{base:'64',lg:230}}
+                    w={'full'}
+                    bg={'gray.400'}
+                    fadeDuration={3}
+                  ></Skeleton>
+                ))}
+              </Stack>
+          
+          }
           </Box>
         </Box>
       </Box>

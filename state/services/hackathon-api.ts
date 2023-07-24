@@ -1,6 +1,7 @@
-import { Hackathon } from "@/const";
+// import { Hackathon } from "@/const";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { APIResponse } from "../types";
+import { Hackathon } from "@prisma/client";
 
 // Define a service using a base URL and expected endpoints
 

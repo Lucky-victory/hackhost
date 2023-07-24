@@ -12,17 +12,7 @@ const HackathonList = ({
 }) => {
   return (
     <Box as={Flex} gap={6} wrap={"wrap"}>
-      {loading ? (
-        <Stack>
-          {[0, 0, 0, 0].map(() => (
-            <Skeleton
-              key={crypto.randomUUID()}
-              h={200}
-              fadeDuration={3}
-            ></Skeleton>
-          ))}
-        </Stack>
-      ) : (
+      {
         hackathons.map((hackathon) => (
           <HackathonItem
             loading
@@ -30,7 +20,7 @@ const HackathonList = ({
             hackathon={hackathon}
           />
         ))
-      )}
+      }
     </Box>
   );
 };
