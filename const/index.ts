@@ -121,8 +121,18 @@
 //   PRIVATE = "private",
 // }
 
-
-type OmitManyToMany<T> = Omit<T, "interest" | "skills" | "toolsUsed" | "tags" | "participants" | "projects" | "judges" | "hackathon"|'user'>;
+type OmitManyToMany<T> = Omit<
+  T,
+  | "interest"
+  | "skills"
+  | "toolsUsed"
+  | "tags"
+  | "participants"
+  | "projects"
+  | "judges"
+  | "hackathon"
+  | "user"
+>;
 
 export interface User {
   id: string;
@@ -135,31 +145,33 @@ export interface User {
   jobTitle?: string | null;
   avatar?: string | null;
   banner?: string | null;
-  role: USER_ROLE;
+  role: keyof typeof USER_ROLE;
   username?: string | null;
   location?: string | null;
-  authType: USER_AUTH_TYPE;
+  authType: keyof typeof USER_AUTH_TYPE;
   interest: UserInterest[];
   skills: UserSkills[];
   projects: Project[];
   hackathon: Hackathon[];
 }
-export interface UserCreate extends Pick<User,'authType'|'avatar'|'email'|'name'|'role'|'password'|'username'>{
-  
-}
+export interface UserCreate
+  extends Pick<
+    User,
+    "authType" | "avatar" | "email" | "name" | "role" | "password" | "username"
+  > {}
 
 export interface UserInterest {
   id: string;
   name: string;
   user?: User | null;
-  userId:string
+  userId: string;
 }
 
 export interface UserSkills {
   id: string;
   name: string;
   user?: User | null;
-  userId:string
+  userId: string;
 }
 
 export interface Project {
@@ -182,8 +194,8 @@ export interface Project {
   status?: PROJECT_STATUS;
   toolsUsed: ProjectToolsUsed[];
 }
-export interface ProjectCreate extends OmitManyToMany<Project>{
-toolsUsed:Pick<ProjectToolsUsed,'name'>[]
+export interface ProjectCreate extends OmitManyToMany<Project> {
+  toolsUsed: Pick<ProjectToolsUsed, "name">[];
 }
 export interface ProjectToolsUsed {
   id: string;
@@ -208,11 +220,16 @@ export interface Hackathon {
   type?: HACKATHON_TYPE | null;
   status?: HACKATHON_STATUS | null;
   tags?: HackathonTags[];
-  judges?:HackathonJudges[]
+  judges?: HackathonJudges[];
+  subStatus?:HACKATHON_SUB_STATUS|null
 }
-export interface HackathonCreate extends  Omit<Hackathon,'id'|'tags'|'judges'|'slug'|'createdAt'|'updatedAt'>{
-judges:Pick<HackathonJudges,'avatar'|'bio'|'name'>[]
-tags?:Pick<HackathonTags,'name'>[]
+export interface HackathonCreate
+  extends Omit<
+    Hackathon,
+    "id" | "tags" | "judges" | "slug" | "createdAt" | "updatedAt"
+  > {
+  judges: Pick<HackathonJudges, "avatar" | "bio" | "name">[];
+  tags?: Pick<HackathonTags, "name">[];
 }
 
 export interface HackathonJudges {
@@ -248,13 +265,15 @@ export enum USER_ROLE {
 }
 
 export enum HACKATHON_STATUS {
-  ONGOING = "ONGOING",
-  ENDED = "ENDED",
-  UPCOMING = "UPCOMING",
+ 
   PUBLISHED = "PUBLISHED",
   DRAFT = "DRAFT",
 }
-
+export enum HACKATHON_SUB_STATUS {
+  ONGOING = "ONGOING",
+  ENDED = "ENDED",
+  UPCOMING = "UPCOMING"
+}
 export enum PROJECT_STATUS {
   PUBLISHED = "PUBLISHED",
   DRAFT = "DRAFT",

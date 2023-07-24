@@ -24,13 +24,17 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import { MdDoDisturb } from "react-icons/md";
 import HackathonList from "./components/HackathonList";
 import { Hackathon } from "@/const";
 import Footer from "./components/Footer";
-// import { Box, Flex } from '@chakra-ui/react';
+import { useSession } from "next-auth/react";
+import Navbar from "./components/Navbar";
+
 export default function Home() {
+  const sess = useSession();
+  
   const { data, isLoading } = useGetHackathonsQuery();
+
   const hackathons = data?.data;
   const [addHack, { data: newData, isLoading: isAdding }] =
     useAddHackathonMutation();
@@ -38,62 +42,21 @@ export default function Home() {
   console.log({ isLoading, data });
   return (
     <main className={styles.main}>
-      <Box p={{lg:"4",base:2}} mt={{lg:'calc(var(--navbar-height) - 2rem)',base:'calc(var(--navbar-height) - 1rem)'}}>
-        <Flex
-          boxShadow={"md"}
-          className={styles.navbar}
-          justify={"space-between"}
-          p={4}
-          align={"center"}
-          pos={"fixed"}
-          w={"100%"}
-          top={0}
-          left={0}
-          zIndex={"banner"}
-        backdropFilter={'auto'}
-          backdropBlur={'md'}
-          h={{base:'var(--navbar-height)'}}
-          overflow={'hidden'}
-          bg={'whiteAlpha.700'}
-        >
-          <Box>
-            <Flex gap={8}>
-              <Box>
-                <Text>App logo</Text>
-              </Box>
+      <Box
+        p={{ lg: "4", base: 2 }}
+        mt={{
+          lg: "calc(var(--navbar-height) - 2rem)",
+          base: "calc(var(--navbar-height) - 1rem)",
+        }}
+      >
 
-              <Link href={"#"}>Host a hackathon</Link>
-            </Flex>
-          </Box>
-          <Box align={'center'} as={Flex} wrap={'wrap'} gap={4}>
-            <Button
-              borderRadius={"base"}
-              as={NextLink}
-              href={"/api/auth/signin"}
-              colorScheme="purple"
-              
-              variant={"ghost"}
-            >
-              Log In
-            </Button>
-
-            <Button
-              borderRadius={"base"}
-              as={NextLink}
-              href={"/auth/sign-up"}
-              colorScheme="purple"
-            >
-              Sign Up
-            </Button>
-          </Box>
-        </Flex>
+        <Navbar />
         <Flex
           bg={"whiteAlpha.800"}
           mx={"auto"}
           maxW={"var(--page-width)"}
           mt={6}
           w={"100%"}
-          
           minH={{ lg: "400", base: 450 }}
           bgPos={"bottom center"}
           bgSize={"contain"}
@@ -104,10 +67,10 @@ export default function Home() {
             base: "/images/mobile-illustration-morning.png",
           }}
         >
-          <Box 
-          p={{ lg: "1xl", base: 4 }}
-           maxW={{ lg: 500, base: 500 }}>
-            <Heading fontSize={{lg:'4xl',base:'3xl'}}>The home for hackathons</Heading>
+          <Box p={{ lg: "1xl", base: 4 }} maxW={{ lg: 500, base: 500 }}>
+            <Heading fontSize={{ lg: "4xl", base: "3xl" }}>
+              The home for hackathons
+            </Heading>
             <Text
               my={6}
               fontSize={{ lg: "2xl", base: "md" }}
@@ -126,24 +89,36 @@ export default function Home() {
           </Box>
         </Flex>
 
-        <Box   my={8}  bg={'whiteAlpha.800'} px={{lg:4,base:2}} py={6}>
+        <Box my={8} bg={"whiteAlpha.800"} px={{ lg: 4, base: 2 }} py={6}>
           <Box maxW={860}>
+            <Flex
+              mb={{ lg: 6, base: 4 }}
+              align={"center"}
+              justify={"space-between"}
+            >
+              <Heading fontSize={{ lg: "4xl", base: "2xl" }}>
+                Hackathons For You
+              </Heading>
+              <Button
+                href={"/hackathons"}
+                colorScheme="purple"
+                as={NextLink}
+                variant={"ghost"}
+                bg={"transparent!important"}
+              >
+                See All
+              </Button>
+            </Flex>
 
-          <Flex  mb={{lg:6,base:4}} align={'center'} justify={'space-between'}>
-
-<Heading   
-fontSize={{lg:'4xl',base:'2xl'}} >Hackathons For You</Heading>
-<Button href={'/hackathons'} colorScheme="purple" as={NextLink} variant={'ghost'} bg={'transparent!important'}>See All</Button>
-          </Flex>
-         
-<HackathonList hackathons={hackathons as Hackathon[]} loading={isLoading} />
-                  
+            <HackathonList
+              hackathons={hackathons as Hackathon[]}
+              loading={isLoading}
+            />
+          </Box>
         </Box>
-        </Box>
-
       </Box>
 
-      <Footer/>
+      <Footer />
     </main>
   );
 }

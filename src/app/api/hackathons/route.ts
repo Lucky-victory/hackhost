@@ -6,16 +6,21 @@ import { getServerSession } from "next-auth";
 export async function GET(request: Request) {
   try {
     const data = await prisma.hackathon.findMany({
-      where:{
-status:{
-  in:['ONGOING']
-}
+      where: {
+        status: {
+          equals:'PUBLISHED',
+        },AND:{
+          subStatus:'ONGOING'
+
+        }
+      
       },
+      
       include: {
-        projects: true,
-        participants: true,
+        
+        participants:true
       },
-    });
+    })
 
     return NextResponse.json(
       {
@@ -34,15 +39,12 @@ status:{
   }
 }
 export async function POST(request: Request) {
-const sess= await getServerSession()
+  const sess = await getServerSession();
 
-  const json = (await request.json())
+  const json = await request.json();
   const { title, ...rest } = json;
   const created = await prisma.hackathon.create({
-    data: {...rest,title,
-      slug: Utils.slugify(title),
-    },
-    
-  })
+    data: { ...rest, title, slug: Utils.slugify(title) },
+  });
   return NextResponse.json(created, { status: 201 });
 }

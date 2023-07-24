@@ -11,28 +11,28 @@ datasource db {
 }
 
 model User {
-  id                String                 @id @default(uuid())
-  name              String
-  email             String                 @unique
-  password          String?
-  createdAt         DateTime               @default(now()) @map("created_at")
-  updatedAt         DateTime               @updatedAt @map("updated_at")
-  bio               String?
-  jobTitle          String?                @map("job_title")
-  interest          UserInterest[]
-  skills            UserSkills[]
-  avatar            String?
-  banner String?
-  role              USER_ROLE              @default(BASIC)
-  username          String?
-  location          String?
-  authType  USER_AUTH_TYPE @default(CREDENTIALS)
-  projects          Project[]
-  hackathon         Hackathon[]
-  participants      HackathonParticipant[]
+  id            String                 @id @default(uuid())
+  name          String
+  email         String                 @unique
+  password      String?
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime               @updatedAt @map("updated_at")
+  bio           String?
+  jobTitle      String?                @map("job_title")
+  interest      UserInterest[]
+  skills        UserSkills[]
+  avatar        String?
+  banner        String?
+  role          USER_ROLE              @default(BASIC)
+  username      String?
+  location      String?
+  authType      USER_AUTH_TYPE         @default(CREDENTIALS)
+  projects      Project[]
+  hackathon     Hackathon[]
+  participants  HackathonParticipant[]
   HackathonTags HackathonTags[]
 
-  @@index([email, jobTitle])
+  @@index([email, jobTitle, name])
   @@map("users")
 }
 
@@ -41,6 +41,7 @@ model UserInterest {
   name   String
   user   User?   @relation(fields: [userId], references: [id])
   userId String? @map("user_id")
+
   @@index([name])
   @@map("user_interest")
 }
@@ -70,34 +71,35 @@ model Project {
   createdAt     DateTime           @default(now()) @map("created_at")
   updatedAt     DateTime           @updatedAt @map("updated_at")
   userId        String             @map("user_id")
-  hackathon    Hackathon          @relation(fields: [hackathonId], references: [id])
+  hackathon     Hackathon          @relation(fields: [hackathonId], references: [id])
   hackathonId   String             @map("hackathon_id")
   isWinner      Boolean            @default(false) @map("is_winner")
-status PROJECT_STATUS @default(DRAFT)
+  status        PROJECT_STATUS     @default(DRAFT)
+
   @@index([title, description, slug])
   @@map("projects")
 }
 
 model ProjectToolsUsed {
-  id   String @id @default(uuid())
-  name String @unique
-  project   Project[]
+  id      String    @id @default(uuid())
+  name    String    @unique
+  project Project[]
 
   @@index([name])
   @@map("project_tools_used")
 }
 
 model Hackathon {
-  id           String                 @id @default(uuid())
-  title        String
-  subtitle     String?
-  description  String
-  startDate    DateTime               @map("start_date")
-  endDate      DateTime               @map("end_date")
-  user         User                   @relation(fields: [userId], references: [id])
-  slug         String                 @unique
-  
-  tags  HackathonTags[]
+  id          String   @id @default(uuid())
+  title       String
+  subtitle    String?
+  description String
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  user        User     @relation(fields: [userId], references: [id])
+  slug        String   @unique
+
+  tags         HackathonTags[]
   createdAt    DateTime               @default(now()) @map("created_at")
   updatedAt    DateTime               @updatedAt @map("updated_at")
   userId       String                 @map("user_id")
@@ -109,8 +111,9 @@ model Hackathon {
   type         HACKATHON_TYPE?        @default(PUBLIC)
   status       HACKATHON_STATUS?      @default(DRAFT)
   judges       HackathonJudges[]
+  subStatus    HACKATHON_SUB_STATUS?  @default(ONGOING) @map("sub_status")
 
-  @@index([title, description, slug,type,price,status])
+  @@index([title, description, slug, type, price, status])
   @@map("hackathons")
 }
 
@@ -126,20 +129,21 @@ model HackathonJudges {
 }
 
 model HackathonTags {
-  id         String      @id @default(uuid())
-  name       String @unique
-  createdAt  DateTime    @default(now()) @map("created_at")
-  updatedAt  DateTime    @updatedAt @map("updated_at")
+  id        String      @id @default(uuid())
+  name      String      @unique
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
   hackathon Hackathon[]
-  user       User?       @relation(fields: [userId], references: [id])
-  userId     String? @map("user_id")
-@@index([name])
+  user      User?       @relation(fields: [userId], references: [id])
+  userId    String?     @map("user_id")
+
+  @@index([name])
   @@map("hackathon_categories")
 }
 
 model HackathonParticipant {
   id          String    @id @default(uuid())
-  hackathon  Hackathon @relation(fields: [hackathonId], references: [id])
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
   hackathonId String    @map("hackathon_id")
   user        User      @relation(fields: [userId], references: [id])
   userId      String    @map("user_id")
@@ -156,13 +160,17 @@ enum USER_ROLE {
   MOD
 }
 
-enum HACKATHON_STATUS {
+enum HACKATHON_SUB_STATUS {
   ONGOING
   ENDED
-UPCOMING
+  UPCOMING
+}
+
+enum HACKATHON_STATUS {
   PUBLISHED
   DRAFT
 }
+
 enum PROJECT_STATUS {
   PUBLISHED
   DRAFT
@@ -172,8 +180,9 @@ enum HACKATHON_TYPE {
   PUBLIC
   PRIVATE
 }
-enum USER_AUTH_TYPE{
-CREDENTIALS
-GITHUB
-GOOGLE
+
+enum USER_AUTH_TYPE {
+  CREDENTIALS
+  GITHUB
+  GOOGLE
 }

@@ -27,10 +27,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NextAuthSessionProvider>
-
-        <ReduxProvider>
-          <ChakraProvider>{children}</ChakraProvider>
-        </ReduxProvider>
+          <ReduxProvider>
+            <ChakraProvider>{children}</ChakraProvider>
+          </ReduxProvider>
         </NextAuthSessionProvider>
       </body>
     </html>

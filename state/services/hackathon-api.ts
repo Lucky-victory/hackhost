@@ -58,10 +58,9 @@ export const HackHostApi = createApi({
         { type: "Hackathons", id: slug },
       ],
     }),
-  getCSRFToken:builder.query<{csrfToken:string},void>({
-    query:()=>'/auth/csrf'
-  })
-
+    getCSRFToken: builder.query<{ csrfToken: string }, void>({
+      query: () => "/auth/csrf",
+    }),
   }),
 });
 
@@ -71,5 +70,6 @@ export const {
   useAddHackathonMutation,
   useGetHackathonsQuery,
   useGetHackathonQuery,
-  useUpdateHackathonMutation,useGetCSRFTokenQuery
+  useUpdateHackathonMutation,
+  useGetCSRFTokenQuery,
 } = HackHostApi;
