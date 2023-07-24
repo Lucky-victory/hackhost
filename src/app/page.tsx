@@ -54,44 +54,75 @@ export default function Home() {
       >
         <Navbar />
         <Flex
-          bg={"whiteAlpha.800"}
+          bg={"purple.100"}
           mx={"auto"}
           maxW={"var(--page-width)"}
           mt={6}
           w={"100%"}
           minH={{ lg: "400", base: 450 }}
-          bgPos={"bottom center"}
+          bgPos={{ lg: "right", base: "bottom" }}
           bgSize={"contain"}
           bgRepeat={"no-repeat"}
           pos={"relative"}
-          bgImage={{
-            lg: "url(/images/desktop-illustration-morning.png)",
-            base: "/images/mobile-illustration-morning.png",
-          }}
+          wrap={"wrap"}
+          // bgImage={{
+          //   lg: "url(/images/hackathon.jpg)",
+          //   base: "/images/hackathon.jpg",
+          // }}
         >
-          <Box p={{ lg: "1xl", base: 4 }} maxW={{ lg: 500, base: 500 }}>
-            <Heading fontSize={{ lg: "4xl", base: "3xl" }}>
+          <Box
+            p={{ lg: "8", base: 4 }}
+            mb={{ base: 8 }}
+            maxW={{ lg: 500, base: 500 }}
+          >
+            <Heading fontSize={{ lg: "4xl", base: "3xl" }} color={"purple.800"}>
               The home for hackathons
             </Heading>
             <Text
               my={6}
               fontSize={{ lg: "2xl", base: "md" }}
-              color={"gray.500"}
+              color={"gray.700"}
             >
               Build products, practice skills, learn technologies, win prizes,
               and grow your network.
             </Text>
-            <Button
-              borderRadius={"base"}
-              size={{ lg: "lg", base: "md", md: "lg" }}
-              colorScheme="purple"
-            >
-              Join the community
-            </Button>
+            {!sess.data ? (
+              <Button
+                as={NextLink}
+                href={"/auth/sign-up"}
+                borderRadius={"base"}
+                size={{ lg: "lg", base: "md", md: "lg" }}
+                colorScheme="purple"
+              >
+                Join the community
+              </Button>
+            ) : (
+              <Button
+                as={NextLink}
+                href={"/hackathons"}
+                borderRadius={"base"}
+                size={{ lg: "lg", base: "md", md: "lg" }}
+                colorScheme="purple"
+              >
+                Join a Hackathon
+              </Button>
+            )}
+          </Box>
+          <Box
+            flex={1}
+            minW={300}
+            clipPath={{ lg: "polygon(24% 0, 100% 0%, 100% 100%, 0% 100%)" }}
+          >
+            <Image
+              w={"full"}
+              src="/images/hackathon.jpg"
+              h={"full"}
+              objectFit={"cover"}
+            ></Image>
           </Box>
         </Flex>
 
-        <Box my={8} bg={"whiteAlpha.800"} px={{ lg: 4, base: 2 }} py={6}>
+        <Box my={8} bg={"white"} px={{ lg: 4, base: 2 }} py={6}>
           <Box maxW={860}>
             <Flex
               mb={{ lg: 6, base: 4 }}
@@ -111,25 +142,25 @@ export default function Home() {
                 See All
               </Button>
             </Flex>
-            {!(isLoading && isEmpty(hackathons)) ?(
+            {!(isLoading && isEmpty(hackathons)) ? (
               <HackathonList
                 hackathons={hackathons as Hackathon[]}
                 loading={isLoading}
               />
-            )  :
-              <Stack gap={'8'}>
+            ) : (
+              <Stack gap={"8"}>
                 {[0, 0, 0, 0].map(() => (
-                  <Skeleton borderRadius={'lg'}
+                  <Skeleton
+                    borderRadius={"lg"}
                     key={crypto.randomUUID()}
-                    h={{base:'64',lg:230}}
-                    w={'full'}
-                    bg={'gray.400'}
+                    h={{ base: "64", lg: 230 }}
+                    w={"full"}
+                    bg={"gray.400"}
                     fadeDuration={3}
                   ></Skeleton>
                 ))}
               </Stack>
-          
-          }
+            )}
           </Box>
         </Box>
       </Box>

@@ -1,7 +1,7 @@
 // import { Hackathon } from "@/const";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { APIResponse } from "../types";
-import { Hackathon } from "@prisma/client";
+import { Hackathon, HackathonResult } from "@/const";
 
 // Define a service using a base URL and expected endpoints
 
@@ -13,7 +13,7 @@ export const HackHostApi = createApi({
   tagTypes: ["Hackathons"],
 
   endpoints: (builder) => ({
-    getHackathons: builder.query<Partial<APIResponse<Hackathon[]>>, void>({
+    getHackathons: builder.query<Partial<APIResponse<HackathonResult[]>>, void>({
       query: () => ({
         url: `hackathons/`,
       }),
@@ -31,13 +31,16 @@ export const HackHostApi = createApi({
           : // an error occurred, but we still want to refetch this query when `{ type: 'Hackathons', id: 'LIST' }` is invalidated
             [{ type: "Hackathons", id: "LIST" }],
     }),
-    getHackathon: builder.query<Partial<APIResponse<Hackathon>>, string>({
+    getHackathon: builder.query<Partial<APIResponse<HackathonResult>>, string>({
       query: (slug) => `hackathon/${slug}`,
       providesTags: (result, error, slug) => {
         return [{ type: "Hackathons" as const, id: slug }];
       },
     }),
-    addHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
+    addHackathon: builder.mutation<
+      APIResponse<Hackathon>,
+      Partial<Hackathon>
+    >({
       query: (data) => ({
         url: `hackathons/`,
         method: "POST",
@@ -45,7 +48,7 @@ export const HackHostApi = createApi({
       }),
       invalidatesTags: [{ type: "Hackathons" as const, id: "LIST" }],
     }),
-    updateHackathon: builder.mutation<Partial<Hackathon>, Partial<Hackathon>>({
+    updateHackathon: builder.mutation<APIResponse<Hackathon>, Partial<Hackathon>>({
       query(data) {
         const { slug, ...body } = data;
         return {

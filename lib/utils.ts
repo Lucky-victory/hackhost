@@ -35,23 +35,18 @@ export class Utils {
     };
   }
   static formatCurrency(amount: number = 0) {
-  
-   
-    return  (+amount).toLocaleString()
-    
+    return (+amount).toLocaleString();
   }
-  static getCurrencySymbol(currency='USD'){
+  static getCurrencySymbol(currency = "USD") {
     const currencyCodes = {
-      USD: '$',
-      EUR: '€',
-      GBP: '£',
-      INR: '₹',
-      NGN: '₦',
+      USD: "$",
+      EUR: "€",
+      GBP: "£",
+      INR: "₹",
+      NGN: "₦",
     };
-return currencyCodes[currency as keyof typeof currencyCodes]
-
+    return currencyCodes[currency as keyof typeof currencyCodes];
   }
-  
 }
 export const envConfigs = {
   google: {

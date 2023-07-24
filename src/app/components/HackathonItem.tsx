@@ -23,32 +23,37 @@ const HackathonItem = ({
   hackathon: Hackathon;
   loading: boolean;
 }) => {
-
-  const dynamicBorderColor=(hackathonStatus:keyof typeof HACKATHON_SUB_STATUS)=>{
-    let color=''
+  const dynamicBorderColor = (
+    hackathonStatus: keyof typeof HACKATHON_SUB_STATUS,
+  ) => {
+    let color = "";
     switch (hackathonStatus) {
-      case 'ONGOING':
-        color='teal'
+      case "ONGOING":
+        color = "teal";
         break;
-    case 'ENDED':
-color='gray.500'
-    break
+      case "ENDED":
+        color = "gray.500";
+        break;
 
       default:
-       color= 'red.500'
+        color = "red.500";
         break;
     }
-return color
-  }
+    return color;
+  };
   return (
     <LinkBox
       border={"2px"}
       transitionProperty={"border"}
       transition={"0.25s ease-in-out"}
       _hover={{
-        borderColor: dynamicBorderColor(hackathon.subStatus as HACKATHON_SUB_STATUS),
+        borderColor: dynamicBorderColor(
+          hackathon.subStatus as HACKATHON_SUB_STATUS,
+        ),
         borderRight: "8px",
-        borderRightColor:  dynamicBorderColor(hackathon.subStatus as HACKATHON_SUB_STATUS),
+        borderRightColor: dynamicBorderColor(
+          hackathon.subStatus as HACKATHON_SUB_STATUS,
+        ),
       }}
       borderRadius={"base"}
       borderColor={"gray.300"}
@@ -68,7 +73,7 @@ return color
         w={[300, 250, 250]}
         maxH={"3xs"}
       />
-      <LinkOverlay as={NextLink} href="/">
+      <LinkOverlay as={NextLink} href={`/hackathon/${hackathon.slug}`}>
         <Box ml={{ lg: 4 }}>
           <Heading
             fontWeight={"semibold"}
@@ -82,12 +87,21 @@ return color
             <Tag
               mr={6}
               size="lg"
-              bg={dynamicBorderColor(hackathon.subStatus as HACKATHON_SUB_STATUS)}
+              bg={dynamicBorderColor(
+                hackathon.subStatus as HACKATHON_SUB_STATUS,
+              )}
               color={"white"}
               borderRadius="full"
             >
               <Box w={1} h={1} borderRadius={"full"} bg={"white"} mr={2}></Box>
-              <TagLabel>{formatDistanceStrict(new Date(hackathon.startDate),new Date(hackathon.endDate),{unit:'day'})} Left</TagLabel>
+              <TagLabel>
+                {formatDistanceStrict(
+                  new Date(hackathon.startDate),
+                  new Date(hackathon.endDate),
+                  { unit: "day" },
+                )}{" "}
+                Left
+              </TagLabel>
             </Tag>
             <Text as={"span"} fontWeight={"bold"}>
               {format(new Date(hackathon.startDate), "MMM dd")} -{" "}
@@ -103,10 +117,8 @@ return color
                 mr={1}
                 fontWeight={"bold"}
               >
-
-                 {U.getCurrencySymbol(hackathon.currency)}{' '}{
-               U.formatCurrency(hackathon.price) 
-                }
+                {U.getCurrencySymbol(hackathon.currency)}{" "}
+                {U.formatCurrency(hackathon.price)}
               </Text>
               <Text as={"span"} color={"gray.500"}>
                 in prizes
@@ -119,7 +131,6 @@ return color
                 mr={1}
                 fontWeight={"bold"}
               >
-                
                 {hackathon?._count?.participants}
               </Text>
               <Text as={"span"} color={"gray.500"}>

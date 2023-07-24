@@ -1,4 +1,3 @@
-
 type OmitManyToMany<T> = Omit<
   T,
   | "interest"
@@ -95,22 +94,35 @@ export interface Hackathon {
   price: number;
   currency: string;
   currencyCode?: string | null;
-  type?:keyof typeof HACKATHON_TYPE | null;
-  status?:keyof typeof  HACKATHON_STATUS | null;
-  tags?: HackathonTags[];
-  judges?: HackathonJudges[];
-  subStatus?: HACKATHON_SUB_STATUS | null;
+  type?: keyof typeof HACKATHON_TYPE | null;
+  status?: keyof typeof HACKATHON_STATUS | null;
+  subStatus?:keyof typeof  HACKATHON_SUB_STATUS | null;
   _count?: {
     participants: number;
   };
 }
+export interface HackathonResult extends Hackathon{
+  tags?: HackathonTags[];
+  judges?: HackathonJudges[];
+  
+  participants?:HackathonParticipant[]
+  projects?:Project[]
+}
+
 export interface HackathonCreate
   extends Omit<
     Hackathon,
-    "id" | "tags" | "judges" | "slug" | "createdAt" | "updatedAt" | "_count"|'userId'
+    | "id"
+    | "tags"
+    | "judges"
+    | "slug"
+    | "createdAt"
+    | "updatedAt"
+    | "_count"
+    | "userId"
   > {
   judges: Pick<HackathonJudges, "avatar" | "bio" | "name">[];
-  tags?: Pick<HackathonTags, "name">[];
+  tags?: HackathonTagCreate[];
 }
 
 export interface HackathonJudges {
@@ -128,7 +140,9 @@ export interface HackathonTags {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface HackathonTagCreate extends Pick<HackathonTags,'name'>{
 
+}
 export interface HackathonParticipant {
   id: string;
   hackathon?: Hackathon;

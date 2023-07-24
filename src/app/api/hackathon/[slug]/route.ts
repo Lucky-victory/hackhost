@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Hackathon } from "@/const";
+import { Hackathon, HackathonCreate } from "@/const";
 
 export async function GET(
   request: Request,
@@ -9,8 +9,14 @@ export async function GET(
   try {
     const data = await prisma.hackathon.findFirst({
       include: {
-        submissions: true,
-        participants: {},
+        projects: true,
+        _count: {
+          select:{
+
+            participants: true,
+          }
+        },
+        participants: true,
       },
       where: { slug },
     });
@@ -32,8 +38,7 @@ export async function GET(
   }
 }
 export async function PATCH(request: Request, { slug }: { slug: string }) {
-  const json = (await request.json()) as Hackathon;
-
+  const json = (await request.json())
   const updated = await prisma.hackathon.update({
     data: json,
     where: {

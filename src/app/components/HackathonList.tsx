@@ -12,15 +12,13 @@ const HackathonList = ({
 }) => {
   return (
     <Box as={Flex} gap={6} wrap={"wrap"}>
-      {
-        hackathons.map((hackathon) => (
-          <HackathonItem
-            loading
-            key={crypto.randomUUID()}
-            hackathon={hackathon}
-          />
-        ))
-      }
+      {hackathons.map((hackathon) => (
+        <HackathonItem
+          loading
+          key={crypto.randomUUID()}
+          hackathon={hackathon}
+        />
+      ))}
     </Box>
   );
 };

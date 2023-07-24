@@ -58,7 +58,8 @@ const currencies = ["USD", "GBP", "EUR", "INR", "NGN"];
 const CreatePage = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [addHackathonTrigger,{data,isLoading,isError}]=useAddHackathonMutation()
+  const [addHackathonTrigger, { data, isLoading, isError }] =
+    useAddHackathonMutation();
   const drawerBtnRef = useRef<HTMLButtonElement | null>(null);
   const fileInputRefs = useRef<HTMLInputElement[] | null[]>([]);
   const [startDate, setStartDate] = useState(new Date());
@@ -68,22 +69,22 @@ const CreatePage = () => {
   const [endDate, setEndDate] = useState(
     new Date(new Date().setDate(new Date().getDate() + 30)),
   );
-  const initialFields={
+  const initialFields = {
     title: "",
     currency: "USD",
     description: "",
     price: 0,
     startDate,
     endDate,
-    
+
     judges: [{ name: "", avatar: "", bio: "" }],
-  }
+  };
   const [formFields, setFormFields] = useState<HackathonCreate>(initialFields);
-  console.log({data});
-  
+  console.log({ data });
+
   function handleFormSubmit(evt: FormEvent) {
     evt.preventDefault();
-    console.log({ formFields,data });
+    console.log({ formFields, data });
   }
   function handleInputChange(evt: ChangeEvent | FormEvent) {
     const { name, value } = evt.target as
@@ -171,55 +172,58 @@ const CreatePage = () => {
     };
     reader.readAsDataURL(file);
   }
-function handleHackathonStatus(status:keyof typeof HACKATHON_STATUS){
-setFormFields((prev)=>({
-  ...prev,status
-}))
-const fields={...formFields,status}
-    addHackathonTrigger(fields)
-
-}
+  function handleHackathonStatus(status: keyof typeof HACKATHON_STATUS) {
+    setFormFields((prev) => ({
+      ...prev,
+      status,
+    }));
+    const fields = { ...formFields, status };
+    addHackathonTrigger(fields);
+  }
   function handleDrawerClose() {}
   return (
     <Box className="page" pb={12}>
-      <Navbar/>
+      <Navbar />
       <FormControl p={8} as={"form"} onSubmit={(evt) => handleFormSubmit(evt)}>
         <Card mb={6}>
           <CardBody>
-
-          
-        <HStack
-          bg={"inherit"}
-          wrap={"wrap"}
-          divider={<StackDivider />}
-          justify={"flex-end"}
-          w={"full"}
-          mb={8}
-        >
-          <Button
-            ref={drawerBtnRef}
-            onClick={onOpen}
-            colorScheme="purple"
-            variant={"ghost"}
-            fontWeight={"medium"}
-          >
-            Preview{" "}
-          </Button>
-          <Button onClick={()=>handleHackathonStatus('DRAFT')}
-            type="submit"
-            colorScheme="purple"
-            variant={"outline"}
-            fontWeight={"medium"}
-          >
-            Save as Draft{" "}
-          </Button>
-          <Button type="submit" colorScheme="purple" onClick={()=>handleHackathonStatus('PUBLISHED')}>
-            Publish
-          </Button>
-        </HStack>
-        </CardBody>
+            <HStack
+              bg={"inherit"}
+              wrap={"wrap"}
+              divider={<StackDivider />}
+              justify={"flex-end"}
+              w={"full"}
+              mb={8}
+            >
+              <Button
+                ref={drawerBtnRef}
+                onClick={onOpen}
+                colorScheme="purple"
+                variant={"ghost"}
+                fontWeight={"medium"}
+              >
+                Preview{" "}
+              </Button>
+              <Button
+                onClick={() => handleHackathonStatus("DRAFT")}
+                type="submit"
+                colorScheme="purple"
+                variant={"outline"}
+                fontWeight={"medium"}
+              >
+                Save as Draft{" "}
+              </Button>
+              <Button
+                type="submit"
+                colorScheme="purple"
+                onClick={() => handleHackathonStatus("PUBLISHED")}
+              >
+                Publish
+              </Button>
+            </HStack>
+          </CardBody>
         </Card>
-      
+
         <Card mb={8}>
           <CardBody>
             <FormLabel mb={8}>
