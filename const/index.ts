@@ -120,7 +120,7 @@
 //   PUBLIC = "public",
 //   PRIVATE = "private",
 // }
-// Generated types for Prisma schema
+
 
 type OmitManyToMany<T> = Omit<T, "interest" | "skills" | "toolsUsed" | "tags" | "participants" | "projects" | "judges" | "hackathon"|'user'>;
 
@@ -144,7 +144,7 @@ export interface User {
   projects: Project[];
   hackathon: Hackathon[];
 }
-export interface NewUser extends OmitManyToMany<User>{
+export interface UserCreate extends Pick<User,'authType'|'avatar'|'email'|'name'|'role'|'password'|'username'>{
   
 }
 
@@ -182,8 +182,8 @@ export interface Project {
   status?: PROJECT_STATUS;
   toolsUsed: ProjectToolsUsed[];
 }
-export interface NewProject extends OmitManyToMany<Project>{
-toolsUsed:{name:string}[]
+export interface ProjectCreate extends OmitManyToMany<Project>{
+toolsUsed:Pick<ProjectToolsUsed,'name'>[]
 }
 export interface ProjectToolsUsed {
   id: string;
@@ -207,10 +207,12 @@ export interface Hackathon {
   currencyCode?: string | null;
   type?: HACKATHON_TYPE | null;
   status?: HACKATHON_STATUS | null;
-  tags: HackathonTags[];
+  tags?: HackathonTags[];
+  judges?:HackathonJudges[]
 }
-export interface NewHackathon extends  OmitManyToMany<Hackathon>{
-
+export interface HackathonCreate extends  Omit<Hackathon,'id'|'tags'|'judges'|'slug'|'createdAt'|'updatedAt'>{
+judges:Pick<HackathonJudges,'avatar'|'bio'|'name'>[]
+tags?:Pick<HackathonTags,'name'>[]
 }
 
 export interface HackathonJudges {

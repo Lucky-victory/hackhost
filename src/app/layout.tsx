@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import { ChakraProvider } from "./providers/chakra-provider";
 import { ReduxProvider } from "./providers/redux-provider";
+import { NextAuthSessionProvider } from "./providers/nextauth-provider";
 
 const inter = Poppins({
   weight: ["300", "400", "500", "700"],
@@ -25,9 +26,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <NextAuthSessionProvider>
+
         <ReduxProvider>
           <ChakraProvider>{children}</ChakraProvider>
         </ReduxProvider>
+        </NextAuthSessionProvider>
       </body>
     </html>
   );

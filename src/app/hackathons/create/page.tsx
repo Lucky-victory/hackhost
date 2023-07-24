@@ -1,5 +1,5 @@
 "use client";
-import { NewHackathon, NewHackathonJudges } from "@/const";
+import { HackathonCreate } from "@/const";
 import { useAddHackathonMutation } from "@/state/services/hackathon-api";
 import {
   Drawer,
@@ -66,7 +66,7 @@ const CreatePage = () => {
   const [endDate, setEndDate] = useState(
     new Date(new Date().setDate(new Date().getDate() + 30)),
   );
-  const [formFields, setFormFields] = useState<NewHackathon>({
+  const [formFields, setFormFields] = useState<HackathonCreate>({
     title: "",
     currency: "USD",
     description: "",

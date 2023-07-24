@@ -5,8 +5,35 @@ import { Utils, envConfigs } from "@/lib/utils"
 import Credentials from "next-auth/providers/credentials"
 import {prisma } from '@/lib/prisma'
 import bcrypt from 'bcrypt';
+import { USER_ROLE, UserCreate } from "@/const"
+import { USER_AUTH_TYPE } from "@prisma/client"
 
 export const authOptions: NextAuthOptions = {
+  callbacks:{
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log({user,account,profile,email,credentials});
+      let authType=''
+      let newUser:UserCreate
+      // if it's a new user create an account
+      if(account){
+       authType=account?.provider?.toUpperCase();
+       newUser={
+         name:profile?.name as string,
+         email:profile?.email as string,
+
+         role:USER_ROLE.BASIC,
+         //@ts-ignore
+  
+  authType:authType
+}
+// check if user exist
+
+//create user
+      }
+
+      return true
+    },
+  },
   providers:[
     Credentials({   
         name: 'Sign In',
@@ -24,7 +51,7 @@ export const authOptions: NextAuthOptions = {
           })
           console.log({auth:u});
           if(u && !Utils.checkAuthType(u.authType).isCredentials){
-return ''
+return null
           }
           const user ={id:'user1',name:'Victory Lucky',email:'me@test.com'}
     
@@ -35,7 +62,7 @@ return ''
           // Return null if user data could not be retrieved
           return null
         }}),
-        GithubProvider(envConfigs.github),
+        GithubProvider({...envConfigs.github}),
         GoogleProvider(envConfigs.google)
       ]
     

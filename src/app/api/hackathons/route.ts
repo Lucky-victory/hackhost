@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Hackathon, NewHackathon } from "@/const";
+import { Hackathon, HackathonCreate } from "@/const";
 import { Utils } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 export async function GET(request: Request) {
@@ -36,7 +36,7 @@ status:{
 export async function POST(request: Request) {
 const sess= await getServerSession()
 
-  const json = (await request.json()) as NewHackathon;
+  const json = (await request.json())
   const { title, ...rest } = json;
   const created = await prisma.hackathon.create({
     data: {...rest,title,

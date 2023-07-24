@@ -80,7 +80,7 @@ export default function Home() {
             <Button
               borderRadius={"base"}
               as={NextLink}
-              href={"/api/auth/signout"}
+              href={"/auth/sign-up"}
               colorScheme="purple"
             >
               Sign Up
