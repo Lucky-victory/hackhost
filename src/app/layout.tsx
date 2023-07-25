@@ -2,13 +2,13 @@ import '@/src/app/styles/globals.css';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import { ChakraProvider } from './providers/chakra-provider';
 import { ReduxProvider } from './providers/redux-provider';
 import { NextAuthSessionProvider } from './providers/nextauth-provider';
 
-const inter = Poppins({
-    weight: ['300', '400', '500', '700'],
+const inter = Montserrat({
+    weight: ['400', '500', '600', '700'],
     subsets: ['latin'],
 });
 export const revalidate = 2;
