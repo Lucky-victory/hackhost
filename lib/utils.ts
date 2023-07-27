@@ -1,12 +1,6 @@
 import { Base64UUID } from 'base64-uuid';
 import slugify from 'slugify';
 import dotenv from 'dotenv';
-import {
-    MdAttachMoney,
-    MdEuro,
-    MdCurrencyRupee,
-    MdCurrencyPound,
-} from 'react-icons/md';
 dotenv.config();
 
 import { v4 as uuid } from 'uuid';
@@ -78,5 +72,9 @@ export const envConfigs = {
     },
     nextauth: {
         url: process.env.NEXTAUTH_URL,
+    },
+    cloudinary: {
+        preset: process.env.NEXT_PUBLIC_CLOUDINARY_PRESET,
+        cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUDNAME,
     },
 };

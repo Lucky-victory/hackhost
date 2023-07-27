@@ -32,6 +32,7 @@ import Footer from './components/Footer';
 import { useSession } from 'next-auth/react';
 import Navbar from './components/Navbar';
 import isEmpty from 'just-is-empty';
+import Script from 'next/script';
 
 export default function Home() {
     const sess = useSession();
@@ -45,6 +46,11 @@ export default function Home() {
     console.log({ isLoading, data });
     return (
         <main className={styles.main}>
+            <Script
+                src="https://upload-widget.cloudinary.com/global/all.js"
+                type="text/javascript"
+                id="cloudinary-script"
+            ></Script>
             <Box
                 p={{ lg: '4', base: 2 }}
                 mt={{
@@ -141,7 +147,7 @@ export default function Home() {
                         >
                             <Heading
                                 color={'purple.800'}
-                                fontSize={{ lg: '4xl', base: '2xl' }}
+                                size={{ lg: '2xl', base: 'lg' }}
                             >
                                 Hackathons For You
                             </Heading>
@@ -168,11 +174,26 @@ export default function Home() {
                                         key={crypto.randomUUID()}
                                         h={{ base: '64', lg: 230 }}
                                         w={'full'}
-                                        bg={'gray.400'}
+                                        colorScheme="gray"
                                         fadeDuration={3}
                                     ></Skeleton>
                                 ))}
                             </Stack>
+                        )}
+                        {!isLoading && isEmpty(hackathons) && (
+                            <Flex
+                                align={'center'}
+                                justify={'center'}
+                                h={{ lg: '200', base: 150 }}
+                            >
+                                <Heading
+                                    size={'lg'}
+                                    as={'h3'}
+                                    color={'purple.800'}
+                                >
+                                    No hackathons available yet
+                                </Heading>
+                            </Flex>
                         )}
                     </Box>
                 </Box>

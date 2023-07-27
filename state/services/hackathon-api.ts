@@ -1,7 +1,13 @@
 // import { Hackathon } from "@/const";
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { APIResponse } from '../types';
-import { Hackathon, HackathonParticipant, HackathonResult } from '@/const';
+import {
+    Hackathon,
+    HackathonParticipant,
+    HackathonResult,
+    Project,
+    ProjectCreate,
+} from '@/const';
 
 // Define a service using a base URL and expected endpoints
 
@@ -54,6 +60,14 @@ export const HackHostApi = createApi({
             }),
             invalidatesTags: [{ type: 'Hackathons' as const, id: 'LIST' }],
         }),
+        addProject: builder.mutation<APIResponse<Project>, ProjectCreate>({
+            query: ({ slug, ...rest }) => ({
+                url: `hackathon/${slug}/submit`,
+                method: 'POST',
+                body: { ...rest },
+            }),
+            invalidatesTags: [{ type: 'Hackathons' as const, id: 'LIST' }],
+        }),
         joinHackathon: builder.mutation<
             APIResponse<HackathonParticipant>,
             string
@@ -103,5 +117,7 @@ export const {
     useGetHackathonQuery,
     useUpdateHackathonMutation,
     useGetCSRFTokenQuery,
-    useJoinHackathonMutation,useCheckHasJoinedHackathonQuery,
+    useJoinHackathonMutation,
+    useCheckHasJoinedHackathonQuery,
+    useAddProjectMutation,
 } = HackHostApi;

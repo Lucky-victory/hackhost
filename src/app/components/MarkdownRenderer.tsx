@@ -33,7 +33,6 @@ const BlockQuote = Box as ComponentWithAs<'blockquote', BlockQuoteProps>;
 
 const MarkdownRenderer = ({ markdown }: { markdown: string }) => {
     return (
-        
         <ReactMarkdown
             // eslint-disable-next-line react/no-children-prop
             children={markdown}
@@ -56,13 +55,13 @@ const MarkdownRenderer = ({ markdown }: { markdown: string }) => {
                 ),
 
                 caption: ({ node, ...props }) => <TableCaption {...props} />,
-                ul: ({ node, className, ...props }) =>
+                ul: ({ node, ordered, className, ...props }) =>
                     className === 'contains-task-list' ? (
                         <List className={className} {...props} />
                     ) : (
                         <OrderedList className={className} {...props} />
                     ),
-                ol: ({ node, className, ...props }) =>
+                ol: ({ node, ordered, className, ...props }) =>
                     className === 'contains-task-list' ? (
                         <List className={className} {...props} />
                     ) : (

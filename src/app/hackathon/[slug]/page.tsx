@@ -4,8 +4,11 @@ import { useGetHackathonQuery } from '@/state/services/hackathon-api';
 import {
     Avatar,
     Box,
+    Card,
+    CardBody,
     Flex,
     Heading,
+    Skeleton,
     Tab,
     TabList,
     TabPanel,
@@ -102,70 +105,92 @@ export default function HackathonPage() {
                     <TabPanels minH={350}>
                         <TabPanel>
                             {hackathon?.subtitle && (
-                                <Box my={4}>{hackathon?.subtitle}</Box>
+                                <Card
+                                    boxShadow={'base'}
+                                    borderRadius={'md'}
+                                    my={4}
+                                >
+                                    <CardBody>
+                                        <Text>{hackathon?.subtitle}</Text>
+                                    </CardBody>
+                                </Card>
                             )}
                             <Flex
                                 gap={{ lg: 6, base: 6 }}
                                 flexWrap={'wrap-reverse'}
                             >
-                                <Box
-                                    boxShadow={'base'}
-                                    borderRadius={'md'}
+                                <Skeleton
+                                    isLoaded={!isLoading}
                                     flex={1}
                                     minW={{ lg: 400, base: 300 }}
-                                    bg={'white'}
                                     w={'full'}
+                                >
+                                    <Box
+                                        boxShadow={'base'}
+                                        borderRadius={'md'}
+                                        flex={1}
+                                        minW={{ lg: 400, base: 300 }}
+                                        bg={'white'}
+                                        w={'full'}
+                                        p={{ lg: '6', base: 4 }}
+                                    >
+                                        <Box maxW={'full'}>
+                                            <MarkdownRenderer
+                                                markdown={
+                                                    hackathon?.description as string
+                                                }
+                                            />
+                                            laborum rerum unde magni iure fugiat
+                                            ab deserunt doloribus doloremque
+                                            quam vitae. Ratione at facere sit
+                                            iusto aperiam, voluptas ea officia
+                                            quo ullam illum. Similique,
+                                            asperiores magni esse accusantium,
+                                            quasi aliquid incidunt cumque
+                                            laborum!
+                                        </Box>
+                                    </Box>
+                                </Skeleton>
+                                <Skeleton isLoaded={!isLoading}>
+                                    <HackathonPageSidebar
+                                        hackathon={hackathon}
+                                    />
+                                </Skeleton>
+                            </Flex>
+                            <Skeleton isLoaded={!isLoading}>
+                                <Box
+                                    bg={'white'}
+                                    boxShadow={'base'}
+                                    borderRadius={'md'}
+                                    my={6}
                                     p={{ lg: '6', base: 4 }}
                                 >
-                                    <Box maxW={'full'}>
-                                        <MarkdownRenderer
-                                            markdown={
-                                                hackathon?.description as string
-                                            }
-                                        />
-                                        laborum rerum unde magni iure fugiat ab
-                                        deserunt doloribus doloremque quam
-                                        vitae. Ratione at facere sit iusto
-                                        aperiam, voluptas ea officia quo ullam
-                                        illum. Similique, asperiores magni esse
-                                        accusantium, quasi aliquid incidunt
-                                        cumque laborum!
-                                    </Box>
+                                    <Heading size={'lg'}>Judges</Heading>
+                                    <Wrap my={6} spacing={'6'}>
+                                        <WrapItem>
+                                            <Flex align={'center'}>
+                                                <Avatar size={'lg'} />
+                                                <Box ml={4}>
+                                                    <Text
+                                                        fontWeight={'semibold'}
+                                                        mb={0.5}
+                                                    >
+                                                        Lucky Victory
+                                                    </Text>
+                                                    <Text
+                                                        fontSize={'sm'}
+                                                        fontWeight={'medium'}
+                                                        as={'em'}
+                                                    >
+                                                        Software engineer at
+                                                        Matrix{' '}
+                                                    </Text>
+                                                </Box>
+                                            </Flex>
+                                        </WrapItem>
+                                    </Wrap>
                                 </Box>
-
-                                <HackathonPageSidebar hackathon={hackathon} />
-                            </Flex>
-                            <Box
-                                bg={'white'}
-                                boxShadow={'base'}
-                                borderRadius={'md'}
-                                my={6}
-                                p={{ lg: '6', base: 4 }}
-                            >
-                                <Heading size={'lg'}>Judges</Heading>
-                                <Wrap my={6} spacing={'6'}>
-                                    <WrapItem>
-                                        <Flex align={'center'}>
-                                            <Avatar size={'lg'} />
-                                            <Box ml={4}>
-                                                <Text
-                                                    fontWeight={'semibold'}
-                                                    mb={0.5}
-                                                >
-                                                    Lucky Victory
-                                                </Text>
-                                                <Text
-                                                    fontSize={'sm'}
-                                                    fontWeight={'medium'}
-                                                    as={'em'}
-                                                >
-                                                    Software engineer at Matrix{' '}
-                                                </Text>
-                                            </Box>
-                                        </Flex>
-                                    </WrapItem>
-                                </Wrap>
-                            </Box>
+                            </Skeleton>
                         </TabPanel>
                         <TabPanel>
                             {isEmpty(hackathon?.projects) &&

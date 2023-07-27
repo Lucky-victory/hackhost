@@ -9,6 +9,9 @@ import { USER_ROLE, UserCreate } from '@/const';
 import { USER_AUTH_TYPE } from '@prisma/client';
 
 export const authOptions: NextAuthOptions = {
+    pages:{
+signIn:'/auth/sign-in',
+    },
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
             // console.log({ user, account, profile, email, credentials });

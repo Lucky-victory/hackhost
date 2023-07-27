@@ -76,13 +76,20 @@ export interface Project {
     hackathon: Hackathon;
     hackathonId: string;
     isWinner: boolean;
-    status?: PROJECT_STATUS;
+    status?: keyof typeof PROJECT_STATUS;
     toolsUsed: ProjectToolsUsed[];
 }
 export interface ProjectCreate
     extends Omit<
         Project,
-        'user' | 'toolsUsed' | 'createdAt' | 'updatedAt' | 'userId' | 'id'
+        | 'user'
+        | 'toolsUsed'
+        | 'createdAt'
+        | 'updatedAt'
+        | 'userId'
+        | 'id'
+        | 'hackathon'
+        | 'hackathonId'
     > {
     toolsUsed: Pick<ProjectToolsUsed, 'name'>[];
 }

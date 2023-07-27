@@ -7,7 +7,10 @@ import {
     PROJECT_STATUS,
     ProjectCreate,
 } from '@/const';
-import { useAddHackathonMutation } from '@/state/services/hackathon-api';
+import {
+    useAddHackathonMutation,
+    useAddProjectMutation,
+} from '@/state/services/hackathon-api';
 import {
     Drawer,
     DrawerBody,
@@ -70,14 +73,30 @@ import {
     lazyload,
     placeholder,
 } from '@cloudinary/react';
-const currencies = ['USD', 'GBP', 'EUR', 'INR', 'NGN'];
+import { useParams } from 'next/navigation';
+import CloudinaryImageWidget from '@/src/app/components/CloudinaryImageWidget';
+const toolsUsed = [
+    'vue',
+    'react',
+    'react-native',
+    'flutter',
+    'angular',
+    'svelte',
+    'redux',
+    'mysql',
+    'postgresql',
+    'mongodb',
+    'tidb',
+    'nodejs',
+    'python',
+];
+const categories = ['Frontend', 'Backend', 'AI', 'Blockchain', 'Mobile App'];
 const SubmissionPage = () => {
+    const { slug: hackathonSlug } = useParams();
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [addHackathonTrigger, { data, isLoading, isError }] =
-        useAddHackathonMutation();
-    const drawerBtnRef = useRef<HTMLButtonElement | null>(null);
-    const fileInputRefs = useRef<HTMLInputElement[] | null[]>([]);
+    const [addProjectTrigger, { data, isLoading }] = useAddProjectMutation();
+    const screenshotInputRef = useRef<HTMLInputElement | null>(null);
     const [startDate, setStartDate] = useState(new Date());
     const [selectedDateType, setSelectedDateType] = useState<'start' | 'end'>(
         'start'
@@ -112,64 +131,70 @@ const SubmissionPage = () => {
             | HTMLButtonElement;
         setFormFields((prev) => ({
             ...prev,
-            [name]: value,
+            [name]:
+                name === 'toolsUsed'
+                    ? [...formFields.toolsUsed, { name: value }]
+                    : value,
         }));
     }
 
-    function handleAddMoreJudge() {
-        const { judges } = formFields;
-        const newJudges = [...judges, { name: '', bio: '', avatar: '' }];
-        setFormFields((prev) => ({ ...prev, judges: newJudges }));
+    function handleToolsUsedRemove(index: number) {
+        const { toolsUsed } = formFields;
+        let newTools = [...toolsUsed];
+        newTools = newTools.filter((_, ind) => ind !== index);
+        setFormFields((prev) => ({ ...prev, toolsUsed: newTools }));
     }
-    function handleRemoveJudge(index: number) {
-        const { judges: prevJudges } = formFields;
-        let newJudges = [...prevJudges];
-        newJudges = newJudges.filter((_, ind) => ind !== index);
-        setFormFields((prev) => ({ ...prev, judges: newJudges }));
-    }
-    function handleJudgesInputChange(evt: ChangeEvent, index: number) {
-        const { name, value } = evt.target as HTMLInputElement;
-        const { judges } = formFields;
-        const newJudges = [...judges];
-        newJudges[index][name as keyof (typeof newJudges)[typeof index]] =
-            value;
+    // function handleJudgesInputChange(evt: ChangeEvent, index: number) {
+    //     const { name, value } = evt.target as HTMLInputElement;
+    //     const { judges } = formFields;
+    //     const newJudges = [...judges];
+    //     newJudges[index][name as keyof (typeof newJudges)[typeof index]] =
+    //         value;
 
-        setFormFields((prev) => ({ ...prev, judges: newJudges }));
-    }
-    function handlePhotoSelect(index: number) {
-        console.log({ inp: fileInputRefs.current[index] });
+    //     setFormFields((prev) => ({ ...prev, judges: newJudges }));
+    // }
+    // function handlePhotoSelect(index: number) {
+    //     console.log({ inp: fileInputRefs.current[index] });
 
-        fileInputRefs.current[index]?.click();
+    //     fileInputRefs.current[index]?.click();
+    // }
+    function handleScreenshotPhotoSelect() {
+        screenshotInputRef.current?.click();
     }
 
-    function handleFileInputChange(
-        evt: ChangeEvent<HTMLInputElement>,
-        index: number
-    ) {
-        console.log(evt.target.files, { index });
-        const file = (evt.target.files && evt.target.files[0]) as File;
-        const { judges } = formFields;
-        const newJudges = [...judges];
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            newJudges[index]['avatar'] = e.target?.result as string;
-            setFormFields((prev) => ({ ...prev, judges: newJudges }));
-        };
-        reader.readAsDataURL(file);
-    }
-    async function handleHackathonPublish(status: keyof typeof PROJECT_STATUS) {
+    // function handleFileInputChange(
+    //     evt: ChangeEvent<HTMLInputElement>,
+    //     index: number
+    // ) {
+    //     console.log(evt.target.files, { index });
+    //     const file = (evt.target.files && evt.target.files[0]) as File;
+    // const { judges } = formFields;
+    // const newJudges = [...judges];
+    // const reader = new FileReader();
+    // reader.onload = function (e) {
+    //     newJudges[index]['avatar'] = e.target?.result as string;
+    //     setFormFields((prev) => ({ ...prev, judges: newJudges }));
+    // };
+    // reader.readAsDataURL(file);
+    // }
+    async function handleProjectPublish(status: keyof typeof PROJECT_STATUS) {
         setFormFields((prev) => ({
             ...prev,
             status,
         }));
         try {
             const fields = { ...formFields, status };
-            await addHackathonTrigger(fields);
+            await addProjectTrigger({
+                ...fields,
+                slug: hackathonSlug as string,
+            });
             setTimeout(() => {
-                setFormFields(initialFields);
+                if (status !== 'DRAFT') {
+                    setFormFields(initialFields);
+                }
             }, 1500);
             toast({
-                title: 'Hackathon added successfully.',
+                title: 'Project added successfully.',
                 description: '',
                 status: 'success',
                 duration: 3000,
@@ -185,7 +210,7 @@ const SubmissionPage = () => {
             });
         }
     }
-    function handleDrawerClose() {}
+
     return (
         <Box className="page" pb={12}>
             <Navbar />
@@ -204,17 +229,8 @@ const SubmissionPage = () => {
                             w={'full'}
                             mb={8}
                         >
-                            {/* <Button
-                                ref={drawerBtnRef}
-                                onClick={onOpen}
-                                colorScheme="purple"
-                                variant={'ghost'}
-                                fontWeight={'medium'}
-                            >
-                                Preview{' '}
-                            </Button> */}
                             <Button
-                                onClick={() => handleHackathonPublish('DRAFT')}
+                                onClick={() => handleProjectPublish('DRAFT')}
                                 type="submit"
                                 colorScheme="purple"
                                 variant={'outline'}
@@ -230,7 +246,7 @@ const SubmissionPage = () => {
                                 colorScheme="purple"
                                 loadingText="Submitting..."
                                 onClick={() =>
-                                    handleHackathonPublish('PUBLISHED')
+                                    handleProjectPublish('PUBLISHED')
                                 }
                             >
                                 Publish
@@ -256,37 +272,57 @@ const SubmissionPage = () => {
                                 isRequired
                                 _focus={{ borderColor: 'purple.600' }}
                                 onChange={handleInputChange}
-                                placeholder="Hackathon Title"
+                                placeholder="Project Title"
                             ></Input>
                         </FormLabel>
-                        <FormLabel htmlFor="desc">
-                            <Text as={'span'}>Subtitle:</Text>
-                        </FormLabel>
-                        <Flex
-                            align="center"
-                            justify={'space-between'}
-                            wrap={'wrap'}
-                            gap={3}
-                        >
-                            <Text fontSize={'smaller'}>
-                                A short introduction.
-                            </Text>
-                        </Flex>
-                        <Box mt={4} mb={4}>
-                            <Textarea
-                                mt={2}
-                                resize={'none'}
-                                h={70}
-                                maxH={100}
-                                id="subtitle"
-                                value={formFields.subtitle as string}
-                                _focus={{ borderColor: 'purple.600' }}
-                                name="subtitle"
-                                placeholder={`Introduction...`}
-                                onChange={handleInputChange}
-                            ></Textarea>
-                        </Box>
 
+                        <Box minH={100} mb={4}>
+                            <FormLabel htmlFor="scrnshot">
+                                <Text as={'span'}>
+                                    ScreenShot:
+                                    <Text as={'span'} color={'red.400'}>
+                                        *
+                                    </Text>
+                                </Text>
+                            </FormLabel>
+                            <Box>
+                                <Text size={'smaller'}>
+                                    Upload a screenshot of your project
+                                </Text>
+                            </Box>
+                            <Flex wrap={'wrap'} align="center" gap={6}>
+                                <Flex
+                                    my={3}
+                                    bg={'gray.100'}
+                                    w={'full'}
+                                    h={150}
+                                    borderRadius={'md'}
+                                    maxW={400}
+                                    align={'center'}
+                                    justify={'center'}
+                                >
+                                    <Text color={'gray.400'}>
+                                        Screenshot preview will appear here{' '}
+                                    </Text>
+                                </Flex>
+
+                                {/* <Input
+                                    hidden
+                                    type="file"
+                                    ref={screenshotInputRef}
+                                    id="srcnshot"
+                                    accept="image/*"
+                                ></Input>
+                                <Button
+                                    colorScheme="purple"
+                                    onClick={handleScreenshotPhotoSelect}
+                                >
+                                    <MdPhoto />
+                                    Choose Photo{' '}
+                                </Button> */}
+                                <CloudinaryImageWidget />
+                            </Flex>
+                        </Box>
                         <FormLabel htmlFor="desc">
                             <Text as={'span'}>
                                 Details:
@@ -339,14 +375,94 @@ const SubmissionPage = () => {
                             wrap={'wrap'}
                             divider={<StackDivider />}
                             my={6}
-                            gap={6}
+                            gap={{ lg: 6, base: 4 }}
                         >
                             <Box>
-                                <FormLabel htmlFor="currency-menu">
-                                    Currency:
+                                <FormLabel htmlFor="category">
+                                    Tools Used:
                                 </FormLabel>
-                                <Menu id="currency-menu">
+
+                                <Menu id="tools-menu">
+                                    <Flex
+                                        align={'center'}
+                                        gap={4}
+                                        wrap={'wrap'}
+                                    >
+                                        <Flex
+                                            overflowX={'auto'}
+                                            align="center"
+                                            gap={2}
+                                            minW={80}
+                                            display={'inline-block'}
+                                            maxW={200}
+                                            py={2}
+                                        >
+                                            {formFields.toolsUsed?.map(
+                                                (t, i) => (
+                                                    <Text
+                                                        flexShrink={0}
+                                                        size={'smaller'}
+                                                        bg={'grap.100'}
+                                                        borderRadius={'base'}
+                                                        key={'tag' + i}
+                                                    >
+                                                        {t?.name}{' '}
+                                                        <IconButton
+                                                            onClick={() =>
+                                                                handleToolsUsedRemove(
+                                                                    i
+                                                                )
+                                                            }
+                                                            size={'xs'}
+                                                            aria-label="close"
+                                                            icon={<MdClose />}
+                                                        />
+                                                    </Text>
+                                                )
+                                            )}
+                                        </Flex>
+                                        <MenuButton
+                                            minW={160}
+                                            px={6}
+                                            py={2}
+                                            border={'1px'}
+                                            maxH={10}
+                                            borderColor={'purple.200'}
+                                            borderRadius={'base'}
+                                            _focus={{
+                                                border: '2px',
+                                                borderColor: 'purple.500',
+                                            }}
+                                            _hover={{
+                                                border: '2px',
+                                                borderColor: 'purple.500',
+                                            }}
+                                            color={'purple.700'}
+                                        >
+                                            <MdExpandMore />
+                                        </MenuButton>
+                                    </Flex>
+                                    <MenuList>
+                                        {toolsUsed.map((tool) => (
+                                            <MenuItem
+                                                key={crypto.randomUUID()}
+                                                name="toolsUsed"
+                                                value={tool}
+                                                onClick={handleInputChange}
+                                            >
+                                                {tool}
+                                            </MenuItem>
+                                        ))}
+                                    </MenuList>
+                                </Menu>
+                            </Box>
+                            <Box>
+                                <FormLabel htmlFor="category">
+                                    Category:
+                                </FormLabel>
+                                <Menu id="category-menu">
                                     <MenuButton
+                                        minW={160}
                                         px={6}
                                         py={2}
                                         border={'1px'}
@@ -362,55 +478,26 @@ const SubmissionPage = () => {
                                             borderColor: 'purple.500',
                                         }}
                                         color={'purple.700'}
-                                        value={formFields.currency}
                                     >
                                         <Flex align={'center'} gap={4}>
-                                            {formFields.currency}
+                                            {formFields.category}
 
                                             <MdExpandMore />
                                         </Flex>
                                     </MenuButton>
                                     <MenuList>
-                                        {currencies.map((currency) => (
+                                        {categories.map((category) => (
                                             <MenuItem
                                                 key={crypto.randomUUID()}
-                                                name="currency"
-                                                value={currency}
+                                                name="category"
+                                                value={category}
                                                 onClick={handleInputChange}
                                             >
-                                                {currency}
+                                                {category}
                                             </MenuItem>
                                         ))}
                                     </MenuList>
                                 </Menu>
-                            </Box>
-                            <Box>
-                                <FormLabel htmlFor="price">
-                                    Total Price:
-                                    <Text
-                                        as={'span'}
-                                        color="red.400"
-                                        fontSize={'sm'}
-                                    >
-                                        *
-                                    </Text>
-                                </FormLabel>
-                                <Input
-                                    id="price"
-                                    type="number"
-                                    value={
-                                        formFields.price === 0
-                                            ? ''
-                                            : formFields.price
-                                    }
-                                    onChange={handleInputChange}
-                                    name="price"
-                                    placeholder="30000"
-                                    _focus={{ borderColor: 'purple.600' }}
-                                    h={10}
-                                    isRequired
-                                    maxW={'3xl'}
-                                />
                             </Box>
                         </HStack>
                     </CardBody>

@@ -6,6 +6,7 @@ import { Montserrat } from 'next/font/google';
 import { ChakraProvider } from './providers/chakra-provider';
 import { ReduxProvider } from './providers/redux-provider';
 import { NextAuthSessionProvider } from './providers/nextauth-provider';
+import Script from 'next/script';
 
 const inter = Montserrat({
     weight: ['400', '500', '600', '700'],

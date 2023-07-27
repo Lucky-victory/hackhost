@@ -75,7 +75,7 @@ const HackathonPageSidebar = ({
                         maxW={500}
                         mx={'auto'}
                         w={'full'}
-                        href={`${pathname}/project/create`}
+                        href={`${pathname}/project/submission`}
                         colorScheme="purple"
                         borderRadius={'base'}
                     >
