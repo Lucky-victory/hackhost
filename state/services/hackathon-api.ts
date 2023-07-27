@@ -64,6 +64,14 @@ export const HackHostApi = createApi({
             }),
             invalidatesTags: [{ type: 'Hackathons' as const, id: 'LIST' }],
         }),
+        checkHasJoinedHackathon: builder.query<
+            APIResponse<{ hasJoined: boolean }>,
+            string
+        >({
+            query: (slug) => ({
+                url: `hackathon/${slug}/participants/confirm`,
+            }),
+        }),
         updateHackathon: builder.mutation<
             APIResponse<Hackathon>,
             Partial<Hackathon>
@@ -95,5 +103,5 @@ export const {
     useGetHackathonQuery,
     useUpdateHackathonMutation,
     useGetCSRFTokenQuery,
-    useJoinHackathonMutation,
+    useJoinHackathonMutation,useCheckHasJoinedHackathonQuery,
 } = HackHostApi;

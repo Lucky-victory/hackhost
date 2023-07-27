@@ -15,7 +15,10 @@ import { format, formatDistanceStrict } from 'date-fns';
 import isEmpty from 'just-is-empty';
 import { MdAccountBalance, MdLanguage } from 'react-icons/md';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { useJoinHackathonMutation } from '@/state/services/hackathon-api';
+import {
+    useCheckHasJoinedHackathonQuery,
+    useJoinHackathonMutation,
+} from '@/state/services/hackathon-api';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
@@ -27,24 +30,22 @@ const HackathonPageSidebar = ({
     const { slug } = useParams();
     const sess = useSession();
     console.log({ sess, slug });
-    const [hasJoined, setHasJoined] = useState(false);
-
-    const [joinHackathonTrigger, { isSuccess, isLoading, data }] =
+    const { data, refetch } = useCheckHasJoinedHackathonQuery(slug as string);
+    const checkedHasJoined = data?.data;
+    const [joinHackathonTrigger, { isSuccess, isLoading }] =
         useJoinHackathonMutation();
     const pathname = usePathname();
     const router = useRouter();
-    const participantIds = hackathon?.participants?.map((part) => part?.userId);
-    console.log({ participantIds, hasJoined });
+
     useEffect(() => {
-        //@ts-ignore
-
-        setHasJoined(participantIds?.includes(sess.data?.user?.id));
-
-        //@ts-ignore
-    }, [hasJoined, hackathon, sess.data?.user]);
+        refetch();
+    }, [isSuccess, refetch]);
     async function handleHackathonJoin() {
         try {
-            if (!sess.data) {
+            if (sess.status === 'loading') {
+                return;
+            }
+            if (sess.status !== 'authenticated') {
                 return router.push(`/api/auth/signin?returnTo=${pathname}`);
             }
             await joinHackathonTrigger(slug as string);
@@ -52,7 +53,7 @@ const HackathonPageSidebar = ({
             console.log('error joining hackathon', error);
         }
     }
-    console.log({ data, isLoading, isSuccess });
+
     return (
         <Box
             as="aside"
@@ -68,7 +69,7 @@ const HackathonPageSidebar = ({
             p={'4'}
         >
             <Stack divider={<StackDivider />} gap={4}>
-                {hasJoined ? (
+                {checkedHasJoined?.hasJoined ? (
                     <Button
                         as={NextLink}
                         maxW={500}

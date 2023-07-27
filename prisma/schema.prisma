@@ -58,8 +58,8 @@ model UserSkills {
 
 model Project {
   id            String             @id @default(uuid())
-  title         String
-  description   String
+  title         String             @db.VarChar(255)
+  description   String             @db.LongText()
   screenshotUrl String             @map("screenshot_url")
   repoUrl       String             @map("repo_url")
   demoUrl       String             @map("demo_url")
@@ -76,7 +76,7 @@ model Project {
   isWinner      Boolean            @default(false) @map("is_winner")
   status        PROJECT_STATUS     @default(DRAFT)
 
-  @@index([title, description, slug])
+  @@index([title, slug])
   @@map("projects")
 }
 
@@ -91,9 +91,9 @@ model ProjectToolsUsed {
 
 model Hackathon {
   id          String   @id @default(uuid())
-  title       String
-  subtitle    String?
-  description String
+  title       String   @db.VarChar(120)
+  subtitle    String?  @db.VarChar(255)
+  description String   @db.LongText()
   startDate   DateTime @map("start_date")
   endDate     DateTime @map("end_date")
   user        User     @relation(fields: [userId], references: [id])
@@ -113,9 +113,10 @@ model Hackathon {
   judges       HackathonJudges[]
   subStatus    HACKATHON_SUB_STATUS?  @default(ONGOING) @map("sub_status")
 
-  @@index([title, description, slug, type, price, status])
+  @@index([title, slug, type, price, status])
   @@map("hackathons")
 }
+
 model HackathonParticipant {
   id          String    @id @default(uuid())
   hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
@@ -128,6 +129,7 @@ model HackathonParticipant {
 
   @@map("hackathon_participants")
 }
+
 model HackathonJudges {
   id          String    @id @default(uuid())
   hackathonId String    @map("hackathon_id")
@@ -151,8 +153,6 @@ model HackathonTags {
   @@index([name])
   @@map("hackathon_categories")
 }
-
-
 
 enum USER_ROLE {
   BASIC

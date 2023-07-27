@@ -1,5 +1,10 @@
 'use client';
-import { HACKATHON_STATUS, HackathonCreate } from '@/const';
+import {
+    HACKATHON_STATUS,
+    HACKATHON_SUB_STATUS,
+    HACKATHON_TYPE,
+    HackathonCreate,
+} from '@/const';
 import { useAddHackathonMutation } from '@/state/services/hackathon-api';
 import {
     Drawer,
@@ -17,7 +22,6 @@ import {
     FormControl,
     FormLabel,
     HStack,
-    Hide,
     IconButton,
     Image,
     Input,
@@ -31,14 +35,12 @@ import {
     Wrap,
     WrapItem,
     useDisclosure,
+    useToast,
 } from '@chakra-ui/react';
 import {
     ChangeEvent,
     FormEvent,
-    LegacyRef,
-    MouseEvent,
     MouseEventHandler,
-    ReactNode,
     forwardRef,
     useEffect,
     useRef,
@@ -53,14 +55,6 @@ import {
     MdDelete,
 } from 'react-icons/md';
 import Navbar from '@/src/app/components/Navbar';
-import { CloudinaryImage } from '@cloudinary/url-gen/assets/CloudinaryImage';
-import {
-    AdvancedImage,
-    accessibility,
-    responsive,
-    lazyload,
-    placeholder,
-} from '@cloudinary/react';
 const currencies = ['USD', 'GBP', 'EUR', 'INR', 'NGN'];
 const CreatePage = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
@@ -77,19 +71,46 @@ const CreatePage = () => {
         new Date(new Date().setDate(new Date().getDate() + 30))
     );
     const initialFields = {
-        title: '',
-        currency: 'USD',
-        description: '',
-        price: 0,
-        startDate,
-        endDate,
+        title: 'SustainTech Hackathon',
+        subtitle: 'Join us in building a sustainable future!',
+        description:
+            '## About the Hackathon\nSustainTech Hackathon is dedicated to finding eco-friendly and sustainable solutions. Participants will get a chance to collaborate with experts in the field and make a positive impact on the environment.\n\n## Requirements\nParticipants are encouraged to build projects that address environmental issues, renewable energy, or waste reduction. Projects should be feasible and contribute to a greener future.\n\n## Rules\n1. Participants can work in teams or individually.\n2. All projects must be presented with a working prototype.\n3. Open-source projects are highly appreciated.\n\n## Prize Distribution\n1. First position - $10,000\n2. Second position - $6,500\n3. Third position - $4,500\n4. Fourth position - $3,000\n5. Fifth position - $2,500',
+        startDate: new Date('2023-08-20T00:00:00.000Z'),
+        endDate: new Date('2023-09-15T00:00:00.000Z'),
+        slug: 'sustaintech-hackathon-72e0d6',
+        price: 42000,
+        currency: 'INR',
+        type: HACKATHON_TYPE.PUBLIC,
+        status: HACKATHON_STATUS.PUBLISHED,
+        subStatus: HACKATHON_SUB_STATUS.ONGOING,
 
-        judges: [{ name: '', avatar: '', bio: '' }],
+        judges: [
+            {
+                name: 'Francis Banks',
+                avatar: 'https://randomuser.me/api/portraits/men/82.jpg',
+                bio: 'Sotfware Engineer',
+            },
+            {
+                name: 'Jane Micheal',
+                avatar: 'https://randomuser.me/api/portraits/women/91.jpg',
+                bio: 'CEO at Tech',
+            },
+            {
+                name: 'Leanne McWood',
+                avatar: 'https://randomuser.me/api/portraits/women/73.jpg',
+                bio: 'Sotfware Engineer',
+            },
+            {
+                name: 'Richard Gabby',
+                avatar: 'https://randomuser.me/api/portraits/men/73.jpg',
+                bio: 'Designer at McHub',
+            },
+        ],
     };
     const [formFields, setFormFields] =
         useState<HackathonCreate>(initialFields);
     console.log({ data });
-
+    const toast = useToast({ position: 'top' });
     function handleFormSubmit(evt: FormEvent) {
         evt.preventDefault();
         console.log({ formFields, data });
@@ -182,13 +203,35 @@ const CreatePage = () => {
         };
         reader.readAsDataURL(file);
     }
-    function handleHackathonStatus(status: keyof typeof HACKATHON_STATUS) {
+    async function handleHackathonPublish(
+        status: keyof typeof HACKATHON_STATUS
+    ) {
         setFormFields((prev) => ({
             ...prev,
             status,
         }));
-        const fields = { ...formFields, status };
-        addHackathonTrigger(fields);
+        try {
+            const fields = { ...formFields, status };
+            await addHackathonTrigger(fields);
+            setTimeout(() => {
+                setFormFields(initialFields);
+            }, 1500);
+            toast({
+                title: 'Hackathon added successfully.',
+                description: '',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch (error) {
+            toast({
+                title: 'An error occured.',
+                description: '',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+        }
     }
     function handleDrawerClose() {}
     return (
@@ -209,7 +252,7 @@ const CreatePage = () => {
                             w={'full'}
                             mb={8}
                         >
-                            <Button
+                            {/* <Button
                                 ref={drawerBtnRef}
                                 onClick={onOpen}
                                 colorScheme="purple"
@@ -217,21 +260,25 @@ const CreatePage = () => {
                                 fontWeight={'medium'}
                             >
                                 Preview{' '}
-                            </Button>
+                            </Button> */}
                             <Button
-                                onClick={() => handleHackathonStatus('DRAFT')}
+                                onClick={() => handleHackathonPublish('DRAFT')}
                                 type="submit"
                                 colorScheme="purple"
                                 variant={'outline'}
                                 fontWeight={'medium'}
+                                isLoading={isLoading}
+                                loadingText="Submitting..."
                             >
                                 Save as Draft{' '}
                             </Button>
                             <Button
+                                isLoading={isLoading}
                                 type="submit"
                                 colorScheme="purple"
+                                loadingText="Submitting..."
                                 onClick={() =>
-                                    handleHackathonStatus('PUBLISHED')
+                                    handleHackathonPublish('PUBLISHED')
                                 }
                             >
                                 Publish
@@ -261,6 +308,34 @@ const CreatePage = () => {
                             ></Input>
                         </FormLabel>
                         <FormLabel htmlFor="desc">
+                            <Text as={'span'}>Subtitle:</Text>
+                        </FormLabel>
+                        <Flex
+                            align="center"
+                            justify={'space-between'}
+                            wrap={'wrap'}
+                            gap={3}
+                        >
+                            <Text fontSize={'smaller'}>
+                                A short introduction.
+                            </Text>
+                        </Flex>
+                        <Box mt={4} mb={4}>
+                            <Textarea
+                                mt={2}
+                                resize={'none'}
+                                h={70}
+                                maxH={100}
+                                id="subtitle"
+                                value={formFields.subtitle as string}
+                                _focus={{ borderColor: 'purple.600' }}
+                                name="subtitle"
+                                placeholder={`Introduction...`}
+                                onChange={handleInputChange}
+                            ></Textarea>
+                        </Box>
+
+                        <FormLabel htmlFor="desc">
                             <Text as={'span'}>
                                 Details:
                                 <Text as={'span'} color={'red.400'}>
@@ -279,7 +354,7 @@ const CreatePage = () => {
                                 rules etc.
                             </Text>
                         </Flex>
-                        <Box mt={6}>
+                        <Box mt={4}>
                             <Text
                                 fontSize={'xs'}
                                 color={'gray.500'}
