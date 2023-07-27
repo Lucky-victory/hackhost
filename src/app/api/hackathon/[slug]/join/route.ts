@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { authOptions } from '../../../auth/[...nextauth]/route';
 export async function GET(request: Request) {
     return NextResponse.json({});
 }
@@ -9,15 +10,23 @@ export async function POST(
     { params: { slug } }: { params: { slug: string } }
 ) {
     try {
-        const sess = await getServerSession();
-        // const response=await prisma.hackathonParticipant.create({
-        //   data:{
+        const sess = await getServerSession(authOptions);
+        // const response = await prisma.hackathonParticipant.create({
+        //     data: {
+        //         hackathon: {},
+        //     },
+        // });
+        const newParticipant = await prisma.hackathonParticipant.create({
+            data: {
+                hackathon: { connect: { slug: slug } },
+                user: { connect: { email: sess?.user?.email as string } },
+            },
+        });
+        console.log(newParticipant);
 
-        //   }
-        // })
         return NextResponse.json(
             {
-                data: null,
+                data: newParticipant,
                 status: 200,
                 message: 'Hackathon Joined Successfully',
             },

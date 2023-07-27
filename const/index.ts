@@ -35,7 +35,7 @@ export interface UserCreate
   extends Pick<
     User,
     "authType" | "avatar" | "email" | "name" | "role" | "password" | "username"
-  > {}
+  > {id?:string}
 
 export interface UserInterest {
   id: string;

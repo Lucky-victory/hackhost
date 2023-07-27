@@ -13,18 +13,46 @@ import {
 } from '@chakra-ui/react';
 import { format, formatDistanceStrict } from 'date-fns';
 import isEmpty from 'just-is-empty';
-import { MdAccountBalance, MdHouse, MdLanguage } from 'react-icons/md';
-import {redirect} from 'next/navigation';
-
+import { MdAccountBalance, MdLanguage } from 'react-icons/md';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useJoinHackathonMutation } from '@/state/services/hackathon-api';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import NextLink from 'next/link';
 const HackathonPageSidebar = ({
     hackathon,
 }: {
     hackathon: HackathonResult;
 }) => {
+    const { slug } = useParams();
+    const sess = useSession();
+    console.log({ sess, slug });
+    const [hasJoined, setHasJoined] = useState(false);
 
-    function handleHackathonJoin(){
+    const [joinHackathonTrigger, { isSuccess, isLoading, data }] =
+        useJoinHackathonMutation();
+    const pathname = usePathname();
+    const router = useRouter();
+    const participantIds = hackathon?.participants?.map((part) => part?.userId);
+    console.log({ participantIds, hasJoined });
+    useEffect(() => {
+        //@ts-ignore
 
+        setHasJoined(participantIds?.includes(sess.data?.user?.id));
+
+        //@ts-ignore
+    }, [hasJoined, hackathon, sess.data?.user]);
+    async function handleHackathonJoin() {
+        try {
+            if (!sess.data) {
+                return router.push(`/api/auth/signin?returnTo=${pathname}`);
+            }
+            await joinHackathonTrigger(slug as string);
+        } catch (error) {
+            console.log('error joining hackathon', error);
+        }
     }
+    console.log({ data, isLoading, isSuccess });
     return (
         <Box
             as="aside"
@@ -40,17 +68,32 @@ const HackathonPageSidebar = ({
             p={'4'}
         >
             <Stack divider={<StackDivider />} gap={4}>
-                <Button
-                    onClick={handleHackathonJoin}
-                    maxW={500}
-                    mx={'auto'}
-                    w={'full'}
-                   
-                    colorScheme="purple"
-                    borderRadius={'base'}
-                >
-                    Join Hackathon
-                </Button>
+                {hasJoined ? (
+                    <Button
+                        as={NextLink}
+                        maxW={500}
+                        mx={'auto'}
+                        w={'full'}
+                        href={`${pathname}/project/create`}
+                        colorScheme="purple"
+                        borderRadius={'base'}
+                    >
+                        Create Project
+                    </Button>
+                ) : (
+                    <Button
+                        onClick={handleHackathonJoin}
+                        maxW={500}
+                        mx={'auto'}
+                        w={'full'}
+                        loadingText="Joining..."
+                        isLoading={isLoading}
+                        colorScheme="purple"
+                        borderRadius={'base'}
+                    >
+                        Join Hackathon
+                    </Button>
+                )}
 
                 <Box as={Flex} gap={4} wrap={'wrap'} align={'center'}>
                     <Tag
@@ -132,7 +175,7 @@ const HackathonPageSidebar = ({
                             {hackathon?._count?.participants}
                         </Text>
                         <Text as={'span'} color={'gray.500'}>
-                            participants
+                            participant(s)
                         </Text>
                     </Box>
                 </HStack>

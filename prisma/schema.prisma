@@ -116,7 +116,18 @@ model Hackathon {
   @@index([title, description, slug, type, price, status])
   @@map("hackathons")
 }
+model HackathonParticipant {
+  id          String    @id @default(uuid())
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
+  hackathonId String    @map("hackathon_id")
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @map("user_id")
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("hackathon_participants")
+}
 model HackathonJudges {
   id          String    @id @default(uuid())
   hackathonId String    @map("hackathon_id")
@@ -141,18 +152,7 @@ model HackathonTags {
   @@map("hackathon_categories")
 }
 
-model HackathonParticipant {
-  id          String    @id @default(uuid())
-  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
-  hackathonId String    @map("hackathon_id")
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String    @map("user_id")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("hackathon_participants")
-}
 
 enum USER_ROLE {
   BASIC
