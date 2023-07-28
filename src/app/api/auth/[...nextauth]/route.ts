@@ -119,7 +119,7 @@ export const authOptions: NextAuthOptions = {
                     return createdUser;
                 }
 
-                if(!existingUser) throw new Error('Invalid User')
+                if (!existingUser) throw new Error('Invalid Credentials');
                 // compare the password
                 const isValidPassword = await bcrypt.compare(
                     credentials?.password as string,

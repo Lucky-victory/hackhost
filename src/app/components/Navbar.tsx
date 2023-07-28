@@ -57,7 +57,7 @@ const Navbar = () => {
                     </Button>
                 </Flex>
             </Box>
-            {!sess?.data && sess.status !== 'loading' && (
+            {!sess?.data && (
                 <Box align={'center'} as={Flex} wrap={'wrap'} gap={4}>
                     <Button
                         borderRadius={'base'}
