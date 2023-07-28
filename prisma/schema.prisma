@@ -11,106 +11,115 @@ datasource db {
 }
 
 model User {
-  id                String                 @id @default(uuid())
-  name              String
-  email             String                 @unique
-  password          String?
-  createdAt         DateTime               @default(now()) @map("created_at")
-  updatedAt         DateTime               @updatedAt @map("updated_at")
-  bio               String?
-  jobTitle          String?                @map("job_title")
-  interest          String?
-  skills            String?
-  avatar            String?
-  role              USER_ROLE              @default(BASIC)
-  username          String?
-  location          String?
-  submissions       Submission[]
-  hackathons        Hackathon[]
-  participants      HackathonParticipant[]
-  HackathonCategory HackathonCategory[]
+  id            String                 @id @default(uuid())
+  name          String
+  email         String                 @unique
+  password      String?
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime               @updatedAt @map("updated_at")
+  bio           String?
+  jobTitle      String?                @map("job_title")
+  interest      UserInterest[]
+  skills        UserSkills[]
+  avatar        String?
+  banner        String?
+  role          USER_ROLE              @default(BASIC)
+  username      String?
+  location      String?
+  authType      USER_AUTH_TYPE         @default(CREDENTIALS)
+  projects      Project[]
+  hackathon     Hackathon[]
+  participants  HackathonParticipant[]
+  HackathonTags HackathonTags[]
 
-  @@index([email, jobTitle, skills])
+  @@index([email, jobTitle, name])
   @@map("users")
 }
 
-model Submission {
-  id            String    @id @default(uuid())
-  title         String
-  description   String
-  screenshotUrl String    @map("screenshot_url")
-  repoUrl       String    @map("repo_url")
-  demoUrl       String    @map("demo_url")
-  fileUrl       String    @map("file_url")
-  user          User      @relation(fields: [userId], references: [id])
-  slug          String    @unique
-  category      String?
-  toolsUsed     String @map("tools_used")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  userId        String    @map("user_id")
-  hackathons    Hackathon @relation(fields: [hackathonId], references: [id])
-  hackathonId   String    @map("hackathon_id")
+model UserInterest {
+  id     String  @id @default(uuid())
+  name   String
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
 
-  @@index([title, description, slug])
-  @@map("submissions")
+  @@index([name])
+  @@map("user_interest")
+}
+
+model UserSkills {
+  id     String  @id @default(uuid())
+  name   String
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
+
+  @@index([name])
+  @@map("user_skills")
+}
+
+model Project {
+  id            String             @id @default(uuid())
+  title         String             @db.VarChar(255)
+  description   String             @db.LongText()
+  screenshotUrl String             @map("screenshot_url")
+  repoUrl       String             @map("repo_url")
+  demoUrl       String             @map("demo_url")
+  fileUrl       String             @map("file_url")
+  user          User               @relation(fields: [userId], references: [id])
+  slug          String             @unique
+  category      String?
+  toolsUsed     ProjectToolsUsed[]
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+  userId        String             @map("user_id")
+  hackathon     Hackathon          @relation(fields: [hackathonId], references: [id])
+  hackathonId   String             @map("hackathon_id")
+  isWinner      Boolean            @default(false) @map("is_winner")
+  status        PROJECT_STATUS     @default(DRAFT)
+
+  @@index([title, slug])
+  @@map("projects")
+}
+
+model ProjectToolsUsed {
+  id      String    @id @default(uuid())
+  name    String    @unique
+  project Project[]
+
+  @@index([name])
+  @@map("project_tools_used")
 }
 
 model Hackathon {
-  id                  String                 @id @default(uuid())
-  title               String
-  subtitle String? 
-  description         String
-  startDate           DateTime               @map("start_date")
-  endDate             DateTime               @map("end_date")
-  user                User                   @relation(fields: [userId], references: [id])
-  slug                String                 @unique
-  category            HackathonCategory?     @relation(fields: [hackathonCategoryId], references: [id])
-  createdAt           DateTime               @default(now()) @map("created_at")
-  updatedAt           DateTime               @updatedAt @map("updated_at")
-  userId              String                 @map("user_id")
-  price               Int                    @map("price")
-  currency            String
-  currencyCode        String?                @map("currency_code")
-  participants        HackathonParticipant[]
-  submissions         Submission[]
-  hackathonCategoryId String?                @map("hackathon_category_id")
-  type                HACKATHON_TYPE?         @default(public)
-  status              HACKATHON_STATUS?       @default(draft)
-  judges              HackathonJudges[]
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(120)
+  subtitle    String?  @db.VarChar(255)
+  description String   @db.LongText()
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  user        User     @relation(fields: [userId], references: [id])
+  slug        String   @unique
 
-  @@index([title, description, slug])
+  tags         HackathonTags[]
+  createdAt    DateTime               @default(now()) @map("created_at")
+  updatedAt    DateTime               @updatedAt @map("updated_at")
+  userId       String                 @map("user_id")
+  price        Int                    @map("price")
+  currency     String
+  currencyCode String?                @map("currency_code")
+  participants HackathonParticipant[]
+  projects     Project[]
+  type         HACKATHON_TYPE?        @default(PUBLIC)
+  status       HACKATHON_STATUS?      @default(DRAFT)
+  judges       HackathonJudges[]
+  subStatus    HACKATHON_SUB_STATUS?  @default(ONGOING) @map("sub_status")
+
+  @@index([title, slug, type, price, status])
   @@map("hackathons")
-}
-
-model HackathonJudges {
-  id          String    @id @default(uuid())
-  hackathonId String    @map("hackathon_id")
-  name        String
-  bio         String?
-  avatar      String?
-  Hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
-
-  @@map("hackathon_judges")
-}
-
-model HackathonCategory {
-  id         String      @id @default(uuid())
-  title      String
-  hackathons Hackathon[]
-  user       User        @relation(fields: [userId], references: [id])
-  userId     String      @map("user_id")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@index([title])
-  @@map("hackathon_categories")
 }
 
 model HackathonParticipant {
   id          String    @id @default(uuid())
-  hackathons  Hackathon @relation(fields: [hackathonId], references: [id])
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
   hackathonId String    @map("hackathon_id")
   user        User      @relation(fields: [userId], references: [id])
   userId      String    @map("user_id")
@@ -121,20 +130,59 @@ model HackathonParticipant {
   @@map("hackathon_participants")
 }
 
+model HackathonJudges {
+  id          String    @id @default(uuid())
+  hackathonId String    @map("hackathon_id")
+  name        String
+  bio         String?
+  avatar      String?
+  hackathon   Hackathon @relation(fields: [hackathonId], references: [id])
+
+  @@map("hackathon_judges")
+}
+
+model HackathonTags {
+  id        String      @id @default(uuid())
+  name      String      @unique
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  hackathon Hackathon[]
+  user      User?       @relation(fields: [userId], references: [id])
+  userId    String?     @map("user_id")
+
+  @@index([name])
+  @@map("hackathon_categories")
+}
+
 enum USER_ROLE {
   BASIC
   ADMIN
   MOD
 }
 
+enum HACKATHON_SUB_STATUS {
+  ONGOING
+  ENDED
+  UPCOMING
+}
+
 enum HACKATHON_STATUS {
-  published
-  ongoing
-  ended
-  draft
+  PUBLISHED
+  DRAFT
+}
+
+enum PROJECT_STATUS {
+  PUBLISHED
+  DRAFT
 }
 
 enum HACKATHON_TYPE {
-  public
-  private
+  PUBLIC
+  PRIVATE
+}
+
+enum USER_AUTH_TYPE {
+  CREDENTIALS
+  GITHUB
+  GOOGLE
 }

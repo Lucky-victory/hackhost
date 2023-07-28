@@ -3,14 +3,19 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import { HackHostApi } from '@/state/services/hackathon-api';
+import { CloudinaryApi } from './services/cloudinary-api';
 
 export const store = configureStore({
     reducer: {
         [HackHostApi.reducerPath]: HackHostApi.reducer,
+        [CloudinaryApi.reducerPath]: CloudinaryApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(HackHostApi.middleware),
+        getDefaultMiddleware().concat(
+            HackHostApi.middleware,
+            CloudinaryApi.middleware
+        ),
 });
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors
