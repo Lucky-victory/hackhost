@@ -9,7 +9,13 @@ export async function GET(
     try {
         const data = await prisma.hackathon.findFirst({
             include: {
-                projects: true,
+                projects: {include:{user:{
+                    select:{
+                        name:true,avatar:true
+                    }
+                },
+            
+            }},
                 _count: {
                     select: {
                         participants: true,
@@ -17,7 +23,15 @@ export async function GET(
                 },
 
                 judges: true,
-                participants: true,
+                participants: {
+                    include:{
+                        user:{
+                            select:{
+                                name:true,avatar:true,id:true
+                            }
+                        }
+                    }
+                },
             },
             where: { slug },
         });

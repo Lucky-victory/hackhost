@@ -9,6 +9,8 @@ export async function GET(
 ) {
     try {
         const sess = await getServerSession(authOptions);
+        console.log({sess});
+        
         if (!sess?.user) {
             return NextResponse.json(
                 {

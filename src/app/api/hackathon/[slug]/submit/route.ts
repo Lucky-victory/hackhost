@@ -42,25 +42,28 @@ import { getServerSession } from 'next-auth';
 //         );
 //     }
 // }
-export async function POST(request: Request) {
+export async function POST(request: Request, { params: { slug } }: { params: { slug: string } }) {
     try {
         const sess = await getServerSession();
 
         const json = await request.json();
         const { title, toolsUsed, ...rest } = json;
         const created = await prisma.project.create({
+            
             data: {
                 ...rest,
                 title,
                 slug: Utils.slugify(title),
+                hackathon:{
+connect:{slug}
+                },
                 user: {
                     connect: {
                         email: sess?.user?.email as string,
                     },
                 },
-                toolsUsed: {
-                    createMany: { data: toolsUsed },
-                },
+               
+                
             },
         });
         return NextResponse.json(

@@ -117,7 +117,7 @@ const HackathonPageSidebar = ({
                         <TagLabel fontWeight={'medium'}>
                             {!isEmpty(hackathon) &&
                                 formatDistanceStrict(
-                                    new Date(hackathon.startDate),
+                                    new Date(),
                                     new Date(hackathon.endDate),
                                     { unit: 'day' }
                                 )}{' '}

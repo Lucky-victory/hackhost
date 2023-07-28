@@ -5,7 +5,6 @@ import { useRef, useState, useEffect, ChangeEvent } from 'react';
 import { envConfigs } from '@/lib/utils';
 import { useCloudUploadImageMutation } from '@/state/services/cloudinary-api';
 
-declare const window: any;
 const CloudinaryImageWidget = ({
     showLoadingText = true,
     getUploadData = ({

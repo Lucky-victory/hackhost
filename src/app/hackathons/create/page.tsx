@@ -57,6 +57,7 @@ import {
 import Navbar from '@/src/app/components/Navbar';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import CloudinaryImageWidget from '../../components/CloudinaryImageWidget';
 
 const currencies = ['USD', 'GBP', 'EUR', 'INR', 'NGN'];
 
@@ -76,41 +77,31 @@ const CreatePage = () => {
     const [endDate, setEndDate] = useState(
         new Date(new Date().setDate(new Date().getDate() + 30))
     );
-    const initialFields = {
-        title: 'SustainTech Hackathon',
-        subtitle: 'Join us in building a sustainable future!',
-        description:
-            '## About the Hackathon\nSustainTech Hackathon is dedicated to finding eco-friendly and sustainable solutions. Participants will get a chance to collaborate with experts in the field and make a positive impact on the environment.\n\n## Requirements\nParticipants are encouraged to build projects that address environmental issues, renewable energy, or waste reduction. Projects should be feasible and contribute to a greener future.\n\n## Rules\n1. Participants can work in teams or individually.\n2. All projects must be presented with a working prototype.\n3. Open-source projects are highly appreciated.\n\n## Prize Distribution\n1. First position - $10,000\n2. Second position - $6,500\n3. Third position - $4,500\n4. Fourth position - $3,000\n5. Fifth position - $2,500',
-        startDate: new Date('2023-08-20T00:00:00.000Z'),
-        endDate: new Date('2023-09-15T00:00:00.000Z'),
-        slug: 'sustaintech-hackathon-72e0d6',
-        price: 42000,
-        currency: 'INR',
+    const initialFields = 
+       {
+   "title": "",
+  "subtitle":'',
+  "description": "",
+  "startDate": new Date("2023-08-15T00:00:00.000Z"),
+  "endDate": new Date("2023-09-08T00:00:00.000Z"),
+ 
+  "price": 23500,
+  "currency": "USD",
+  
+
         type: HACKATHON_TYPE.PUBLIC,
         status: HACKATHON_STATUS.PUBLISHED,
         subStatus: HACKATHON_SUB_STATUS.ONGOING,
 
         judges: [
-            {
-                name: 'Francis Banks',
-                avatar: 'https://randomuser.me/api/portraits/men/82.jpg',
-                bio: 'Sotfware Engineer',
-            },
+          
             {
                 name: 'Jane Micheal',
                 avatar: 'https://randomuser.me/api/portraits/women/91.jpg',
                 bio: 'CEO at Tech',
             },
-            {
-                name: 'Leanne McWood',
-                avatar: 'https://randomuser.me/api/portraits/women/73.jpg',
-                bio: 'Sotfware Engineer',
-            },
-            {
-                name: 'Richard Gabby',
-                avatar: 'https://randomuser.me/api/portraits/men/73.jpg',
-                bio: 'Designer at McHub',
-            },
+           
+            
         ],
     };
     const [formFields, setFormFields] =
@@ -119,7 +110,7 @@ const CreatePage = () => {
     const toast = useToast({ position: 'top' });
     function handleFormSubmit(evt: FormEvent) {
         evt.preventDefault();
-        console.log({ formFields, data });
+        // console.log({ formFields, data });
     }
     function handleInputChange(evt: ChangeEvent | FormEvent) {
         const { name, value } = evt.target as
@@ -200,19 +191,18 @@ const CreatePage = () => {
         fileInputRefs.current[index]?.click();
     }
 
-    function handleFileInputChange(
-        evt: ChangeEvent<HTMLInputElement>,
+    function getPhotoUploadData(
+        data:{fileUrl:string,data:any},
         index: number
     ) {
-        const file = (evt.target.files && evt.target.files[0]) as File;
+        
         const { judges } = formFields;
         const newJudges = [...judges];
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            newJudges[index]['avatar'] = e.target?.result as string;
+       
+            newJudges[index]['avatar'] =data?.fileUrl;
             setFormFields((prev) => ({ ...prev, judges: newJudges }));
-        };
-        reader.readAsDataURL(file);
+        
+        
     }
     async function handleHackathonPublish(
         status: keyof typeof HACKATHON_STATUS
@@ -656,7 +646,7 @@ const CreatePage = () => {
                                             </Box>
                                         ) : (
                                             <Box>
-                                                <Button colorScheme="purple">
+                                                {/* <Button colorScheme="purple">
                                                     <MdPhoto />
                                                     <Text
                                                         ml={2}
@@ -691,7 +681,8 @@ const CreatePage = () => {
                                                     id="j-photo"
                                                     type={'file'}
                                                     hidden
-                                                />
+                                                /> */}
+                                                <CloudinaryImageWidget getUploadData={(data)=>getPhotoUploadData(data,index)}/>
                                             </Box>
                                         )}
                                     </Box>
