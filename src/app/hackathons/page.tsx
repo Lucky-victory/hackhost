@@ -25,8 +25,8 @@ export default function HackathonPage() {
                 align={'center'}
                 justify={'center'}
             >
-            <Flex align='center'>
-<Input _focus={{borderColor:'purple.700'}} borderRightRadius={0} w={{base:350}} borderColor={'gray.400'} type="search" placeholder='Search for Hackathons'/ ><Button  borderLeftRadius={0} colorScheme='purple'>Search</Button>
+            <Flex align='center' w={'full'} h={{lg:'60px'}} maxW={700} >
+<Input h={'full'} _focus={{borderColor:'purple.700'}} borderRightRadius={0} w={{base:'100%'}} flex={1} borderColor={'gray.400'} type="search" placeholder='Search for Hackathons'/ ><Button  borderLeftRadius={0} colorScheme='purple' h={'full'}>Search</Button>
             </Flex>
             </Flex>
 <Box mt={'calc(var(--navbar-height) - 2rem)'}>
@@ -42,7 +42,7 @@ export default function HackathonPage() {
                                 color={'purple.800'}
                                 size={{ lg: 'xl', base: 'md' }}
                             >
-                                Hackathons For You
+                                Hackathons 
                             </Heading>
                       {/*      <Button
                                 href={'/hackathons'}

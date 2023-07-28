@@ -1,34 +1,20 @@
 'use client';
 import {
-    HACKATHON_STATUS,
-    HACKATHON_SUB_STATUS,
-    HACKATHON_TYPE,
-    HackathonCreate,
     PROJECT_STATUS,
     ProjectCreate,
 } from '@/const';
 import {
-    useAddHackathonMutation,
     useAddProjectMutation,
 } from '@/state/services/hackathon-api';
 import {
-    Drawer,
-    DrawerBody,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
     Box,
     Button,
     Card,
     CardBody,
     Flex,
     FormControl,
-    Toast,
     FormLabel,
     HStack,
-    Hide,
     IconButton,
     Image,
     Input,
@@ -47,32 +33,15 @@ import {
 import {
     ChangeEvent,
     FormEvent,
-    LegacyRef,
-    MouseEvent,
-    MouseEventHandler,
-    ReactNode,
-    forwardRef,
     useEffect,
     useRef,
     useState,
 } from 'react';
-import DatePicker from 'react-datepicker';
 import {
     MdExpandMore,
-    MdPhoto,
-    MdAdd,
     MdClose,
-    MdDelete,
 } from 'react-icons/md';
 import Navbar from '@/src/app/components/Navbar';
-import { CloudinaryImage } from '@cloudinary/url-gen/assets/CloudinaryImage';
-import {
-    AdvancedImage,
-    accessibility,
-    responsive,
-    lazyload,
-    placeholder,
-} from '@cloudinary/react';
 import { useParams } from 'next/navigation';
 import CloudinaryImageWidget from '@/src/app/components/CloudinaryImageWidget';
 const toolsUsed = [
@@ -90,20 +59,13 @@ const toolsUsed = [
     'nodejs',
     'python',
 ];
-const categories = ['Frontend', 'Backend', 'AI', 'Blockchain', 'Mobile App'];
+const categories = ['Frontend', 'Backend', 'Web app','AI', 'Blockchain', 'Mobile App'];
 const SubmissionPage = () => {
     const { slug: hackathonSlug } = useParams();
-    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+   const [screenshotUrl,setScreenShotUrl]=useState('')
     const [addProjectTrigger, { data, isLoading }] = useAddProjectMutation();
     const screenshotInputRef = useRef<HTMLInputElement | null>(null);
-    const [startDate, setStartDate] = useState(new Date());
-    const [selectedDateType, setSelectedDateType] = useState<'start' | 'end'>(
-        'start'
-    );
-    const [endDate, setEndDate] = useState(
-        new Date(new Date().setDate(new Date().getDate() + 30))
-    );
+    
     const initialFields = {
         title: '',
         description: '',
@@ -118,7 +80,7 @@ const SubmissionPage = () => {
         toolsUsed: [],
     };
     const [formFields, setFormFields] = useState<ProjectCreate>(initialFields);
-    console.log({ data });
+    
     const toast = useToast({ position: 'top' });
     function handleFormSubmit(evt: FormEvent) {
         evt.preventDefault();
@@ -210,12 +172,17 @@ const SubmissionPage = () => {
             });
         }
     }
-
+function getPhotoUploadData({fileUrl}:{fileUrl:string}){
+setScreenShotUrl(fileUrl)
+}
+useEffect(()=>{
+setFormFields((prev)=>({...prev,screenshotUrl}))
+},[screenshotUrl])
     return (
         <Box className="page" pb={12}>
             <Navbar />
             <FormControl
-                p={8}
+                p={{lg:6,base:4}}
                 as={'form'}
                 onSubmit={(evt) => handleFormSubmit(evt)}
             >
@@ -295,15 +262,16 @@ const SubmissionPage = () => {
                                     my={3}
                                     bg={'gray.100'}
                                     w={'full'}
-                                    h={150}
+                                    h={250}
                                     borderRadius={'md'}
                                     maxW={400}
                                     align={'center'}
                                     justify={'center'}
                                 >
-                                    <Text color={'gray.400'}>
+                                    {formFields.screenshotUrl? <Image src={formFields.screenshotUrl} alt='preview' h={'full'} w={'full'} objectFit={'cover'} />:
+                                    <Text color={'gray.400'} px={2}>
                                         Screenshot preview will appear here{' '}
-                                    </Text>
+                                    </Text>}
                                 </Flex>
 
                                 {/* <Input
@@ -320,7 +288,7 @@ const SubmissionPage = () => {
                                     <MdPhoto />
                                     Choose Photo{' '}
                                 </Button> */}
-                                <CloudinaryImageWidget />
+                                <CloudinaryImageWidget getUploadData={getPhotoUploadData} />
                             </Flex>
                         </Box>
                         <FormLabel htmlFor="desc">
@@ -377,10 +345,10 @@ const SubmissionPage = () => {
                             my={6}
                             gap={{ lg: 6, base: 4 }}
                         >
-                            <Box>
-                                <FormLabel htmlFor="category">
+                            {/* <Box>
+                                <Text fontWeight={'medium'} mb={2}>
                                     Tools Used:
-                                </FormLabel>
+                                </Text>
 
                                 <Menu id="tools-menu">
                                     <Flex
@@ -392,8 +360,8 @@ const SubmissionPage = () => {
                                             overflowX={'auto'}
                                             align="center"
                                             gap={2}
-                                            minW={80}
-                                            display={'inline-block'}
+                                            minW={'80px'}
+                                          
                                             maxW={200}
                                             py={2}
                                         >
@@ -455,11 +423,11 @@ const SubmissionPage = () => {
                                         ))}
                                     </MenuList>
                                 </Menu>
-                            </Box>
+                            </Box> */}
                             <Box>
-                                <FormLabel htmlFor="category">
+                                <Text fontWeight={'medium'} mb={2}>
                                     Category:
-                                </FormLabel>
+                                </Text>
                                 <Menu id="category-menu">
                                     <MenuButton
                                         minW={160}
@@ -504,10 +472,11 @@ const SubmissionPage = () => {
                 </Card>
                 <Card>
                     <CardBody>
-                        <Wrap>
-                            <WrapItem mr={8}>
+                        <Wrap spacing={6}>
+                            <WrapItem   minW={{base:300,lg:400}}>
+                                        <Box w={'full'}>
                                 <Box>
-                                    <FormLabel htmlFor="s-date">
+                                    <FormLabel htmlFor="demoUrl">
                                         Demo Link:
                                         <Text
                                             as={'span'}
@@ -521,15 +490,20 @@ const SubmissionPage = () => {
                                         Link to view your live project.
                                     </Text>
                                 </Box>
-                                <Input
+
+                                <Input id='demoUrl' w={'full'}
                                     name="demoUrl"
+                                    onChange={handleInputChange}
+                                    isRequired
                                     value={formFields.demoUrl}
                                     placeholder="https://my-app.example.com"
-                                />
+                                    />
+                                    </Box>
                             </WrapItem>
-                            <WrapItem>
+                            <WrapItem  minW={{base:300,lg:400}}>
+                                        <Box w={'full'}>
                                 <Box>
-                                    <FormLabel htmlFor="e-date">
+                                    <FormLabel htmlFor="repoUrl">
                                         Repo Link:
                                         <Text
                                             as={'span'}
@@ -544,11 +518,15 @@ const SubmissionPage = () => {
                                         Github,GitLab,etc.{' '}
                                     </Text>
                                 </Box>
-                                <Input
+
+                                <Input id='repoUrl'
                                     name="repoUrl"
+                                    isRequired
                                     value={formFields.repoUrl}
+                                    onChange={handleInputChange}
                                     placeholder="https://github.com/<username>/<project>"
-                                />
+                                    />
+                                    </Box>
                             </WrapItem>
                         </Wrap>
                     </CardBody>
