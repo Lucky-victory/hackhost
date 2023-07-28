@@ -37,7 +37,7 @@ import Script from 'next/script';
 export default function Home() {
     const sess = useSession();
 
-    const { data, isLoading } = useGetHackathonsQuery();
+    const { data, isLoading } = useGetHackathonsQuery({params:{limit:5,filterBy:'ongoing'}});
 
     const hackathons = data?.data;
     const [addHack, { data: newData, isLoading: isAdding }] =
