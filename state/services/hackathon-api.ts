@@ -21,11 +21,17 @@ export const HackHostApi = createApi({
     endpoints: (builder) => ({
         getHackathons: builder.query<
             Partial<APIResponse<HackathonResult[]>>,
-            {params:{sort?:string,filterBy?:string,limit?:number}}
+            {params:{filterBy?:string,limit?:string}}
         >({
-            query: ({params}) => ({
-                url: `hackathons/`,params
-            }),
+            query: ({params}) => {
+                console.log(params,'here');
+                
+                const queryParams = new URLSearchParams(params).toString();
+                console.log(queryParams);
+                
+              return  ({
+                url: `hackathons/?${queryParams}`,params
+            })},
             providesTags: (result) =>
                 // is result available?
                 result?.data

@@ -89,9 +89,14 @@ const HackathonItem = ({
                                 mr={2}
                             ></Box>
                             <TagLabel>
-                                {formatDistanceStrict(
-                                    new Date(hackathon.startDate),
+                                {hackathon.subStatus==='ONGOING' && formatDistanceStrict(
+                                    new Date(),
                                     new Date(hackathon.endDate),
+                                    { unit: 'day' }
+                                )}{' '}
+                                {hackathon.subStatus==='UPCOMING' && formatDistanceStrict(
+                                    new Date(),
+                                    new Date(hackathon.startDate),
                                     { unit: 'day' }
                                 )}{' '}
                                 Left
