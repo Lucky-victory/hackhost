@@ -4,44 +4,44 @@ import { Hackathon, HackathonCreate } from '@/const';
 import { Utils } from '@/lib/utils';
 import { getServerSession } from 'next-auth';
 
-export async function GET(request: Request) {
-    try {
-        const data = await prisma.hackathon.findMany({
-            where: {
-                status: {
-                    equals: 'PUBLISHED',
-                },
-            },
+// export async function GET(request: Request) {
+//     try {
+//         const data = await prisma.hackathon.findMany({
+//             where: {
+//                 status: {
+//                     equals: 'PUBLISHED',
+//                 },
+//             },
 
-            include: {
-                _count: {
-                    select: {
-                        participants: true,
-                    },
-                },
-            },
-        });
-        const sess = await getServerSession();
-        console.log({ sess });
-        return NextResponse.json(
-            {
-                data: data,
-                status: 200,
-                message: 'Hackathons retrieved successfully',
-            },
-            { status: 200 }
-        );
-    } catch (error) {
-        throw NextResponse.json(
-            {
-                data: null,
-                status: 500,
-                message: "An error occurred couldn't retrieve hackathons",
-            },
-            { status: 500 }
-        );
-    }
-}
+//             include: {
+//                 _count: {
+//                     select: {
+//                         participants: true,
+//                     },
+//                 },
+//             },
+//         });
+//         const sess = await getServerSession();
+//         console.log({ sess });
+//         return NextResponse.json(
+//             {
+//                 data: data,
+//                 status: 200,
+//                 message: 'Hackathons retrieved successfully',
+//             },
+//             { status: 200 }
+//         );
+//     } catch (error) {
+//         throw NextResponse.json(
+//             {
+//                 data: null,
+//                 status: 500,
+//                 message: "An error occurred couldn't retrieve hackathons",
+//             },
+//             { status: 500 }
+//         );
+//     }
+// }
 export async function POST(request: Request) {
     try {
         const sess = await getServerSession();

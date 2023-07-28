@@ -37,8 +37,9 @@ const HackathonItem = ({
                     hackathon.subStatus as HACKATHON_SUB_STATUS
                 ),
             }}
-            borderRadius={'base'}
-            borderColor={'gray.300'}
+            boxShadow={'base'}
+            borderRadius={'md'}
+            borderColor={'gray.100'}
             as={Flex}
             wrap={'wrap'}
             gap={4}
