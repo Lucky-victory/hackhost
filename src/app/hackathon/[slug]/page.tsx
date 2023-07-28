@@ -140,14 +140,6 @@ export default function HackathonPage() {
                                                     hackathon?.description as string
                                                 }
                                             />
-                                            laborum rerum unde magni iure fugiat
-                                            ab deserunt doloribus doloremque
-                                            quam vitae. Ratione at facere sit
-                                            iusto aperiam, voluptas ea officia
-                                            quo ullam illum. Similique,
-                                            asperiores magni esse accusantium,
-                                            quasi aliquid incidunt cumque
-                                            laborum!
                                         </Box>
                                     </Box>
                                 </Skeleton>
@@ -166,28 +158,39 @@ export default function HackathonPage() {
                                     p={{ lg: '6', base: 4 }}
                                 >
                                     <Heading size={'lg'}>Judges</Heading>
-                                    <Wrap my={6} spacing={'6'}>
-                                        <WrapItem>
-                                            <Flex align={'center'}>
-                                                <Avatar size={'lg'} />
-                                                <Box ml={4}>
-                                                    <Text
-                                                        fontWeight={'semibold'}
-                                                        mb={0.5}
-                                                    >
-                                                        Lucky Victory
-                                                    </Text>
-                                                    <Text
-                                                        fontSize={'sm'}
-                                                        fontWeight={'medium'}
-                                                        as={'em'}
-                                                    >
-                                                        Software engineer at
-                                                        Matrix{' '}
-                                                    </Text>
-                                                </Box>
-                                            </Flex>
-                                        </WrapItem>
+                                    <Wrap my={6} spacing={'6'} maxW={900}>
+                                        {hackathon?.judges?.map((judge) => (
+                                            <WrapItem key={crypto.randomUUID()}>
+                                                <Flex align={'center'}>
+                                                    <Avatar
+                                                        size={'lg'}
+                                                        name={judge.name}
+                                                        src={
+                                                            judge.avatar as string
+                                                        }
+                                                    />
+                                                    <Box ml={4}>
+                                                        <Text
+                                                            fontWeight={
+                                                                'semibold'
+                                                            }
+                                                            mb={0.5}
+                                                        >
+                                                            {judge.name}
+                                                        </Text>
+                                                        <Text
+                                                            fontSize={'sm'}
+                                                            fontWeight={
+                                                                'medium'
+                                                            }
+                                                            as={'em'}
+                                                        >
+                                                            {judge.bio}{' '}
+                                                        </Text>
+                                                    </Box>
+                                                </Flex>
+                                            </WrapItem>
+                                        ))}
                                     </Wrap>
                                 </Box>
                             </Skeleton>

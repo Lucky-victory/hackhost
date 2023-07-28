@@ -4,7 +4,6 @@ import {
     Box,
     Button,
     Flex,
-    Link,
     Tag,
     Popover,
     PopoverTrigger,
@@ -21,7 +20,7 @@ import {
 import { useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { MdArrowDropDown, MdLogout } from 'react-icons/md';
-
+import { Link } from '@chakra-ui/next-js';
 const Navbar = () => {
     const sess = useSession();
 
@@ -40,17 +39,22 @@ const Navbar = () => {
             backdropFilter={'auto'}
             backdropBlur={'md'}
             h={{ base: 'var(--navbar-height)' }}
-            bg={'whiteAlpha.700'}
+            bg={'whiteAlpha.800'}
         >
             <Box>
-                <Flex gap={8}>
+                <Flex gap={{ lg: 8, base: 6 }} align="center">
                     <Box>
-                        <Text>App logo</Text>
+                        <Link href="/">App logo</Link>
                     </Box>
 
-                    <Link as={NextLink} href={'/hackathons/create'}>
+                    <Button
+                        as={NextLink}
+                        variant={'ghost'}
+                        colorScheme="purple"
+                        href={'/hackathons/create'}
+                    >
                         Host a hackathon
-                    </Link>
+                    </Button>
                 </Flex>
             </Box>
             {!sess?.data && sess.status !== 'loading' && (

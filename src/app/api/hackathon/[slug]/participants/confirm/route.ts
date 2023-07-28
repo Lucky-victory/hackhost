@@ -9,11 +9,16 @@ export async function GET(
 ) {
     try {
         const sess = await getServerSession(authOptions);
-        // const response = await prisma.hackathonParticipant.create({
-        //     data: {
-        //         hackathon: {},
-        //     },
-        // });
+        if (!sess?.user) {
+            return NextResponse.json(
+                {
+                    data: { hasJoined: false },
+                    status: 200,
+                    message: 'Already joined',
+                },
+                { status: 200 }
+            );
+        }
         const participant = await prisma.hackathonParticipant.findFirst({
             where: {
                 hackathon: { slug },
@@ -22,7 +27,7 @@ export async function GET(
                 },
             },
         });
-        console.log(participant);
+        console.log({ participant }, 'here');
         if (participant) {
             return NextResponse.json(
                 {

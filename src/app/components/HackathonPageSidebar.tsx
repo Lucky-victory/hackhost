@@ -29,7 +29,6 @@ const HackathonPageSidebar = ({
 }) => {
     const { slug } = useParams();
     const sess = useSession();
-    console.log({ sess, slug });
     const { data, refetch } = useCheckHasJoinedHackathonQuery(slug as string);
     const checkedHasJoined = data?.data;
     const [joinHackathonTrigger, { isSuccess, isLoading }] =
@@ -39,15 +38,16 @@ const HackathonPageSidebar = ({
 
     useEffect(() => {
         refetch();
-    }, [isSuccess, refetch]);
+    }, [isSuccess, refetch, sess.data]);
     async function handleHackathonJoin() {
         try {
             if (sess.status === 'loading') {
                 return;
             }
             if (sess.status !== 'authenticated') {
-                return router.push(`/api/auth/signin?returnTo=${pathname}`);
+                return router.push(`/auth/sign-in?from=${pathname}`);
             }
+            await refetch();
             await joinHackathonTrigger(slug as string);
         } catch (error) {
             console.log('error joining hackathon', error);

@@ -55,13 +55,19 @@ import {
     MdDelete,
 } from 'react-icons/md';
 import Navbar from '@/src/app/components/Navbar';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 const currencies = ['USD', 'GBP', 'EUR', 'INR', 'NGN'];
+
 const CreatePage = () => {
-    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const sess = useSession();
+    const router = useRouter();
+    if (!sess.data && sess.status !== 'loading') {
+        router.replace(`/auth/sign-in?from=/hackathons/create`);
+    }
     const [addHackathonTrigger, { data, isLoading, isError }] =
         useAddHackathonMutation();
-    const drawerBtnRef = useRef<HTMLButtonElement | null>(null);
     const fileInputRefs = useRef<HTMLInputElement[] | null[]>([]);
     const [startDate, setStartDate] = useState(new Date());
     const [selectedDateType, setSelectedDateType] = useState<'start' | 'end'>(
@@ -717,29 +723,6 @@ const CreatePage = () => {
                     </CardBody>
                 </Card>
             </FormControl>
-
-            <Drawer
-                isOpen={isOpen}
-                finalFocusRef={drawerBtnRef}
-                size={'lg'}
-                onClose={onClose}
-            >
-                <DrawerOverlay />
-                <DrawerContent>
-                    <DrawerCloseButton />
-                    <DrawerHeader>A preview of your hackathon</DrawerHeader>
-
-                    <DrawerBody>
-                        {/* <Input placeholder='Type here...' /> */}
-                    </DrawerBody>
-
-                    <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={onClose}>
-                            Close
-                        </Button>
-                    </DrawerFooter>
-                </DrawerContent>
-            </Drawer>
         </Box>
     );
 };

@@ -9,8 +9,8 @@ import { USER_ROLE, UserCreate } from '@/const';
 import { USER_AUTH_TYPE } from '@prisma/client';
 
 export const authOptions: NextAuthOptions = {
-    pages:{
-signIn:'/auth/sign-in',
+    pages: {
+        signIn: '/auth/sign-in',
     },
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
@@ -76,6 +76,7 @@ signIn:'/auth/sign-in',
             name: '',
 
             credentials: {
+                type: {},
                 email: {
                     label: 'E-mail',
                     type: 'text',
@@ -94,9 +95,10 @@ signIn:'/auth/sign-in',
                         email: credentials?.email,
                     },
                 });
+                console.log({ existingUser }, 'hrer');
 
                 // if it's a new user create an account
-                if (!existingUser) {
+                if (!existingUser && credentials?.type === 'create') {
                     const hashedPassword = await bcrypt.hash(
                         credentials?.password as string,
                         10
@@ -112,12 +114,16 @@ signIn:'/auth/sign-in',
                     const createdUser = await prisma.user.create({
                         data: newUser,
                     });
+                    console.log({ createdUser }), 'here';
+
                     return createdUser;
                 }
+
+                if(!existingUser) throw new Error('Invalid User')
                 // compare the password
                 const isValidPassword = await bcrypt.compare(
                     credentials?.password as string,
-                    existingUser.password as string
+                    existingUser?.password as string
                 );
                 if (!isValidPassword) {
                     // Return null if password does not match
@@ -127,7 +133,7 @@ signIn:'/auth/sign-in',
                 return existingUser;
             },
         }),
-        GithubProvider({ ...envConfigs.github }),
+        GithubProvider(envConfigs.github),
         GoogleProvider(envConfigs.google),
     ],
 };

@@ -147,7 +147,7 @@ export default function Home() {
                         >
                             <Heading
                                 color={'purple.800'}
-                                size={{ lg: '2xl', base: 'lg' }}
+                                size={{ lg: 'xl', base: 'md' }}
                             >
                                 Hackathons For You
                             </Heading>
