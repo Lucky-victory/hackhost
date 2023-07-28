@@ -115,7 +115,7 @@ const CreatePage = () => {
     };
     const [formFields, setFormFields] =
         useState<HackathonCreate>(initialFields);
-    console.log({ data });
+
     const toast = useToast({ position: 'top' });
     function handleFormSubmit(evt: FormEvent) {
         evt.preventDefault();
@@ -179,6 +179,12 @@ const CreatePage = () => {
         newJudges = newJudges.filter((_, ind) => ind !== index);
         setFormFields((prev) => ({ ...prev, judges: newJudges }));
     }
+    function handleRemoveJudgePhoto(index: number) {
+        const { judges: prevJudges } = formFields;
+        let newJudges = [...prevJudges];
+        newJudges[index] = { ...newJudges[index], avatar: '' };
+        setFormFields((prev) => ({ ...prev, judges: newJudges }));
+    }
     function handleJudgesInputChange(evt: ChangeEvent, index: number) {
         const { name, value } = evt.target as HTMLInputElement;
         const { judges } = formFields;
@@ -198,7 +204,6 @@ const CreatePage = () => {
         evt: ChangeEvent<HTMLInputElement>,
         index: number
     ) {
-        console.log(evt.target.files, { index });
         const file = (evt.target.files && evt.target.files[0]) as File;
         const { judges } = formFields;
         const newJudges = [...judges];
@@ -625,7 +630,7 @@ const CreatePage = () => {
                                                         h={8}
                                                         p={0}
                                                         onClick={() =>
-                                                            handlePhotoSelect(
+                                                            handleRemoveJudgePhoto(
                                                                 index
                                                             )
                                                         }

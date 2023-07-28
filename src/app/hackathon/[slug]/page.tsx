@@ -19,14 +19,15 @@ import {
     WrapItem,
 } from '@chakra-ui/react';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
-import Navbar from '../../components/Navbar';
+import Navbar from '@/src/app/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import isEmpty from 'just-is-empty';
-import MarkdownRenderer from '../../components/MarkdownRenderer';
-import HackathonPageSidebar from '../../components/HackathonPageSidebar';
+import MarkdownRenderer from '@/src/app/components/MarkdownRenderer';
+import HackathonPageSidebar from '@/src/app/components/HackathonPageSidebar';
 import { HackathonResult } from '@/const';
 import Head from 'next/head';
+import ProjectCardList from '@/src/app/components/ProjectCardList';
 
 const tabs = ['overview', 'projects', 'participants'];
 export default function HackathonPage() {
@@ -158,7 +159,7 @@ export default function HackathonPage() {
                                     p={{ lg: '6', base: 4 }}
                                 >
                                     <Heading size={'lg'}>Judges</Heading>
-                                    <Wrap my={6} spacing={'6'} maxW={900}>
+                                    <Wrap my={6} spacing={'6'} maxW={1000}>
                                         {hackathon?.judges?.map((judge) => (
                                             <WrapItem key={crypto.randomUUID()}>
                                                 <Flex align={'center'}>
@@ -196,30 +197,57 @@ export default function HackathonPage() {
                             </Skeleton>
                         </TabPanel>
                         <TabPanel>
-                            {isEmpty(hackathon?.projects) &&
-                                'No Projects yet for this hackathon.'}
-                            <Flex
-                                gap={{ lg: 8, base: 6 }}
-                                flexWrap={'wrap-reverse'}
-                            >
-                                <Box
-                                    boxShadow={'base'}
-                                    borderRadius={'md'}
-                                    flex={1}
-                                    minW={{ lg: 500, base: 300 }}
-                                    bg={'white'}
-                                    w={'full'}
-                                    p={{ lg: '6', base: 4 }}
+                            {isEmpty(hackathon?.projects) ? (
+                                <Flex
+                                    borderRadius="base"
+                                    boxShadow={'md'}
+                                    minH={150}
+                                    bg="white"
+                                    my={6}
+                                    align={'center'}
+                                    justify={'center'}
                                 >
-                                    laborum rerum unde magni iure fugiat ab
-                                    deserunt doloribus doloremque quam vitae.
-                                    Ratione at facere sit iusto aperiam,
-                                    voluptas ea officia quo ullam illum.
-                                    Similique, asperiores magni esse
-                                    accusantium, quasi aliquid incidunt cumque
-                                </Box>
-                                <HackathonPageSidebar hackathon={hackathon} />
-                            </Flex>
+                                    <Heading
+                                        color={'purple.800'}
+                                        as={'h4'}
+                                        size={'md'}
+                                    >
+                                        No Projects yet for this hackathon.
+                                    </Heading>
+                                </Flex>
+                            ) : (
+                                <Flex
+                                    gap={{ lg: 8, base: 6 }}
+                                    flexWrap={'wrap-reverse'}
+                                >
+                                    <Skeleton
+                                        borderRadius={'base'}
+                                        isLoaded={!isLoading}
+                                        flex={1}
+                                        minW={{ lg: 400, base: 300 }}
+                                        w={'full'}
+                                    >
+                                        <Box
+                                            boxShadow={'base'}
+                                            borderRadius={'md'}
+                                            flex={1}
+                                            minW={{ lg: 500, base: 300 }}
+                                            bg={'white'}
+                                            w={'full'}
+                                            p={{ lg: '6', base: 4 }}
+                                        >
+                                            <ProjectCardList
+                                                projects={hackathon?.projects}
+                                            />
+                                        </Box>
+                                    </Skeleton>
+                                    <Skeleton isLoaded={!isLoading}>
+                                        <HackathonPageSidebar
+                                            hackathon={hackathon}
+                                        />
+                                    </Skeleton>
+                                </Flex>
+                            )}
                         </TabPanel>
                         <TabPanel>participants tabs</TabPanel>
                     </TabPanels>

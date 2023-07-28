@@ -122,10 +122,10 @@ export interface Hackathon {
 }
 export interface HackathonResult extends Hackathon {
     tags?: HackathonTags[];
-    judges?: HackathonJudges[];
+    judges: HackathonJudges[];
 
     participants?: HackathonParticipant[];
-    projects?: Project[];
+    projects: Project[];
 }
 
 export interface HackathonCreate
