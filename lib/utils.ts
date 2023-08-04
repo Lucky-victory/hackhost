@@ -7,6 +7,7 @@ dotenv.config();
 import { v4 as uuid } from 'uuid';
 import { USER_AUTH_TYPE } from '@prisma/client';
 import { HACKATHON_SUB_STATUS, User } from '@/const';
+import { format, isValid } from 'date-fns';
 export class Utils {
     static genUUID(removeDashes = false) {
         return removeDashes ? uuid().split('-').join('') : uuid();
@@ -72,6 +73,13 @@ export class Utils {
     };
     static isSameUser(userLeft: Partial<User>, userRight: Partial<User>) {
         return userLeft?.id === userRight?.id;
+    }
+    static formatDate(date: Date | string | number, dateFormat = '') {
+        const _date = new Date(date);
+        if (isValid(_date)) {
+            return format(_date, dateFormat);
+        }
+        return '';
     }
 }
 

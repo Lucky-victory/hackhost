@@ -7,6 +7,7 @@ import {
     HackathonResult,
     Project,
     ProjectCreate,
+    User,
 } from '@/const';
 
 // Define a service using a base URL and expected endpoints
@@ -16,22 +17,23 @@ export const HackHostApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: '/api/',
     }),
-    tagTypes: ['Hackathons'],
+    tagTypes: ['Hackathons', 'Users'],
 
     endpoints: (builder) => ({
         getHackathons: builder.query<
             Partial<APIResponse<HackathonResult[]>>,
-            {params:{filterBy?:string,limit?:string}}
+            { params: { filterBy?: string; limit?: string } }
         >({
-            query: ({params}) => {
-                console.log(params,'here');
-                
-                const queryParams = new URLSearchParams(params).toString();
-                console.log(queryParams);
-                
-              return  ({
-                url: `hackathons/?${queryParams}`,params
-            })},
+            query: ({ params }) => {
+                // console.log(params,'here');
+
+                // const queryParams = new URLSearchParams(params).toString();
+                // console.log(queryParams);
+
+                return {
+                    url: `hackathons/`,
+                };
+            },
             providesTags: (result) =>
                 // is result available?
                 result?.data
@@ -46,14 +48,38 @@ export const HackHostApi = createApi({
                     : // an error occurred, but we still want to refetch this query when `{ type: 'Hackathons', id: 'LIST' }` is invalidated
                       [{ type: 'Hackathons', id: 'LIST' }],
         }),
+        getUsers: builder.query<Partial<APIResponse<User[]>>, void>({
+            query: () => {
+                return {
+                    url: `users/`,
+                };
+            },
+            providesTags: (result) =>
+                // is result available?
+                result?.data
+                    ? // successful query
+                      [
+                          ...result?.data.map(({ id }) => ({
+                              type: 'Users' as const,
+                              id: id,
+                          })),
+                          { type: 'Users', id: 'LIST' },
+                      ]
+                    : [{ type: 'Users', id: 'LIST' }],
+        }),
         getHackathon: builder.query<
             Partial<APIResponse<HackathonResult>>,
             string
         >({
-
             query: (slug) => `hackathon/${slug}`,
             providesTags: (result, error, slug) => {
                 return [{ type: 'Hackathons' as const, id: slug }];
+            },
+        }),
+        getUser: builder.query<Partial<APIResponse<User>>, string>({
+            query: (username) => `users/${username}`,
+            providesTags: (result, error, username) => {
+                return [{ type: 'Users' as const, id: username }];
             },
         }),
         addHackathon: builder.mutation<
@@ -127,4 +153,6 @@ export const {
     useJoinHackathonMutation,
     useCheckHasJoinedHackathonQuery,
     useAddProjectMutation,
+    useGetUserQuery,
+    useGetUsersQuery,
 } = HackHostApi;
