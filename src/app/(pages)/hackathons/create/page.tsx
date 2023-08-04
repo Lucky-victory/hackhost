@@ -57,7 +57,7 @@ import {
 import Navbar from '@/src/app/components/Navbar';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import CloudinaryImageWidget from '../../components/CloudinaryImageWidget';
+import CloudinaryImageWidget from '@/src/app/components/CloudinaryImageWidget';
 
 const currencies = ['USD', 'GBP', 'EUR', 'INR', 'NGN'];
 
@@ -77,31 +77,26 @@ const CreatePage = () => {
     const [endDate, setEndDate] = useState(
         new Date(new Date().setDate(new Date().getDate() + 30))
     );
-    const initialFields = 
-       {
-   "title": "",
-  "subtitle":'',
-  "description": "",
-  "startDate": new Date("2023-08-15T00:00:00.000Z"),
-  "endDate": new Date("2023-09-08T00:00:00.000Z"),
- 
-  "price": 23500,
-  "currency": "USD",
-  
+    const initialFields = {
+        title: '',
+        subtitle: '',
+        description: '',
+        startDate: new Date('2023-08-15T00:00:00.000Z'),
+        endDate: new Date('2023-09-08T00:00:00.000Z'),
+
+        price: 23500,
+        currency: 'USD',
 
         type: HACKATHON_TYPE.PUBLIC,
         status: HACKATHON_STATUS.PUBLISHED,
         subStatus: HACKATHON_SUB_STATUS.ONGOING,
 
         judges: [
-          
             {
                 name: 'Jane Micheal',
                 avatar: 'https://randomuser.me/api/portraits/women/91.jpg',
                 bio: 'CEO at Tech',
             },
-           
-            
         ],
     };
     const [formFields, setFormFields] =
@@ -192,17 +187,14 @@ const CreatePage = () => {
     }
 
     function getPhotoUploadData(
-        data:{fileUrl:string,data:any},
+        data: { fileUrl: string; data: any },
         index: number
     ) {
-        
         const { judges } = formFields;
         const newJudges = [...judges];
-       
-            newJudges[index]['avatar'] =data?.fileUrl;
-            setFormFields((prev) => ({ ...prev, judges: newJudges }));
-        
-        
+
+        newJudges[index]['avatar'] = data?.fileUrl;
+        setFormFields((prev) => ({ ...prev, judges: newJudges }));
     }
     async function handleHackathonPublish(
         status: keyof typeof HACKATHON_STATUS
@@ -682,7 +674,14 @@ const CreatePage = () => {
                                                     type={'file'}
                                                     hidden
                                                 /> */}
-                                                <CloudinaryImageWidget getUploadData={(data)=>getPhotoUploadData(data,index)}/>
+                                                <CloudinaryImageWidget
+                                                    getUploadData={(data) =>
+                                                        getPhotoUploadData(
+                                                            data,
+                                                            index
+                                                        )
+                                                    }
+                                                />
                                             </Box>
                                         )}
                                     </Box>

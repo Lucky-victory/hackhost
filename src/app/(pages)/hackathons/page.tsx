@@ -3,10 +3,10 @@ import { useGetHackathonQuery, useGetHackathonsQuery } from "@/state/services/ha
 
 import { Box, Button, Flex, Heading, Input, Skeleton, Stack } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
-import Navbar from "../components/Navbar";
+import Navbar from "@/src/app/components/Navbar";
 import NextLink from 'next/link';
 import isEmpty from "just-is-empty";
-import HackathonList from "../components/HackathonList";
+import HackathonList from "@/src/app/components/HackathonList";
 import { Hackathon } from "@/const";
 
 export default function HackathonPage() {

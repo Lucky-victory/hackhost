@@ -37,7 +37,9 @@ import Script from 'next/script';
 export default function Home() {
     const sess = useSession();
 
-    const { data, isLoading } = useGetHackathonsQuery({params:{limit:'5',filterBy:'ongoing'}});
+    const { data, isLoading } = useGetHackathonsQuery({
+        params: { limit: '5', filterBy: 'ongoing' },
+    });
 
     const hackathons = data?.data;
     const [addHack, { data: newData, isLoading: isAdding }] =
@@ -46,11 +48,6 @@ export default function Home() {
     console.log({ isLoading, data });
     return (
         <main className={styles.main}>
-            <Script
-                src="https://upload-widget.cloudinary.com/global/all.js"
-                type="text/javascript"
-                id="cloudinary-script"
-            ></Script>
             <Box
                 p={{ lg: '4', base: 2 }}
                 mt={{
@@ -71,10 +68,6 @@ export default function Home() {
                     bgRepeat={'no-repeat'}
                     pos={'relative'}
                     wrap={'wrap'}
-                    // bgImage={{
-                    //   lg: "url(/images/hackathon.jpg)",
-                    //   base: "/images/hackathon.jpg",
-                    // }}
                 >
                     <Box
                         p={{ lg: '8', base: 4 }}
