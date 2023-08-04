@@ -7,9 +7,9 @@ const OverviewPage = () => {
     return (
         <Box>
             <Flex
+                minH={500}
                 gap={{ lg: 8, base: 6 }}
                 bg={'white'}
-                p={{ lg: 6, base: 4 }}
                 borderRadius={'md'}
             >
                 <DashboardSidebar currentPage="overview" />
