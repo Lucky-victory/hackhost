@@ -12,7 +12,7 @@ import { Hackathon } from "@/const";
 export default function HackathonPage() {
 
 
-    const { data, isLoading } = useGetHackathonsQuery({params:{limit:'5'}});
+    const { data, isLoading } = useGetHackathonsQuery({});
 
     const hackathons = data?.data;
   return <Box p={"1rem"} className="page">
