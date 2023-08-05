@@ -103,7 +103,7 @@ const HackathonsPage = () => {
                                         <Td {...tdProps}>
                                             <Button
                                                 as={NextLink}
-                                                href={`/dashboard/hackathons/${hackathon.id}`}
+                                                href={`hackathons/${hackathon.id}`}
                                                 variant={'outline'}
                                                 size={'sm'}
                                                 colorScheme="purple"

@@ -116,6 +116,7 @@ export interface Hackathon {
     status?: keyof typeof HACKATHON_STATUS | null;
     subStatus?: keyof typeof HACKATHON_SUB_STATUS | null;
     _count?: {
+        projects?:number;
         participants: number;
     };
 }

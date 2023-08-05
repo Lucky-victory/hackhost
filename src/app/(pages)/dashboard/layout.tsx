@@ -22,11 +22,13 @@ export default function DashboardLayout({
                 bg={'white'}
                 p={{ lg: 6, base: 4 }}
             >
-                <Heading color={'gray.600'}>Dashboard</Heading>
+                <Heading color={'gray.600'} size={'lg'}>
+                    Dashboard
+                </Heading>
             </Box>
             <Flex
                 minH={500}
-                gap={{ lg: 8, base: 6 }}
+                gap={{ lg: 6, base: 4 }}
                 bg={'white'}
                 boxShadow={'base'}
                 borderRadius={'md'}
