@@ -23,7 +23,7 @@ import {
 
 const UsersPage = () => {
     const { data: response, isFetching } = useGetUsersQuery();
-    console.log({ response });
+
     const users = response?.data;
     const tdProps = {
         textOverflow: 'ellipsis',
@@ -31,15 +31,8 @@ const UsersPage = () => {
         overflow: 'hidden',
     };
     return (
-        <Box>
-            <Flex
-                minH={500}
-                gap={{ lg: 8, base: 6 }}
-                bg={'white'}
-                // py={{ lg: 6, base: 4 }}
-                boxShadow={'base'}
-                borderRadius={'md'}
-            >
+        <>
+           
                 <DashboardSidebar currentPage="users" />
 
                 <Flex
@@ -105,13 +98,13 @@ const UsersPage = () => {
                                                 <Td {...tdProps}>
                                                     {U.formatDate(
                                                         user?.createdAt,
-                                                        'dd/MM/yyyy HH:mm'
+                                                     
                                                     )}
                                                 </Td>
                                                 <Td {...tdProps}>
                                                     {U.formatDate(
                                                         user?.updatedAt,
-                                                        'dd/MM/yyyy HH:mm'
+                                                      
                                                     )}
                                                 </Td>
                                                 <Td>{user?.role}</Td>
@@ -135,8 +128,8 @@ const UsersPage = () => {
                         <Loader />
                     )}
                 </Flex>
-            </Flex>
-        </Box>
+            
+        </>
     );
 };
 

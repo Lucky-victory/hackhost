@@ -1,21 +1,27 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Hackathon, HackathonCreate } from '@/const';
+import { getServerSession } from 'next-auth';
 
 export async function GET(
     request: Request,
     { params: { slug } }: { params: { slug: string } }
 ) {
     try {
+        const sess = await getServerSession();
         const data = await prisma.hackathon.findFirst({
             include: {
-                projects: {include:{user:{
-                    select:{
-                        name:true,avatar:true
-                    }
+                projects: {
+                    include: {
+                        user: {
+                            select: {
+                                name: true,
+                                avatar: true,
+                            },
+                        },
+                    },
                 },
-            
-            }},
+
                 _count: {
                     select: {
                         participants: true,
@@ -24,16 +30,18 @@ export async function GET(
 
                 judges: true,
                 participants: {
-                    include:{
-                        user:{
-                            select:{
-                                name:true,avatar:true,id:true
-                            }
-                        }
-                    }
+                    include: {
+                        user: {
+                            select: {
+                                name: true,
+                                avatar: true,
+                                id: true,
+                            },
+                        },
+                    },
                 },
             },
-            where: { slug },
+            where: { OR: [{ id: slug }, { slug: slug }] },
         });
 
         return NextResponse.json(
@@ -50,15 +58,22 @@ export async function GET(
             status: 500,
             message: "An error occurred couldn't retrieve hackathon",
         });
+    } finally {
+        await prisma.$disconnect();
     }
 }
 export async function PATCH(request: Request, { slug }: { slug: string }) {
-    const json = await request.json();
-    const updated = await prisma.hackathon.update({
-        data: json,
-        where: {
-            slug,
-        },
-    });
-    return NextResponse.json(updated, { status: 200 });
+    try {
+        const json = await request.json();
+        const updated = await prisma.hackathon.update({
+            data: json,
+            where: {
+                slug,
+            },
+        });
+        return NextResponse.json(updated, { status: 200 });
+    } catch (error) {
+    } finally {
+        await prisma.$disconnect();
+    }
 }

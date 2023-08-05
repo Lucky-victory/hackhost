@@ -9,8 +9,8 @@ export async function GET(
 ) {
     try {
         const sess = await getServerSession(authOptions);
-        console.log({sess});
-        
+        console.log({ sess });
+
         if (!sess?.user) {
             return NextResponse.json(
                 {
@@ -53,5 +53,7 @@ export async function GET(
             { data: null, status: 500, message: 'An error occured' },
             { status: 500 }
         );
+    } finally {
+        await prisma.$disconnect();
     }
 }

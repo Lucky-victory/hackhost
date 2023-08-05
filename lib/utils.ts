@@ -74,7 +74,10 @@ export class Utils {
     static isSameUser(userLeft: Partial<User>, userRight: Partial<User>) {
         return userLeft?.id === userRight?.id;
     }
-    static formatDate(date: Date | string | number, dateFormat = '') {
+    static formatDate(
+        date: Date | string | number,
+        dateFormat = 'dd/MM/yyyy HH:mm'
+    ) {
         const _date = new Date(date);
         if (isValid(_date)) {
             return format(_date, dateFormat);

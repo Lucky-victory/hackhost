@@ -10,7 +10,6 @@ type OmitManyToMany<T> = Omit<
     | 'hackathon'
     | 'user'
 >;
-
 export interface User {
     id: string;
     name: string;
@@ -120,6 +119,33 @@ export interface Hackathon {
         participants: number;
     };
 }
+
+export type WhereFilter<T = Hackathon> = {
+    [key in keyof T]?: T[key]; // Use mapped object type to specify the filter type
+};
+export type OrderByFilter<T = Hackathon> = {
+    [key in keyof T]?: 'desc' | 'asc'; // Use mapped object type to specify the filter type
+};
+export type QueryFilter = {
+    limit?: number;
+    offset?: number;
+    filterType?: FilterType;
+    where?: WhereFilter;
+    orderBy?: OrderByFilter;
+};
+export type FilterType =
+    | 'equals'
+    | 'in'
+    | 'notIn'
+    | 'lt'
+    | 'lte'
+    | 'gt'
+    | 'gte'
+    | 'contains'
+    | 'startsWith'
+    | 'endsWith'
+    | 'not';
+
 export interface HackathonResult extends Hackathon {
     tags?: HackathonTags[];
     judges: HackathonJudges[];

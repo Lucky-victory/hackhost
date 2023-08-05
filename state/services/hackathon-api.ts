@@ -3,11 +3,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { APIResponse } from '../types';
 import {
     Hackathon,
+    WhereFilter,
     HackathonParticipant,
     HackathonResult,
     Project,
     ProjectCreate,
     User,
+    QueryFilter,
 } from '@/const';
 
 // Define a service using a base URL and expected endpoints
@@ -22,9 +24,9 @@ export const HackHostApi = createApi({
     endpoints: (builder) => ({
         getHackathons: builder.query<
             Partial<APIResponse<HackathonResult[]>>,
-            { params: { filterBy?: string; limit?: string } }
+            QueryFilter
         >({
-            query: ({ params }) => {
+            query: (params) => {
                 // console.log(params,'here');
 
                 // const queryParams = new URLSearchParams(params).toString();
@@ -32,6 +34,8 @@ export const HackHostApi = createApi({
 
                 return {
                     url: `hackathons/`,
+                    method: 'POST',
+                    body: params,
                 };
             },
             providesTags: (result) =>
@@ -87,7 +91,7 @@ export const HackHostApi = createApi({
             Partial<Hackathon>
         >({
             query: (data) => ({
-                url: `hackathons/`,
+                url: `hackathons/new`,
                 method: 'POST',
                 body: data,
             }),

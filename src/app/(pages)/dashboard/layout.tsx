@@ -1,5 +1,5 @@
 'use client';
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 
 export default function DashboardLayout({
     children,
@@ -24,7 +24,15 @@ export default function DashboardLayout({
             >
                 <Heading color={'gray.600'}>Dashboard</Heading>
             </Box>
-            {children}
+            <Flex
+                minH={500}
+                gap={{ lg: 8, base: 6 }}
+                bg={'white'}
+                boxShadow={'base'}
+                borderRadius={'md'}
+            >
+                {children}
+            </Flex>
         </Box>
     );
 }

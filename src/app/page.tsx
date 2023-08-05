@@ -32,20 +32,17 @@ import Footer from './components/Footer';
 import { useSession } from 'next-auth/react';
 import Navbar from './components/Navbar';
 import isEmpty from 'just-is-empty';
-import Script from 'next/script';
 
 export default function Home() {
     const sess = useSession();
 
     const { data, isLoading } = useGetHackathonsQuery({
-        params: { limit: '5', filterBy: 'ongoing' },
+        limit: 5,
+        where: { subStatus: 'ONGOING' },
     });
 
     const hackathons = data?.data;
-    const [addHack, { data: newData, isLoading: isAdding }] =
-        useAddHackathonMutation();
-
-    console.log({ isLoading, data });
+    
     return (
         <main className={styles.main}>
             <Box

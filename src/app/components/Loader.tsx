@@ -5,9 +5,12 @@ const Loader = ({ loadingText = 'Fetching Data...' }) => {
     return (
         <Flex
             w={'full'}
+            h={'full'}
+            // minW={300}
             direction={'column'}
             align={'center'}
             justify={'center'}
+            mx={'auto'}
         >
             <Spinner
                 mb={2}

@@ -112,7 +112,12 @@ export default function HackathonPage() {
                                     my={4}
                                 >
                                     <CardBody>
-                                        <Text>{hackathon?.subtitle}</Text>
+                                        <Text
+                                            fontWeight={'medium'}
+                                            fontSize={'lg'}
+                                        >
+                                            {hackathon?.subtitle}
+                                        </Text>
                                     </CardBody>
                                 </Card>
                             )}
