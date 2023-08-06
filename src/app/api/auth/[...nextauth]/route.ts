@@ -39,7 +39,9 @@ export const authOptions: NextAuthOptions = {
                         role: USER_ROLE.BASIC,
                         authType: authType,
                         //@ts-ignore
-                        username: profile?.username,
+                        username: profile?.username
+                            ? profile?.username
+                            : Utils.genUsername(profile?.name),
                     };
 
                     await prisma.user.create({
