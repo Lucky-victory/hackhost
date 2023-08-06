@@ -16,13 +16,13 @@ const OverviewPage = () => {
     return (
         <>
             <DashboardSidebar currentPage="overview" />
-            <Box w={'full'} px={4} py={6}>
-                <SimpleGrid minChildWidth={'150px'} my={4} spacing={'20px'}>
+            <Box w={'full'} px={4} py={6} overflowX={'auto'}>
+                <SimpleGrid minChildWidth={'200px'} my={4} spacing={'20px'}>
                     <Card>
                         <CardBody
                             py={2}
                             alignItems={'center'}
-                            gap={4}
+                            gap={3}
                             display={'flex'}
                         >
                             <Flex
@@ -50,7 +50,7 @@ const OverviewPage = () => {
                         <CardBody
                             py={2}
                             alignItems={'center'}
-                            gap={4}
+                            gap={3}
                             display={'flex'}
                         >
                             <Flex
@@ -60,6 +60,7 @@ const OverviewPage = () => {
                                 w={12}
                                 color={'white'}
                                 borderRadius={'md'}
+                                flexShrink={0}
                                 bg={'teal.500'}
                             >
                                 <Box
@@ -82,7 +83,7 @@ const OverviewPage = () => {
                         <CardBody
                             py={2}
                             alignItems={'center'}
-                            gap={4}
+                            gap={3}
                             display={'flex'}
                         >
                             <Flex
@@ -92,6 +93,7 @@ const OverviewPage = () => {
                                 w={12}
                                 color={'white'}
                                 borderRadius={'md'}
+                                flexShrink={0}
                                 bg={'green.400'}
                             >
                                 <Box
