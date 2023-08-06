@@ -28,6 +28,7 @@ export default function DashboardLayout({
             </Box>
             <Flex
                 minH={500}
+                maxH={650}
                 gap={{ lg: 6, base: 4 }}
                 bg={'white'}
                 boxShadow={'base'}
