@@ -40,7 +40,8 @@ export const authOptions: NextAuthOptions = {
                         authType: authType,
                         //@ts-ignore
                         username: profile?.username
-                            ? profile?.username
+                            ? //@ts-ignore
+                              profile?.username
                             : Utils.genUsername(profile?.name),
                     };
 
