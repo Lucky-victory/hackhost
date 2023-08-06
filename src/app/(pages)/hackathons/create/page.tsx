@@ -7,13 +7,6 @@ import {
 } from "@/const";
 import { useAddHackathonMutation } from "@/state/services/hackathon-api";
 import {
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
   Box,
   Button,
   Card,
@@ -34,7 +27,6 @@ import {
   Textarea,
   Wrap,
   WrapItem,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import {
@@ -49,7 +41,6 @@ import {
 import DatePicker from "react-datepicker";
 import {
   MdExpandMore,
-  MdPhoto,
   MdAdd,
   MdClose,
   MdDelete,
@@ -81,8 +72,8 @@ const CreatePage = () => {
     title: "",
     subtitle: "",
     description: "",
-    startDate: new Date("2023-08-15T00:00:00.000Z"),
-    endDate: new Date("2023-09-08T00:00:00.000Z"),
+    startDate: startDate,
+    endDate: endDate,
 
     price: 23500,
     currency: "USD",
@@ -93,9 +84,9 @@ const CreatePage = () => {
 
     judges: [
       {
-        name: "Jane Micheal",
-        avatar: "https://randomuser.me/api/portraits/women/91.jpg",
-        bio: "CEO at Tech",
+        name: "",
+        avatar: "",
+        bio: "",
       },
     ],
   };
