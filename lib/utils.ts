@@ -6,7 +6,7 @@ dotenv.config();
 
 import { v4 as uuid } from 'uuid';
 import { USER_AUTH_TYPE } from '@prisma/client';
-import { HACKATHON_SUB_STATUS, User } from '@/const';
+import { HACKATHON_SUB_STATUS, USER_ROLE, User } from '@/const';
 import { format, isValid } from 'date-fns';
 export class Utils {
     static genUUID(removeDashes = false) {
@@ -40,8 +40,18 @@ export class Utils {
             isUpcoming: subStatus === 'UPCOMING',
         };
     }
+    static checkUserRole(user: Partial<User> | DefaultSession['user']) {
+        return {
+            isAdmin: user?.role === 'ADMIN',
+            isMod: user?.role === 'MOD',
+            isBasic: user?.role === 'BASIC',
+        };
+    }
     static formatCurrency(amount: number = 0) {
         return (+amount).toLocaleString();
+    }
+    static genUsername(name = '') {
+        return slugify(`${name} ${this.shortId(4)}`, { replacement: '_' });
     }
     static getCurrencySymbol(currency = 'USD') {
         const currencyCodes = {

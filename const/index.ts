@@ -1,3 +1,5 @@
+import { ISODateString, DefaultUser } from 'next-auth';
+
 type OmitManyToMany<T> = Omit<
     T,
     | 'interest'
@@ -10,6 +12,18 @@ type OmitManyToMany<T> = Omit<
     | 'hackathon'
     | 'user'
 >;
+declare global {
+    interface DefaultSession {
+        user?: {
+            name?: string | null;
+            email?: string | null;
+            image?: string | null;
+            role?: keyof typeof USER_ROLE;
+            id: string | null;
+        };
+        expires: ISODateString;
+    }
+}
 export interface User {
     id: string;
     name: string;
@@ -116,7 +130,7 @@ export interface Hackathon {
     status?: keyof typeof HACKATHON_STATUS | null;
     subStatus?: keyof typeof HACKATHON_SUB_STATUS | null;
     _count?: {
-        projects?:number;
+        projects?: number;
         participants: number;
     };
 }

@@ -10,7 +10,7 @@ import { USER_AUTH_TYPE } from '@prisma/client';
 
 export const authOptions: NextAuthOptions = {
     pages: {
-        signIn: '/auth/sign-in',
+        signIn: '/(pages)/auth/sign-in',
     },
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
@@ -37,6 +37,7 @@ export const authOptions: NextAuthOptions = {
                         avatar: user?.image,
                         role: USER_ROLE.BASIC,
                         authType: authType,
+                        username: Utils.genUsername(profile?.name),
                     };
 
                     await prisma.user.create({
@@ -51,10 +52,10 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, account, profile, user }) {
             // Persist the OAuth access_token and or the user id to the token right after signin
             if (account) {
-                console.log({ profile, user });
                 //@ts-ignore
-
                 token.id = user.id;
+                //@ts-ignore
+                token.role = user.role;
             }
             return token;
         },
@@ -62,10 +63,10 @@ export const authOptions: NextAuthOptions = {
             // Send properties to the client, like an access_token and user id from a provider.
             // session.accessToken = token.accessToken
             if (token) {
-                console.log(user);
-
                 //@ts-ignore
                 session.user.id = token.id;
+                //@ts-ignore
+                session.user.role = token.role;
             }
 
             return session;
@@ -95,7 +96,6 @@ export const authOptions: NextAuthOptions = {
                         email: credentials?.email,
                     },
                 });
-                console.log({ existingUser }, 'hrer');
 
                 // if it's a new user create an account
                 if (!existingUser && credentials?.type === 'create') {
@@ -109,12 +109,12 @@ export const authOptions: NextAuthOptions = {
                         password: hashedPassword,
                         role: USER_ROLE.BASIC,
                         authType: 'CREDENTIALS',
+                        username: Utils.genUsername(credentials?.name),
                     };
 
                     const createdUser = await prisma.user.create({
                         data: newUser,
                     });
-                    console.log({ createdUser }), 'here';
 
                     return createdUser;
                 }
