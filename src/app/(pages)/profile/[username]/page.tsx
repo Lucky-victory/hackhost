@@ -52,54 +52,63 @@ const UserProfilePage = () => {
                             src={user?.avatar as string}
                         />
                     </Skeleton>
-                    <Box mt={4}>
-                        {U.isSameUser(user, visitingUser) ? (
-                            <Button borderRadius={'base'} colorScheme="purple">
-                                <MdEdit style={{ marginRight: 8 }} /> Edit
-                                Profile
-                            </Button>
-                        ) : (
-                            <Button
-                                minW={'124'}
-                                borderRadius={'base'}
-                                colorScheme="purple"
-                            >
-                                <MdAdd style={{ marginRight: 8 }} /> Follow
-                            </Button>
-                        )}
-                    </Box>
+                    <Skeleton isLoaded={!isFetching} my={4}>
+                        <Box mt={4}>
+                            {U.isSameUser(user, visitingUser) ? (
+                                <Button
+                                    borderRadius={'base'}
+                                    colorScheme="purple"
+                                >
+                                    <MdEdit style={{ marginRight: 8 }} /> Edit
+                                    Profile
+                                </Button>
+                            ) : (
+                                <Button
+                                    minW={'124'}
+                                    borderRadius={'base'}
+                                    colorScheme="purple"
+                                >
+                                    <MdAdd style={{ marginRight: 8 }} /> Follow
+                                </Button>
+                            )}
+                        </Box>
+                    </Skeleton>
                 </Flex>
                 <Box mt={4} ml={{ lg: 4 }}>
-                    <Flex
-                        // bg={'green.300'}
-                        align={'center'}
-                        // justify={{ lg: 'center' }}
-                        gap={1}
-                        direction={{ lg: 'row', base: 'column' }}
-                    >
-                        <Heading color={{ lg: 'white' }} as={'h3'}>
-                            {user?.name}
-                        </Heading>
-
-                        <Text
-                            as={'span'}
-                            fontSize={'lg'}
-                            fontWeight={'normal'}
-                            color={{ base: 'gray.600', lg: 'white' }}
-                            textAlign={'left'}
-                            // bg={'red'}
-                            // h={'full'}
-                            alignSelf={{ lg: 'flex-end' }}
+                    <Skeleton isLoaded={!isFetching} mb={4}>
+                        <Flex
+                            // bg={'green.300'}
+                            align={'center'}
+                            // justify={{ lg: 'center' }}
+                            gap={1}
+                            direction={{ lg: 'row', base: 'column' }}
                         >
-                            ({user?.username})
-                        </Text>
-                    </Flex>
-                    <Box mt={4} maxW={600} px={{ lg: 0, base: 4 }}>
-                        <Text fontWeight={'medium'} textAlign={'center'}>
-                            A passionate web developer, with understanding of
-                            web standards, blockchain and cybersecurity
-                        </Text>
-                    </Box>
+                            <Heading color={{ lg: 'white' }} as={'h3'}>
+                                {user?.name}
+                            </Heading>
+
+                            <Text
+                                as={'span'}
+                                fontSize={'lg'}
+                                fontWeight={'normal'}
+                                color={{ base: 'gray.600', lg: 'white' }}
+                                textAlign={'left'}
+                                // bg={'red'}
+                                // h={'full'}
+                                alignSelf={{ lg: 'flex-end' }}
+                            >
+                                ({user?.username})
+                            </Text>
+                        </Flex>
+                    </Skeleton>
+                    <Skeleton isLoaded={!isFetching}>
+                        <Box mt={4} maxW={600} px={{ lg: 0, base: 4 }}>
+                            <Text fontWeight={'medium'} textAlign={'center'}>
+                                A passionate web developer, with understanding
+                                of web standards, blockchain and cybersecurity
+                            </Text>
+                        </Box>
+                    </Skeleton>
                 </Box>
             </Flex>
         </Box>
