@@ -1,14 +1,28 @@
 'use client';
 
 import Navbar from '@/src/app/components/Navbar';
-import { Avatar, Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+    Avatar,
+    Box,
+    Button,
+    Flex,
+    Heading,
+    Skeleton,
+    SkeletonCircle,
+    Text,
+} from '@chakra-ui/react';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { Utils as U } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
+import { useGetUserQuery } from '@/state/services/hackathon-api';
+import { useParams } from 'next/navigation';
 const UserProfilePage = () => {
-    const user = { id: 'u1', username: 'Lucky-victory22' };
-    const visitingUser = {
-        id: 'u2',
-    };
+    const { username } = useParams();
+    const visitingUser = useSession().data?.user as DefaultSession['user'];
+    const { data: response, isFetching } = useGetUserQuery(username as string);
+    const user = response?.data;
+    console.log({ user });
+
     return (
         <Box
             maxW={'var(--page-width)'}
@@ -29,11 +43,15 @@ const UserProfilePage = () => {
                 align={{ base: 'center', lg: 'normal' }}
             >
                 <Flex direction={'column'} align={'center'}>
-                    <Avatar
-                        border={'2px'}
-                        size={'2xl'}
-                        src="https://randomuser.me/api/portraits/men/47.jpg"
-                    />
+                    <Skeleton isLoaded={!isFetching} borderRadius={'full'}>
+                        <Avatar
+                            border={'2px'}
+                            borderColor={'white'}
+                            size={'2xl'}
+                            name={user?.name}
+                            src={user?.avatar as string}
+                        />
+                    </Skeleton>
                     <Box mt={4}>
                         {U.isSameUser(user, visitingUser) ? (
                             <Button borderRadius={'base'} colorScheme="purple">
@@ -60,23 +78,26 @@ const UserProfilePage = () => {
                         direction={{ lg: 'row', base: 'column' }}
                     >
                         <Heading color={{ lg: 'white' }} as={'h3'}>
-                            Lucky Victory
+                            {user?.name}
                         </Heading>
+
                         <Text
                             as={'span'}
                             fontSize={'lg'}
                             fontWeight={'normal'}
                             color={{ base: 'gray.600', lg: 'white' }}
+                            textAlign={'left'}
                             // bg={'red'}
                             // h={'full'}
                             alignSelf={{ lg: 'flex-end' }}
                         >
-                            (Lucky-victory02)
+                            ({user?.username})
                         </Text>
                     </Flex>
                     <Box mt={4} maxW={600} px={{ lg: 0, base: 4 }}>
                         <Text fontWeight={'medium'} textAlign={'center'}>
-                            I&apos;m lucky-victory, a passionate web developer
+                            A passionate web developer, with understanding of
+                            web standards, blockchain and cybersecurity
                         </Text>
                     </Box>
                 </Box>

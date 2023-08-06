@@ -1,7 +1,8 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
-import { Utils, envConfigs } from '@/lib/utils';
+import { Utils } from '@/lib/utils';
+import { envConfigs } from '@/lib/env-config';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
@@ -37,7 +38,8 @@ export const authOptions: NextAuthOptions = {
                         avatar: user?.image,
                         role: USER_ROLE.BASIC,
                         authType: authType,
-                        username: Utils.genUsername(profile?.name),
+                        //@ts-ignore
+                        username: profile?.username,
                     };
 
                     await prisma.user.create({
@@ -51,11 +53,13 @@ export const authOptions: NextAuthOptions = {
         },
         async jwt({ token, account, profile, user }) {
             // Persist the OAuth access_token and or the user id to the token right after signin
-            if (account) {
+            if (user) {
                 //@ts-ignore
                 token.id = user.id;
                 //@ts-ignore
-                token.role = user.role;
+                token.role = user?.role;
+                //@ts-ignore
+                token.username = user?.username;
             }
             return token;
         },
@@ -67,6 +71,8 @@ export const authOptions: NextAuthOptions = {
                 session.user.id = token.id;
                 //@ts-ignore
                 session.user.role = token.role;
+                //@ts-ignore
+                session.user.username = token.username;
             }
 
             return session;
@@ -133,8 +139,24 @@ export const authOptions: NextAuthOptions = {
                 return existingUser;
             },
         }),
-        GithubProvider(envConfigs.github),
-        GoogleProvider(envConfigs.google),
+        GithubProvider({
+            ...envConfigs.github,
+            profile(profile, tokens) {
+                return {
+                    ...profile,
+                    username: Utils.genUsername(profile?.name),
+                };
+            },
+        }),
+        GoogleProvider({
+            ...envConfigs.google,
+            profile(profile, tokens) {
+                return {
+                    ...profile,
+                    username: Utils.genUsername(profile?.name),
+                };
+            },
+        }),
     ],
 };
 const handler = NextAuth(authOptions);

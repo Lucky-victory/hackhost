@@ -1,7 +1,6 @@
 // import { Hackathon } from "@/const";
-import { envConfigs } from '@/lib/utils';
+import { envConfigs } from '@/lib/env-config';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
 
 export const CloudinaryApi = createApi({
     reducerPath: 'CloudinaryApi',

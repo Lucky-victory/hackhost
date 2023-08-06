@@ -17,7 +17,7 @@ import OAuthButtons from '@/src/app/components/OAuth';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { Link } from '@chakra-ui/next-js';
 import NextLink from 'next/link';
-import Navbar from '../../components/Navbar';
+import Navbar from '@/src/app/components/Navbar';
 import { useSearchParams } from 'next/navigation';
 const SignUpPage = () => {
     const sess = useSession();
@@ -108,6 +108,7 @@ const SignUpPage = () => {
                                     placeholder="password"
                                     isRequired
                                     name="password"
+                                    type="password"
                                     id="password"
                                     value={signUpForm.password}
                                 />

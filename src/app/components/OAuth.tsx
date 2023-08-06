@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, Text } from '@chakra-ui/react';
 import { GithubIcon, GoogleIcon } from './Icons';
-import { envConfigs } from '@/lib/utils';
+import { envConfigs } from '@/lib/env-config';
 
 const OAuthButtons = ({ csrfToken = '' }) => {
     return (

@@ -16,6 +16,9 @@ import {
     PopoverAnchor,
     TagRightIcon,
     Text,
+    LinkBox,
+    LinkOverlay,
+    Image,
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import NextLink from 'next/link';
@@ -43,9 +46,11 @@ const Navbar = () => {
         >
             <Box>
                 <Flex gap={{ lg: 8, base: 6 }} align="center">
-                    <Box>
-                        <Link href="/">App logo</Link>
-                    </Box>
+                    <LinkBox>
+                        <LinkOverlay href="/">
+                            <Image src={'/HackHost.svg'} alt="logo" />
+                        </LinkOverlay>
+                    </LinkBox>
 
                     <Button
                         as={NextLink}

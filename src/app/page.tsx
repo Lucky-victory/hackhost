@@ -35,14 +35,14 @@ import isEmpty from 'just-is-empty';
 
 export default function Home() {
     const sess = useSession();
-
+    console.log({ sess }, 'user sess');
     const { data, isLoading } = useGetHackathonsQuery({
         limit: 5,
         where: { subStatus: 'ONGOING' },
     });
 
     const hackathons = data?.data;
-    
+
     return (
         <main className={styles.main}>
             <Box

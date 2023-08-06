@@ -14,18 +14,18 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import OAuthButtons from '@/src/app/components/OAuth';
 import { useSession, signIn } from 'next-auth/react';
 import { useGetCSRFTokenQuery } from '@/state/services/hackathon-api';
-import { envConfigs } from '@/lib/utils';
+import { envConfigs } from '@/lib/env-config';
 import { Link } from '@chakra-ui/next-js';
 import NextLink from 'next/link';
-import Navbar from '../../components/Navbar';
+import Navbar from '@/src/app/components/Navbar';
 import { useSearchParams } from 'next/navigation';
 
 const SignInPage = () => {
     const sess = useSession();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { data } = useGetCSRFTokenQuery();
-const params=useSearchParams();
-const redirectUrl=params.get('from');
+    const params = useSearchParams();
+    const redirectUrl = params.get('from');
 
     const [signInForm, setSignInForm] = useState({
         password: '',
@@ -38,7 +38,7 @@ const redirectUrl=params.get('from');
         signIn('credentials', {
             ...signInForm,
             redirect: true,
-            callbackUrl: redirectUrl?redirectUrl: '/',
+            callbackUrl: redirectUrl ? redirectUrl : '/',
         });
     }
     function handleInputChange(evt: ChangeEvent<HTMLInputElement>) {
@@ -84,6 +84,7 @@ const redirectUrl=params.get('from');
                                     </Text>
                                 </FormLabel>
                                 <Input
+                                    type="password"
                                     minLength={6}
                                     onChange={handleInputChange}
                                     placeholder="password"

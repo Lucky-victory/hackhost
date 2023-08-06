@@ -12,15 +12,18 @@ type OmitManyToMany<T> = Omit<
     | 'hackathon'
     | 'user'
 >;
-declare global {
-    interface DefaultSession {
-        user?: {
+export interface UserSess extends DefaultUser
+    {
             name?: string | null;
             email?: string | null;
             image?: string | null;
             role?: keyof typeof USER_ROLE;
-            id: string | null;
+            id: string;
         };
+
+declare global {
+    interface DefaultSession {
+        user?: UserSess;
         expires: ISODateString;
     }
 }
