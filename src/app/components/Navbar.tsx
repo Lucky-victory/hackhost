@@ -1,4 +1,5 @@
 'use client';
+import { Utils } from '@/lib/utils';
 import {
     Avatar,
     Box,
@@ -108,6 +109,16 @@ const Navbar = () => {
                             {/* <PopoverHeader>Confirmation!</PopoverHeader> */}
                             <PopoverBody>
                                 <Stack divider={<StackDivider />}>
+                                    {Utils.checkUserRole(user).isAdmin && (
+                                        <Button
+                                            variant="ghost"
+                                            colorScheme="purple"
+                                            href={`/dashboard/overview`}
+                                            as={NextLink}
+                                        >
+                                            Dashboard
+                                        </Button>
+                                    )}
                                     <Button
                                         variant="ghost"
                                         colorScheme="purple"

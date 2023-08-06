@@ -9,6 +9,7 @@ import {
     SimpleGrid,
     Tag,
     Text,
+    Container,
 } from '@chakra-ui/react';
 import { MdGridOn, MdGridView, MdGroup } from 'react-icons/md';
 
@@ -115,6 +116,13 @@ const OverviewPage = () => {
                         </CardBody>
                     </Card>
                 </SimpleGrid>
+                <Card minH={250}>
+                    <CardBody>
+                        <Container>
+                            <Text>No history yet</Text>
+                        </Container>
+                    </CardBody>
+                </Card>
             </Box>
         </>
     );

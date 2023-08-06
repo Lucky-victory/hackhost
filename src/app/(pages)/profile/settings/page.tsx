@@ -1,6 +1,2 @@
-
-const UserSettingsPage = () => {
-
-
-}
-export default UserSettingsPage
+const UserSettingsPage = () => {};
+export default UserSettingsPage;

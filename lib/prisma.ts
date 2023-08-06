@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 export { prisma };
 // // PrismaClient is attached to the `global` object in development to prevent
@@ -8,47 +8,47 @@ export { prisma };
 // // https://pris.ly/d/help/next-js-best-practices
 
 declare global {
-    // allow global `var` declarations
-    // eslint-disable-next-line no-var
-    var prisma: PrismaClient | undefined;
+  // allow global `var` declarations
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined;
 }
 
 let prisma: PrismaClient;
 
 const {
-    TIDB_USER,
-    TIDB_PASSWORD,
-    TIDB_HOST,
-    TIDB_PORT,
-    TIDB_DB_NAME = 'hackhost',
-    DATABASE_URL,
+  TIDB_USER,
+  TIDB_PASSWORD,
+  TIDB_HOST,
+  TIDB_PORT,
+  TIDB_DB_NAME = "hackhost",
+  DATABASE_URL,
 } = process.env;
 // Notice: When using TiDb Cloud Serverless Tier, you **MUST** set the following flags to enable tls connection.
-const SSL_FLAGS = 'pool_timeout=60&sslaccept=accept_invalid_certs';
+const SSL_FLAGS = "pool_timeout=60&sslaccept=accept_invalid_certs";
 const databaseURL = DATABASE_URL
-    ? `${DATABASE_URL}?${SSL_FLAGS}`
-    : `mysql://${TIDB_USER}:${TIDB_PASSWORD}@${TIDB_HOST}:${TIDB_PORT}/${TIDB_DB_NAME}?${SSL_FLAGS}`;
+  ? `${DATABASE_URL}?${SSL_FLAGS}`
+  : `mysql://${TIDB_USER}:${TIDB_PASSWORD}@${TIDB_HOST}:${TIDB_PORT}/${TIDB_DB_NAME}?${SSL_FLAGS}`;
 
-if (process.env.NODE_ENV === 'production') {
-    prisma = new PrismaClient({
-        datasources: {
-            db: {
-                url: databaseURL,
-            },
-        },
-    });
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: databaseURL,
+      },
+    },
+  });
 } else {
-    if (!global.prisma) {
-        global.prisma = new PrismaClient({
-            log: ['info', 'query', 'error'],
-            datasources: {
-                db: {
-                    url: databaseURL,
-                },
-            },
-        });
-    }
-    prisma = global.prisma;
+  if (!global.prisma) {
+    global.prisma = new PrismaClient({
+      log: ["info", "query", "error"],
+      datasources: {
+        db: {
+          url: databaseURL,
+        },
+      },
+    });
+  }
+  prisma = global.prisma;
 }
 
 export default prisma;

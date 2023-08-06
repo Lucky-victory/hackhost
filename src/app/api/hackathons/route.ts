@@ -1,68 +1,68 @@
-import { OrderByFilter } from './../../../../const/index';
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { FilterType, WhereFilter } from '@/const';
+import { OrderByFilter } from "./../../../../const/index";
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { FilterType, WhereFilter } from "@/const";
 
 export async function POST(request: Request) {
-    const {
-        limit = 5,
-        orderBy = { createdAt: 'desc' },
-        where = {},
-        filterType = 'equals',
-    } = (await request.json()) as {
-        limit?: number;
-        filterType?: FilterType;
-        where: WhereFilter;
-        orderBy: OrderByFilter;
+  const {
+    limit = 5,
+    orderBy = { createdAt: "desc" },
+    where = {},
+    filterType = "equals",
+  } = (await request.json()) as {
+    limit?: number;
+    filterType?: FilterType;
+    where: WhereFilter;
+    orderBy: OrderByFilter;
+  };
+
+  let filterObjs = {};
+  for (const key in where) {
+    //@ts-ignore
+    filterObjs[key] = {
+      [filterType]: where[key as keyof WhereFilter],
     };
+  }
+  try {
+    const data = await prisma.hackathon.findMany({
+      where: {
+        status: {
+          equals: "PUBLISHED",
+        },
+        ...filterObjs,
+      },
+      //@ts-ignore
+      orderBy,
+      take: limit,
+      include: {
+        _count: {
+          select: {
+            participants: true,
+          },
+        },
+      },
+    });
 
-    let filterObjs = {};
-    for (const key in where) {
-        //@ts-ignore
-        filterObjs[key] = {
-            [filterType]: where[key as keyof WhereFilter],
-        };
-    }
-    try {
-        const data = await prisma.hackathon.findMany({
-            where: {
-                status: {
-                    equals: 'PUBLISHED',
-                },
-                ...filterObjs,
-            },
-            //@ts-ignore
-            orderBy,
-            take: limit,
-            include: {
-                _count: {
-                    select: {
-                        participants: true,
-                    },
-                },
-            },
-        });
-
-        return NextResponse.json(
-            {
-                data: data,
-                status: 200,
-                message: 'Hackathons retrieved successfully',
-            },
-            { status: 200 }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            {
-                data: null,
-                status: 500,
-                message: "An error occurred couldn't retrieve hackathons",
-            },
-            { status: 500 }
-        );
-    } finally {
-        await prisma.$disconnect();
-    }
+    return NextResponse.json(
+      {
+        data: data,
+        status: 200,
+        message: "Hackathons retrieved successfully",
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        data: null,
+        status: 500,
+        message: "An error occurred couldn't retrieve hackathons",
+      },
+      { status: 500 },
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 // export async function POST(request: Request) {
 //   try {
