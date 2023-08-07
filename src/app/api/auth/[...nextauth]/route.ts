@@ -148,6 +148,7 @@ export const authOptions: NextAuthOptions = {
                 return {
                     ...profile,
                     username: Utils.genUsername(profile?.name),
+                    tokens,
                 };
             },
         }),
@@ -157,6 +158,7 @@ export const authOptions: NextAuthOptions = {
                 return {
                     ...profile,
                     username: Utils.genUsername(profile?.name),
+                    tokens,
                 };
             },
         }),
