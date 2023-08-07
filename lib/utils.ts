@@ -47,7 +47,7 @@ export class Utils {
     return (+amount).toLocaleString();
   }
   static genUsername(name = "") {
-    return slugify(`${name} ${this.shortId(4)}`, { replacement: "_" });
+    return slugify(`${name} ${this.shortId(4)}`,{lower:true});
   }
   static getCurrencySymbol(currency = "USD") {
     const currencyCodes = {
