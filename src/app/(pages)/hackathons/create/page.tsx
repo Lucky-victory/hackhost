@@ -75,7 +75,7 @@ const CreatePage = () => {
     startDate: startDate,
     endDate: endDate,
 
-    price: 23500,
+    price: 0,
     currency: "USD",
 
     type: HACKATHON_TYPE.PUBLIC,
