@@ -144,23 +144,9 @@ export const authOptions: NextAuthOptions = {
         }),
         GithubProvider({
             ...envConfigs.github,
-            profile(profile, tokens) {
-                return {
-                    ...profile,
-                    username: Utils.genUsername(profile?.name),
-                    tokens,
-                };
-            },
         }),
         GoogleProvider({
             ...envConfigs.google,
-            profile(profile, tokens) {
-                return {
-                    ...profile,
-                    username: Utils.genUsername(profile?.name),
-                    tokens,
-                };
-            },
         }),
     ],
 };
