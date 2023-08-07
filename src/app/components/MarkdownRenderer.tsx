@@ -67,7 +67,7 @@ const MarkdownRenderer = ({ markdown }: { markdown: string }) => {
                     ) : (
                         <OrderedList className={className} {...props} />
                     ),
-                li: ({ node, checked, className, ...props }) =>
+                li: ({ ordered, node, checked, className, ...props }) =>
                     className === 'task-list-item' ? (
                         <ListItem className={className} {...props}>
                             <ListIcon

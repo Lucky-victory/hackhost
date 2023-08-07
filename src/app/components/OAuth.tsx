@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, Text } from '@chakra-ui/react';
 import { GithubIcon, GoogleIcon } from './Icons';
-import { envConfigs } from '@/lib/utils';
+import { envConfigs } from '@/lib/env-config';
 
 const OAuthButtons = ({ csrfToken = '' }) => {
     return (
@@ -16,11 +16,11 @@ const OAuthButtons = ({ csrfToken = '' }) => {
                     name="csrfToken"
                     defaultValue={csrfToken}
                 />
-                <input
-                    type="hidden"
-                    name="callbackUrl"
-                    defaultValue={envConfigs.nextauth.url}
-                />
+                {/* <input
+          type="hidden"
+          name="callbackUrl"
+          // defaultValue={envConfigs.nextauth.url}
+        /> */}
                 <Button type="submit" w={'full'}>
                     <Box mr={4}>
                         <GoogleIcon size={28} />
@@ -40,11 +40,11 @@ const OAuthButtons = ({ csrfToken = '' }) => {
                     name="csrfToken"
                     defaultValue={csrfToken}
                 />
-                <input
-                    type="hidden"
-                    name="callbackUrl"
-                    defaultValue={envConfigs.nextauth.url}
-                />
+                {/* <input
+          type="hidden"
+          name="callbackUrl"
+          defaultValue={envConfigs.nextauth.url}
+        /> */}
                 <Button type="submit" w={'full'}>
                     <Box mr={4}>
                         <GithubIcon size={28} />

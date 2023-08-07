@@ -1,7 +1,8 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
-import { Utils, envConfigs } from '@/lib/utils';
+import { Utils } from '@/lib/utils';
+import { envConfigs } from '@/lib/env-config';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
@@ -37,6 +38,11 @@ export const authOptions: NextAuthOptions = {
                         avatar: user?.image,
                         role: USER_ROLE.BASIC,
                         authType: authType,
+                        //@ts-ignore
+                        username: profile?.username
+                            ? //@ts-ignore
+                              profile?.username
+                            : Utils.genUsername(profile?.name),
                     };
 
                     await prisma.user.create({
@@ -51,10 +57,12 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, account, profile, user }) {
             // Persist the OAuth access_token and or the user id to the token right after signin
             if (account) {
-                console.log({ profile, user });
                 //@ts-ignore
-
                 token.id = user.id;
+                //@ts-ignore
+                token.role = user?.role;
+                //@ts-ignore
+                token.username = user?.username;
             }
             return token;
         },
@@ -62,10 +70,12 @@ export const authOptions: NextAuthOptions = {
             // Send properties to the client, like an access_token and user id from a provider.
             // session.accessToken = token.accessToken
             if (token) {
-                console.log(user);
-
                 //@ts-ignore
                 session.user.id = token.id;
+                //@ts-ignore
+                session.user.role = token.role;
+                //@ts-ignore
+                session.user.username = token.username;
             }
 
             return session;
@@ -95,7 +105,6 @@ export const authOptions: NextAuthOptions = {
                         email: credentials?.email,
                     },
                 });
-                console.log({ existingUser }, 'hrer');
 
                 // if it's a new user create an account
                 if (!existingUser && credentials?.type === 'create') {
@@ -109,12 +118,12 @@ export const authOptions: NextAuthOptions = {
                         password: hashedPassword,
                         role: USER_ROLE.BASIC,
                         authType: 'CREDENTIALS',
+                        username: Utils.genUsername(credentials?.name),
                     };
 
                     const createdUser = await prisma.user.create({
                         data: newUser,
                     });
-                    console.log({ createdUser }), 'here';
 
                     return createdUser;
                 }
@@ -133,8 +142,12 @@ export const authOptions: NextAuthOptions = {
                 return existingUser;
             },
         }),
-        GithubProvider(envConfigs.github),
-        GoogleProvider(envConfigs.google),
+        GithubProvider({
+            ...envConfigs.github,
+        }),
+        GoogleProvider({
+            ...envConfigs.google,
+        }),
     ],
 };
 const handler = NextAuth(authOptions);

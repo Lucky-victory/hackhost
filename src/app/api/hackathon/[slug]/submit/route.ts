@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { Hackathon, HackathonCreate } from '@/const';
-import { Utils } from '@/lib/utils';
-import { getServerSession } from 'next-auth';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { Hackathon, HackathonCreate } from "@/const";
+import { Utils } from "@/lib/utils";
+import { getServerSession } from "next-auth";
 
 // export async function GET(request: Request) {
 //     try {
@@ -42,42 +42,44 @@ import { getServerSession } from 'next-auth';
 //         );
 //     }
 // }
-export async function POST(request: Request, { params: { slug } }: { params: { slug: string } }) {
-    try {
-        const sess = await getServerSession();
+export async function POST(
+  request: Request,
+  { params: { slug } }: { params: { slug: string } },
+) {
+  try {
+    const sess = await getServerSession();
 
-        const json = await request.json();
-        const { title, toolsUsed, ...rest } = json;
-        const created = await prisma.project.create({
-            
-            data: {
-                ...rest,
-                title,
-                slug: Utils.slugify(title),
-                hackathon:{
-connect:{slug}
-                },
-                user: {
-                    connect: {
-                        email: sess?.user?.email as string,
-                    },
-                },
-               
-                
-            },
-        });
-        return NextResponse.json(
-            {
-                data: created,
-                status: 201,
-                message: 'Project added successfully',
-            },
-            { status: 201 }
-        );
-    } catch (error) {
-        throw NextResponse.json(
-            { data: null, message: "An error occured couldn't add project" },
-            { status: 500 }
-        );
-    }
+    const json = await request.json();
+    const { title, toolsUsed, ...rest } = json;
+    const created = await prisma.project.create({
+      data: {
+        ...rest,
+        title,
+        slug: Utils.slugify(title),
+        hackathon: {
+          connect: { slug },
+        },
+        user: {
+          connect: {
+            email: sess?.user?.email as string,
+          },
+        },
+      },
+    });
+    return NextResponse.json(
+      {
+        data: created,
+        status: 201,
+        message: "Project added successfully",
+      },
+      { status: 201 },
+    );
+  } catch (error) {
+    throw NextResponse.json(
+      { data: null, message: "An error occured couldn't add project" },
+      { status: 500 },
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
 }

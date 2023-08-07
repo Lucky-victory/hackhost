@@ -26,6 +26,8 @@ export async function GET(request: Request) {
       status: 500,
       message: "An error occurred couldn't retrieve hackathons",
     });
+  } finally {
+    await prisma.$disconnect();
   }
 }
 export async function POST(request: Request) {
