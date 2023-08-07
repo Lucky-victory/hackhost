@@ -122,7 +122,11 @@ const Navbar = () => {
                                     <Button
                                         variant="ghost"
                                         colorScheme="purple"
-                                        href={`/profile/${user?.username}`}
+                                        href={`/profile/${
+                                            user?.username
+                                                ? user?.username
+                                                : user?.id
+                                        }`}
                                         as={NextLink}
                                     >
                                         Profile
